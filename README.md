@@ -2,6 +2,8 @@
 
 Torrent client for DashoTV
 
+[![Build Status](https://travis-ci.org/dashotv/flame.svg?branch=master)](https://travis-ci.org/dashotv/flame)
+
 ## make [test]
 
 Default target, runs a simple test.

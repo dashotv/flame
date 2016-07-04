@@ -7,8 +7,5 @@ build:
 test:
 	go test
 
-deps:
-	gvt restore
-
 update:
 	gvt update -all

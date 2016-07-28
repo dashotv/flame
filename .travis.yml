@@ -1,5 +1,2 @@
 language: go
 go: 1.6
-before_script:
-  - go get -u github.com/FiloSottile/gvt
-  - make update

@@ -1,11 +1,12 @@
 
 all: test
 
-build:
-	go build client.go response.go torrent.go
-
-test:
+test: build
 	go test
 
-update:
-	gvt update -all
+build: deps
+	go build
+
+deps:
+	go get github.com/Masterminds/glide
+	glide install

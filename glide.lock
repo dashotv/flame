@@ -1,0 +1,10 @@
+hash: 7a4d06b28d29c22a150b66780cacd5b451d2947538d2ec64d0162a6edff29ed0
+updated: 2016-07-27T19:43:43.347421852-07:00
+imports:
+- name: github.com/grengojbo/goquery
+  version: 581f5a57e7dbfd4af64c18c08f6323f80d971d24
+  subpackages:
+  - exp/cascadia
+  - exp/html
+  - exp/html/atom
+testImports: []

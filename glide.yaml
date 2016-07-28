@@ -1,0 +1,3 @@
+package: github.com/dashotv/flame
+import:
+- package: github.com/grengojbo/goquery

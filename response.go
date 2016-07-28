@@ -9,11 +9,21 @@ type Response struct {
 func (r *Response) Load(data *map[string]interface{}) {
 	value := *data
 	r.Build = value["build"].(float64)
-	r.CacheId = value["torrentc"].(string)
-	for _, t := range value["torrents"].([]interface{}) {
-		//fmt.Println(t)
-		torrent := Torrent{}
-		torrent.Load(t.([]interface{}))
-		r.Torrents = append(r.Torrents, torrent)
+
+	if val, ok := value["torrentc"]; ok {
+		r.CacheId = val.(string)
 	}
+
+	if val, ok := value["torrents"]; ok {
+		for _, t := range val.([]interface{}) {
+			//fmt.Println(t)
+			torrent := Torrent{}
+			torrent.Load(t.([]interface{}))
+			r.Torrents = append(r.Torrents, torrent)
+		}
+	}
+}
+
+func (r *Response) Count() (int) {
+	return len(r.Torrents)
 }

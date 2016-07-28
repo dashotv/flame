@@ -1,8 +1,11 @@
 package flame
 
+//http://help.utorrent.com/customer/en/portal/articles/1573947-torrent-labels-list---webapi
+
 type Torrent struct {
 	Hash           string
-	Status         float64
+	Status         *Status
+	State          string
 	Name           string
 	Size           float64 // in bytes
 	Progress       float64 // float64eger in per mils
@@ -24,7 +27,7 @@ type Torrent struct {
 
 func (t *Torrent) Load(values []interface{}) {
 	t.Hash = values[0].(string)
-	t.Status = values[1].(float64)
+	t.Status = NewStatus(int(values[1].(float64)))
 	t.Name = values[2].(string)
 	t.Size = values[3].(float64)
 	t.Progress = values[4].(float64) / 10
@@ -42,4 +45,9 @@ func (t *Torrent) Load(values []interface{}) {
 	t.Availability = values[16].(float64)
 	t.Queue = values[17].(float64)
 	t.Remaining = values[18].(float64)
+	t.State = values[21].(string)
+}
+
+func (t *Torrent) SizeMb() float64 {
+	return t.Size / 1000000
 }

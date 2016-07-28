@@ -3,41 +3,61 @@ package flame
 import (
 	"fmt"
 	"net/http"
-	"log"
 	"io/ioutil"
 	"encoding/json"
 	"github.com/grengojbo/goquery"
 )
 
 type Client struct {
-	Url string
+	Url           string
 
 	token         string
 	cookie        string
 	authenticated bool
 }
 
-func (c *Client) Connect(url *string) {
-	c.Url = *url
-	c.token = ""
-	c.cookie = ""
-	c.authenticated = false
+func NewClient(url string) (*Client) {
+	return &Client{
+		Url: url,
+		token: "",
+		cookie: "",
+		authenticated: false,
+	}
 }
 
-func (c *Client) Authenticate() error {
+func (c *Client) List() (*Response, error) {
+	r := &Response{}
+	parsed := make(map[string]interface{})
+
+	err := c.request("", "list=1", &parsed)
+	if err != nil {
+		return nil, err
+	}
+	//fmt.Println("parsed: ", parsed)
+	r.Load(&parsed)
+
+	return r, nil
+}
+
+// Private
+
+func (c *Client) authenticate() (err error) {
+	var response *http.Response
+	var doc *goquery.Document
+
 	if !c.authenticated {
-		response, err := http.Get(c.Url + "/token.html")
-		if err != nil {
-			log.Fatal(err)
+		if response, err = http.Get(c.Url + "/token.html"); err != nil {
+			return err
 		}
 		defer response.Body.Close()
 
 		// get token from response
-		doc, err := goquery.NewDocumentFromResponse(response)
-		if err != nil {
+		if doc, err = goquery.NewDocumentFromResponse(response); err != nil {
 			return err
 		}
-		c.token = doc.Find("div#token").Text()
+		if c.token = doc.Find("div#token").Text(); c.token == "" {
+			return fmt.Errorf("token not found")
+		}
 
 		// find GUID cookie and store value
 		for _, cookie := range response.Cookies() {
@@ -53,51 +73,41 @@ func (c *Client) Authenticate() error {
 	}
 }
 
-func (c *Client) List(response *Response) error {
-	parsed := make(map[string]interface{})
+func (c *Client) request(action string, params string, target *map[string]interface{}) (err error) {
+	var url string
+	var client *http.Client
+	var request *http.Request
+	var response *http.Response
+	var body []byte
 
-	err := c.get(&parsed)
-	if err != nil {
+	if err = c.authenticate(); err != nil {
 		return err
 	}
-	//fmt.Printf("parsed: %q\n", parsed)
-	response.Load(&parsed)
 
-	return nil
-}
+	url = fmt.Sprintf("%s/%s?%s&cid=1&token=%s", c.Url, action, params, c.token)
+	//fmt.Printf("request: %s\n", url)
 
-func (c *Client) get(target *map[string]interface{}) error {
-	if !c.authenticated {
-		err := c.Authenticate()
-		if err != nil {
-			return err
-		}
-	}
+	client = &http.Client{}
 
-	url := fmt.Sprintf("%s/?token=%s&cid=1&list=1", c.Url, c.token)
-	client := &http.Client{}
-
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
+	if request, err = http.NewRequest("GET", url, nil); err != nil {
 		//log.Fatal(err)
 		return err
 	}
+
 	request.Header.Set("Cookie", fmt.Sprintf("GUID=%s; count=1", c.cookie))
-	response, err := client.Do(request)
-	if err != nil {
+
+	if response, err = client.Do(request); err != nil {
 		//log.Fatal(err)
 		return err
 	}
 	defer response.Body.Close()
 
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
+	if body, err = ioutil.ReadAll(response.Body); err != nil {
 		//log.Fatal(err)
 		return err
 	}
 
-	//fmt.Printf("body: %s\n", string(body))
-	//fmt.Print("\n")
+	//fmt.Println("body: ", string(body))
 
 	json.Unmarshal(body, target)
 

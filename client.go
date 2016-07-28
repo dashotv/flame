@@ -29,10 +29,10 @@ func (c *Client) List() (*Response, error) {
 	r := &Response{}
 	parsed := make(map[string]interface{})
 
-	err := c.request("", "list=1", &parsed)
-	if err != nil {
+	if err := c.request("", "list=1", &parsed); err != nil {
 		return nil, err
 	}
+
 	//fmt.Println("parsed: ", parsed)
 	r.Load(&parsed)
 

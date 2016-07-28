@@ -1,4 +1,4 @@
-# flame
+# Flame
 
 Torrent client for DashoTV
 
@@ -11,7 +11,3 @@ Default target, runs a simple test. If running locally, must set up environment:
 ```
 export FLAME_URL="<url to utorrent gui>"
 ```
-
-## make update
-
-Updates dependencies using `gvt`

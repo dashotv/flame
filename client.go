@@ -1,26 +1,27 @@
 package flame
 
 import (
-	"fmt"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/grengojbo/goquery"
 )
 
 type Client struct {
-	Url           string
+	Url string
 
 	token         string
 	cookie        string
 	authenticated bool
 }
 
-func NewClient(url string) (*Client) {
+func NewClient(url string) *Client {
 	return &Client{
-		Url: url,
-		token: "",
-		cookie: "",
+		Url:           url,
+		token:         "",
+		cookie:        "",
 		authenticated: false,
 	}
 }

@@ -1,5 +1,7 @@
 package flame
 
+import "encoding/json"
+
 type Response struct {
 	Build    float64
 	Torrents []Torrent
@@ -24,6 +26,15 @@ func (r *Response) Load(data *map[string]interface{}) {
 	}
 }
 
-func (r *Response) Count() (int) {
+func (r *Response) Count() int {
 	return len(r.Torrents)
+}
+
+func (r *Response) JSON() (string, error) {
+	b, err := json.Marshal(r)
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
 }

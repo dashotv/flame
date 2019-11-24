@@ -4,7 +4,7 @@ package flame
 
 type Torrent struct {
 	Hash           string
-	Status         *Status
+	Status         int
 	State          string
 	Name           string
 	Size           float64 // in bytes
@@ -27,7 +27,7 @@ type Torrent struct {
 
 func (t *Torrent) Load(values []interface{}) {
 	t.Hash = values[0].(string)
-	t.Status = NewStatus(int(values[1].(float64)))
+	t.Status = int(values[1].(float64))
 	t.Name = values[2].(string)
 	t.Size = values[3].(float64)
 	t.Progress = values[4].(float64) / 10

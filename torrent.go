@@ -26,26 +26,40 @@ type Torrent struct {
 }
 
 func (t *Torrent) Load(values []interface{}) {
-	t.Hash = values[0].(string)
-	t.Status = int(values[1].(float64))
-	t.Name = values[2].(string)
-	t.Size = values[3].(float64)
-	t.Progress = values[4].(float64) / 10
-	t.Downloaded = values[5].(float64)
-	t.Uploaded = values[6].(float64)
-	t.Ratio = values[7].(float64)
-	t.UploadRate = values[8].(float64)
-	t.DownloadRate = values[9].(float64)
-	t.Finish = values[10].(float64)
-	t.Label = values[11].(string)
-	t.PeersConnected = values[12].(float64)
-	t.PeersTotal = values[13].(float64)
-	t.SeedsConnected = values[14].(float64)
-	t.SeedsTotal = values[15].(float64)
-	t.Availability = values[16].(float64)
-	t.Queue = values[17].(float64)
-	t.Remaining = values[18].(float64)
-	t.State = values[21].(string)
+	t.Hash = t.getString(values[0])
+	t.Status = int(t.getFloat64(values[1]))
+	t.Name = t.getString(values[2])
+	t.Size = t.getFloat64(values[3])
+	t.Progress = t.getFloat64(values[4]) / 10
+	t.Downloaded = t.getFloat64(values[5])
+	t.Uploaded = t.getFloat64(values[6])
+	t.Ratio = t.getFloat64(values[7])
+	t.UploadRate = t.getFloat64(values[8])
+	t.DownloadRate = t.getFloat64(values[9])
+	t.Finish = t.getFloat64(values[10])
+	t.Label = t.getString(values[11])
+	t.PeersConnected = t.getFloat64(values[12])
+	t.PeersTotal = t.getFloat64(values[13])
+	t.SeedsConnected = t.getFloat64(values[14])
+	t.SeedsTotal = t.getFloat64(values[15])
+	t.Availability = t.getFloat64(values[16])
+	t.Queue = t.getFloat64(values[17])
+	t.Remaining = t.getFloat64(values[18])
+	t.State = t.getString(values[21])
+}
+
+func (t *Torrent) getString(value interface{}) string {
+	if value != nil {
+		return value.(string)
+	}
+	return ""
+}
+
+func (t *Torrent) getFloat64(value interface{}) float64 {
+	if value != nil {
+		return value.(float64)
+	}
+	return 0.0
 }
 
 func (t *Torrent) SizeMb() float64 {

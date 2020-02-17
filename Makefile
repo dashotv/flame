@@ -1,5 +1,3 @@
-FLAME_URL = "http://admin:utorrent@utorrent.dasho.net/gui"
-
 all: test
 
 test:

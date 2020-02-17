@@ -1,4 +1,4 @@
-package flame
+package utorrent
 
 import (
 	"encoding/json"
@@ -29,7 +29,7 @@ func NewClient(url string) *Client {
 }
 
 func (c *Client) List() (*Response, error) {
-	r := &Response{}
+	r := NewResponse()
 	parsed := make(map[string]interface{})
 	files := make(map[string]interface{})
 

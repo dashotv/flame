@@ -1,4 +1,4 @@
-package flame
+package utorrent
 
 type Status struct {
 	value int

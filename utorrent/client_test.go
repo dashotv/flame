@@ -1,4 +1,4 @@
-package flame
+package utorrent
 
 import (
 	"fmt"

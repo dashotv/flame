@@ -1,4 +1,4 @@
-package flame
+package utorrent
 
 //http://help.utorrent.com/customer/en/portal/articles/1573947-torrent-labels-list---webapi
 

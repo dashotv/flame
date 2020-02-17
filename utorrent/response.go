@@ -1,7 +1,8 @@
-package flame
+package utorrent
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -12,6 +13,13 @@ type Response struct {
 	UploadRate   float64
 	DownloadRate float64
 	CacheId      string
+	Timestamp    time.Time
+}
+
+func NewResponse() *Response {
+	return &Response{
+		Timestamp: time.Now(),
+	}
 }
 
 func (r *Response) Get(hash string) *Torrent {

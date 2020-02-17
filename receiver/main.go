@@ -20,16 +20,16 @@ func (a TorrentsByIndex) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a TorrentsByIndex) Less(i, j int) bool { return a[i].Queue < a[j].Queue }
 
 func main() {
-	m, err := mercury.New("flame", nats.DefaultURL)
+	m, err := mercury.New("mercury", nats.DefaultURL)
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Println("starting receiver...")
 	channel := make(chan *utorrent.Response, 5)
-	m.Receiver("flame.torrents", channel)
+	m.Receiver("mercury.torrents", channel)
 	channel2 := make(chan string, 5)
-	m.Receiver("flame.downloads", channel2)
+	m.Receiver("mercury.downloads", channel2)
 
 	for {
 		select {

@@ -37,13 +37,13 @@ func New(URL, mode string, port int) (*Server, error) {
 	host, _ := os.Hostname()
 	s.log = logrus.WithField("prefix", host)
 
-	s.merc, err = mercury.New("flame.torrents", nats.DefaultURL)
+	s.merc, err = mercury.New("mercury", nats.DefaultURL)
 	if err != nil {
 		return nil, err
 	}
 
 	s.channel = make(chan *utorrent.Response, 5)
-	if err := s.merc.Sender("flame.torrents", s.channel); err != nil {
+	if err := s.merc.Sender("mercury.torrents", s.channel); err != nil {
 		return nil, err
 	}
 
@@ -94,6 +94,7 @@ func (s *Server) Sender() {
 
 	b, err := json.Marshal(&resp)
 	if err != nil {
+		logrus.Errorf("json marshall error: %s", err)
 		return
 	}
 

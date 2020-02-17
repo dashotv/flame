@@ -1,7 +1,8 @@
 all: test
 
 test:
-	@[ -f .env ] && source .env; go test -count=1 ./...
+	[ -f .env ] && source .env
+	go test -count=1 ./...
 
 build:
 	go build

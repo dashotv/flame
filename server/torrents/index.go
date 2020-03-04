@@ -19,7 +19,7 @@ func Torrents(c *gin.Context) {
 	// read the json string from cache
 	res, err := cache.Get("flame").Result()
 	if err != nil {
-		c.Error(err)
+		_ = c.Error(err)
 		return
 	}
 

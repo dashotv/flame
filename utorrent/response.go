@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -72,7 +74,7 @@ func (r *Response) Count() int {
 func (r *Response) JSON() (string, error) {
 	b, err := json.Marshal(r)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "json marshall")
 	}
 
 	return string(b), nil

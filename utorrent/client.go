@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	"github.com/grengojbo/goquery"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,7 +37,7 @@ func (c *Client) List() (*Response, error) {
 	params := url.Values{}
 	params.Add("list", "1")
 	if err := c.request("", params, parsed); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "getting torrent list")
 	}
 	//fmt.Printf("parsed: %#v\n", parsed)
 	r.Load(parsed)
@@ -47,7 +48,7 @@ func (c *Client) List() (*Response, error) {
 		fileParams.Add("hash", t.Hash)
 	}
 	if err := c.request("", fileParams, files); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "getting torrent files")
 	}
 	r.LoadFiles(files)
 
@@ -65,16 +66,16 @@ func (c *Client) authenticate() (err error) {
 	}
 
 	if response, err = http.Get(c.Url + "/token.html"); err != nil {
-		return err
+		return errors.Wrap(err, "getting token")
 	}
 	defer response.Body.Close()
 
 	// get token from response
 	if doc, err = goquery.NewDocumentFromResponse(response); err != nil {
-		return err
+		return errors.Wrap(err, "reading http response")
 	}
 	if c.token = doc.Find("div#token").Text(); c.token == "" {
-		return fmt.Errorf("token not found")
+		return errors.New("token not found")
 	}
 
 	// find GUID cookie and store value
@@ -86,7 +87,7 @@ func (c *Client) authenticate() (err error) {
 		}
 	}
 
-	return fmt.Errorf("failed to authenticate")
+	return errors.New("failed to authenticate")
 }
 
 func (c *Client) request(action string, params url.Values, target map[string]interface{}) (err error) {
@@ -97,13 +98,13 @@ func (c *Client) request(action string, params url.Values, target map[string]int
 	var body []byte
 
 	if err = c.authenticate(); err != nil {
-		return err
+		return errors.Wrap(err, "authentication failed")
 	}
 
 	url = fmt.Sprintf("%s/%s", c.Url, action)
 
 	if request, err = http.NewRequest("GET", url, nil); err != nil {
-		return err
+		return errors.Wrap(err, "creating "+url+" request failed")
 	}
 
 	request.Header.Set("Cookie", fmt.Sprintf("GUID=%s; count=1", c.cookie))
@@ -115,19 +116,19 @@ func (c *Client) request(action string, params url.Values, target map[string]int
 	client = &http.Client{}
 	if response, err = client.Do(request); err != nil {
 		//log.Fatal(err)
-		return err
+		return errors.Wrap(err, "error making http request")
 	}
 	defer response.Body.Close()
 
 	if body, err = ioutil.ReadAll(response.Body); err != nil {
 		//log.Fatal(err)
-		return err
+		return errors.Wrap(err, "reading request body")
 	}
 
 	logrus.Debugf("body: %s", string(body))
 
 	if err = json.Unmarshal(body, &target); err != nil {
-		return err
+		return errors.Wrap(err, "json unmarshall")
 	}
 
 	return nil

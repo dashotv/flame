@@ -22,18 +22,22 @@ func (a TorrentsByIndex) Less(i, j int) bool { return a[i].Queue < a[j].Queue }
 func main() {
 	m, err := mercury.New("mercury", nats.DefaultURL)
 	if err != nil {
-		panic(err)
+		logrus.Fatalf("creating mercury: %w", err)
 	}
 
 	fmt.Println("starting receiver...")
-	channel := make(chan *utorrent.Response, 5)
-	m.Receiver("mercury.torrents", channel)
-	channel2 := make(chan string, 5)
-	m.Receiver("mercury.downloads", channel2)
+	torrents := make(chan *utorrent.Response, 5)
+	if err := m.Receiver("flame.torrents", torrents); err != nil {
+		logrus.Fatalf("flame torrents receiver: %w", err)
+	}
+	downloads := make(chan string, 5)
+	if m.Receiver("seer.downloads", downloads); err != nil {
+		logrus.Fatalf("seer downloads receiver: %w", err)
+	}
 
 	for {
 		select {
-		case r := <-channel:
+		case r := <-torrents:
 			//logrus.Infof("received message")
 			sort.Sort(TorrentsByIndex(r.Torrents))
 			for _, t := range r.Torrents {
@@ -42,7 +46,7 @@ func main() {
 					logrus.Infof("  %d %6.2f%% %10.2fmb           %s\n", f.Priority, f.DownloadedPercent(), f.SizeMb(), f.Name)
 				}
 			}
-		case s := <-channel2:
+		case s := <-downloads:
 			fmt.Printf("received2: %#v\n", s)
 		case <-time.After(30 * time.Second):
 			fmt.Println("timeout")

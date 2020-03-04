@@ -7,6 +7,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
 	nats "github.com/nats-io/nats.go"
@@ -37,14 +39,14 @@ func New(URL, mode string, port int) (*Server, error) {
 	host, _ := os.Hostname()
 	s.log = logrus.WithField("prefix", host)
 
-	s.merc, err = mercury.New("mercury", nats.DefaultURL)
+	s.merc, err = mercury.New("flame", nats.DefaultURL)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "creating mercury")
 	}
 
 	s.channel = make(chan *utorrent.Response, 5)
-	if err := s.merc.Sender("mercury.torrents", s.channel); err != nil {
-		return nil, err
+	if err := s.merc.Sender("flame.torrents", s.channel); err != nil {
+		return nil, errors.Wrap(err, "mercury sender")
 	}
 
 	s.cache = redis.NewClient(&redis.Options{
@@ -62,7 +64,7 @@ func (s *Server) Start() error {
 
 	c := cron.New(cron.WithSeconds())
 	if _, err := c.AddFunc("* * * * * *", s.Sender); err != nil {
-		return err
+		return errors.Wrap(err, "adding cron function")
 	}
 
 	go func() {
@@ -79,7 +81,7 @@ func (s *Server) Start() error {
 
 	s.log.Info("starting web...")
 	if err := router.Run(fmt.Sprintf(":%d", s.Port)); err != nil {
-		return err
+		return errors.Wrap(err, "starting router")
 	}
 
 	return nil

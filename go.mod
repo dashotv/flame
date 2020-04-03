@@ -20,7 +20,7 @@ require (
 	github.com/nats-io/nats.go v1.9.1
 	github.com/pkg/errors v0.8.0
 	github.com/robfig/cron/v3 v3.0.0
-	github.com/sirupsen/logrus v1.4.2
+	github.com/sirupsen/logrus v1.5.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.5.0
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2

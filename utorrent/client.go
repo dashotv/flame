@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/grengojbo/goquery"
 	"github.com/pkg/errors"
@@ -53,6 +54,58 @@ func (c *Client) List() (*Response, error) {
 	r.LoadFiles(files)
 
 	return r, nil
+}
+
+func (c *Client) AddMagnet() {
+
+}
+
+func (c *Client) AddFile() {
+
+}
+
+func (c *Client) Remove() {
+
+}
+
+func (c *Client) Wanted() {
+
+}
+
+func (c *Client) Want() {
+
+}
+
+func (c *Client) WantNone() {
+
+}
+
+func (c *Client) Pause() {
+
+}
+
+func (c *Client) PauseAll() {
+
+}
+
+func (c *Client) Resume() {
+
+}
+
+func (c *Client) ResumeAll() {
+
+}
+
+func (c *Client) Stop() {
+
+}
+
+func (c *Client) Start() {
+
+}
+
+func (c *Client) Label() {
+
 }
 
 // Private
@@ -132,4 +185,28 @@ func (c *Client) request(action string, params url.Values, target map[string]int
 	}
 
 	return nil
+}
+
+func magnetInfohash(URL string) (string, error) {
+	u, err := url.Parse(URL)
+	if err != nil {
+		return "", errors.Wrap(err, "could not parse url")
+	}
+
+	q, err := url.ParseQuery(u.RawQuery)
+	if err != nil {
+		return "", errors.Wrap(err, "could not parse query")
+	}
+
+	fmt.Printf("query: %#v\n", q)
+	h := ""
+	for _, v := range q["xt"] {
+		s := strings.Split(v, ":")
+		if s[0] == "urn" && s[1] == "btih" {
+			h = s[2]
+			break
+		}
+	}
+
+	return h, nil
 }

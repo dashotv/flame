@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/grengojbo/goquery"
 	"github.com/pkg/errors"
@@ -56,16 +55,81 @@ func (c *Client) List() (*Response, error) {
 	return r, nil
 }
 
-func (c *Client) AddMagnet() {
+func (c *Client) Add(URI string) (string, error) {
+	u, err := url.Parse(URI)
+	if err != nil {
+		return "", errors.Wrap(err, "could not add uri")
+	}
 
+	switch u.Scheme {
+	case "http", "https":
+		return c.addURL(u)
+	case "magnet":
+		return c.addMagnet(u)
+	default:
+		return "", errors.New("only URL and magnet supported")
+	}
 }
 
-func (c *Client) AddFile() {
+func (c *Client) addMagnet(magnet *url.URL) (string, error) {
+	i, err := magnetInfohash(magnet)
+	if err != nil {
+		return "", err
+	}
 
+	params := url.Values{}
+	params.Add("action", "add-url")
+	params.Add("s", magnet.String())
+	if err := c.action(params); err != nil {
+		return "", errors.Wrap(err, "could not add magnet")
+	}
+
+	return i, nil
 }
 
-func (c *Client) Remove() {
+func (c *Client) addFile(file string) (string, error) {
+	i, err := fileInfohash(file)
+	if err != nil {
+		return "", err
+	}
 
+	return i, nil
+}
+
+func (c *Client) addURL(URL *url.URL) (string, error) {
+	tmp, err := downloadURL(URL.String())
+	if err != nil {
+		return "", err
+	}
+
+	i, err := fileInfohash(tmp)
+	if err != nil {
+		return "", err
+	}
+
+	params := url.Values{}
+	params.Add("action", "add-url")
+	params.Add("s", URL.String())
+	if err := c.action(params); err != nil {
+		return "", errors.Wrap(err, "could not add magnet")
+	}
+
+	return i, nil
+}
+
+func (c *Client) Remove(infohash string, delete bool) error {
+	a := "remove"
+	if delete {
+		a = "removedata"
+	}
+	params := url.Values{}
+	params.Add("action", a)
+	params.Add("hash", infohash)
+	if err := c.action(params); err != nil {
+		return errors.Wrap(err, fmt.Sprintf("could not remove %s", infohash))
+	}
+
+	return nil
 }
 
 func (c *Client) Wanted() {
@@ -143,6 +207,10 @@ func (c *Client) authenticate() (err error) {
 	return errors.New("failed to authenticate")
 }
 
+func (c *Client) action(params url.Values) error {
+	return c.request("", params, nil)
+}
+
 func (c *Client) request(action string, params url.Values, target map[string]interface{}) (err error) {
 	var url string
 	var client *http.Client
@@ -180,33 +248,13 @@ func (c *Client) request(action string, params url.Values, target map[string]int
 
 	logrus.Debugf("body: %s", string(body))
 
+	if target == nil {
+		return nil
+	}
+
 	if err = json.Unmarshal(body, &target); err != nil {
 		return errors.Wrap(err, "json unmarshall")
 	}
 
 	return nil
-}
-
-func magnetInfohash(URL string) (string, error) {
-	u, err := url.Parse(URL)
-	if err != nil {
-		return "", errors.Wrap(err, "could not parse url")
-	}
-
-	q, err := url.ParseQuery(u.RawQuery)
-	if err != nil {
-		return "", errors.Wrap(err, "could not parse query")
-	}
-
-	fmt.Printf("query: %#v\n", q)
-	h := ""
-	for _, v := range q["xt"] {
-		s := strings.Split(v, ":")
-		if s[0] == "urn" && s[1] == "btih" {
-			h = s[2]
-			break
-		}
-	}
-
-	return h, nil
 }

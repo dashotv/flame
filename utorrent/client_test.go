@@ -2,9 +2,9 @@ package utorrent
 
 import (
 	"fmt"
-	"net/url"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
@@ -68,29 +68,14 @@ func TestClient_Add(t *testing.T) {
 		require.NoError(t, err, "should be able to add: ", v)
 		require.Equal(t, k, s, "hashes should match")
 
+		time.Sleep(1 * time.Second)
 		err = c.Remove(k, true)
 		require.NoError(t, err, "shouldn't fail to remove")
 	}
 
+	time.Sleep(1 * time.Second)
 	if r, err = c.List(); err != nil {
 		require.NoError(t, err, "should be able to list")
 	}
 	printResponse(r)
-}
-
-func Test_magnetInfohash(t *testing.T) {
-	for k, v := range magnetURLs {
-		u, err := url.Parse(v)
-		if err != nil {
-			t.Errorf("error: %s", err)
-		}
-		i, err := magnetInfohash(u)
-		if err != nil {
-			t.Errorf("error: %s", err)
-		}
-
-		if i != k {
-			t.Errorf("infohash: wanted %s, got %s", k, i)
-		}
-	}
 }

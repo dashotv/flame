@@ -77,7 +77,7 @@ func (s *Server) Start() error {
 	}
 	router := gin.Default()
 	router.GET("/", homeIndex)
-	torrents.Routes(s.cache, router)
+	torrents.Routes(s.cache, s.client, router)
 
 	s.log.Info("starting web...")
 	if err := router.Run(fmt.Sprintf(":%d", s.Port)); err != nil {

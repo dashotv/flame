@@ -20,6 +20,7 @@ type File struct {
 	Size       float64
 	Downloaded float64
 	Priority   int
+	Number     int
 }
 
 func (f *File) Load(values []interface{}) {

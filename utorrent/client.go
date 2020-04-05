@@ -20,6 +20,8 @@ type Client struct {
 	authenticated bool
 }
 
+type params map[string]interface{}
+
 func NewClient(url string) *Client {
 	return &Client{
 		Url:           url,
@@ -77,10 +79,7 @@ func (c *Client) addMagnet(magnet *url.URL) (string, error) {
 		return "", err
 	}
 
-	params := url.Values{}
-	params.Add("action", "add-url")
-	params.Add("s", magnet.String())
-	if err := c.action(params); err != nil {
+	if err := c.action(params{"action": "add-url", "s": magnet.String()}); err != nil {
 		return "", errors.Wrap(err, "could not add magnet")
 	}
 
@@ -107,10 +106,7 @@ func (c *Client) addURL(URL *url.URL) (string, error) {
 		return "", err
 	}
 
-	params := url.Values{}
-	params.Add("action", "add-url")
-	params.Add("s", URL.String())
-	if err := c.action(params); err != nil {
+	if err := c.action(params{"action": "add-url", "s": URL.String()}); err != nil {
 		return "", errors.Wrap(err, "could not add magnet")
 	}
 
@@ -122,54 +118,84 @@ func (c *Client) Remove(infohash string, delete bool) error {
 	if delete {
 		a = "removedata"
 	}
-	params := url.Values{}
-	params.Add("action", a)
-	params.Add("hash", infohash)
-	if err := c.action(params); err != nil {
+
+	if err := c.action(params{"action": a, "hash": infohash}); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("could not remove %s", infohash))
 	}
 
 	return nil
 }
 
-func (c *Client) Wanted() {
+func (c *Client) Wanted(infohash string) (bool, error) {
+	t, err := c.Get(infohash)
+	if err != nil {
+		return false, err
+	}
 
+	for _, f := range t.Files {
+		if f.Priority != 0 {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
-func (c *Client) Want() {
-
+func (c *Client) Get(infohash string) (*Torrent, error) {
+	r, err := c.List()
+	if err != nil {
+		return nil, err
+	}
+	return r.Get(infohash), nil
 }
 
-func (c *Client) WantNone() {
-
+func (c *Client) Want(infohash string, ids []int) error {
+	return c.Priorities(infohash, 2, ids)
 }
 
-func (c *Client) Pause() {
+func (c *Client) WantNone(infohash string) error {
+	t, err := c.Get(infohash)
+	if err != nil {
+		return err
+	}
 
+	ids := make([]int, len(t.Files))
+	for i, f := range t.Files {
+		ids[i] = f.Number
+	}
+
+	return c.Priorities(infohash, 0, ids)
 }
 
-func (c *Client) PauseAll() {
-
+func (c *Client) Priorities(infohash string, priority int, ids []int) error {
+	return c.action(params{"action": "setprio", "p": priority, "f": ids, "hash": infohash})
 }
 
-func (c *Client) Resume() {
-
+func (c *Client) Pause(infohash string) error {
+	return c.action(params{"action": "pause", "hash": infohash})
 }
 
-func (c *Client) ResumeAll() {
-
+func (c *Client) PauseAll() error {
+	return c.action(params{"action": "pauseall"})
 }
 
-func (c *Client) Stop() {
-
+func (c *Client) Resume(infohash string) error {
+	return c.action(params{"action": "unpause", "hash": infohash})
 }
 
-func (c *Client) Start() {
-
+func (c *Client) ResumeAll() error {
+	return c.action(params{"action": "unpauseall"})
 }
 
-func (c *Client) Label() {
+func (c *Client) Stop(infohash string) error {
+	return c.action(params{"action": "stop", "hash": infohash})
+}
 
+func (c *Client) Start(infohash string) error {
+	return c.action(params{"action": "start", "hash": infohash})
+}
+
+func (c *Client) Label(infohash, label string) error {
+	return c.action(params{"action": "setprops", "hash": infohash, "s": "label", "v": label})
 }
 
 // Private
@@ -207,8 +233,13 @@ func (c *Client) authenticate() (err error) {
 	return errors.New("failed to authenticate")
 }
 
-func (c *Client) action(params url.Values) error {
-	return c.request("", params, nil)
+//func (c *Client) action(params url.Values) error {
+func (c *Client) action(params params) error {
+	values := url.Values{}
+	for k, v := range params {
+		values.Add(k, fmt.Sprintf("%v", v))
+	}
+	return c.request("", values, nil)
 }
 
 func (c *Client) request(action string, params url.Values, target map[string]interface{}) (err error) {

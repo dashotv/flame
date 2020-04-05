@@ -57,8 +57,8 @@ func (r *Response) LoadFiles(value map[string]interface{}) {
 		list := val.([]interface{})
 		for i := 0; i+1 <= len(list); i = i + 2 {
 			logrus.Debugf("%s = %#v", list[i], list[i+1])
-			for _, f := range list[i+1].([]interface{}) {
-				file := &File{}
+			for i, f := range list[i+1].([]interface{}) {
+				file := &File{Number: i}
 				file.Load(f.([]interface{}))
 				t := r.Get(list[i].(string))
 				t.AddFile(file)

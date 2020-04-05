@@ -9,15 +9,19 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/dashotv/flame/jsonrpc"
 )
 
 type Client struct {
 	URL string
+	rpc jsonrpc.RPCClient
 }
 
 func NewClient(endpoint string) *Client {
 	client := &Client{
 		URL: endpoint,
+		rpc: jsonrpc.NewClient(endpoint),
 	}
 	return client
 }

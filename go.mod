@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/anacrolix/torrent v1.15.0
+	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect
@@ -25,7 +26,6 @@ require (
 	github.com/spf13/viper v1.5.0
 	github.com/stretchr/testify v1.5.1
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
-	github.com/ybbus/jsonrpc v2.1.2+incompatible
 	golang.org/x/crypto v0.0.0-20191122220453-ac88ee75c92c // indirect
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.0 // indirect

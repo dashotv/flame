@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/andrewstuart/go-nzb"
-
 	"github.com/pkg/errors"
 )
 

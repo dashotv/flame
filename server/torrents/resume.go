@@ -7,7 +7,11 @@ import (
 )
 
 func Resume(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := c.Query("infohash")
+	if infohash == "" {
+		ResumeAll(c)
+		return
+	}
 	err := client.Resume(infohash)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)

@@ -7,7 +7,7 @@ import (
 )
 
 func Start(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := c.Query("infohash")
 	err := client.Start(infohash)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)
@@ -17,7 +17,7 @@ func Start(c *gin.Context) {
 }
 
 func Stop(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := c.Query("infohash")
 	err := client.Stop(infohash)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)

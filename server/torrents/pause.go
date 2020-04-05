@@ -7,7 +7,11 @@ import (
 )
 
 func Pause(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := c.Query("infohash")
+	if infohash == "" {
+		PauseAll(c)
+		return
+	}
 	err := client.Pause(infohash)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)

@@ -17,7 +17,7 @@ func Add(c *gin.Context) {
 }
 
 func Remove(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := c.Query("infohash")
 	delete := c.Query("delete") == "true"
 	err := client.Remove(infohash, delete)
 	if err != nil {

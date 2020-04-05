@@ -7,8 +7,8 @@ import (
 )
 
 func Label(c *gin.Context) {
-	infohash := c.Param("infohash")
-	label := c.Param("label")
+	infohash := c.Query("infohash")
+	label := c.Query("label")
 	err := client.Label(infohash, label)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)

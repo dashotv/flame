@@ -9,8 +9,13 @@ import (
 )
 
 func Want(c *gin.Context) {
-	infohash := c.Param("infohash")
-	ids, err := filesToIds(c.Param("files"))
+	infohash := c.Query("infohash")
+	files := c.Query("files")
+	if files == "none" {
+		WantNone(c, infohash)
+		return
+	}
+	ids, err := filesToIds(files)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -37,8 +42,7 @@ func filesToIds(files string) ([]int, error) {
 	return ids, nil
 }
 
-func WantNone(c *gin.Context) {
-	infohash := c.Param("infohash")
+func WantNone(c *gin.Context, infohash string) {
 	err := client.WantNone(infohash)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)
@@ -48,7 +52,7 @@ func WantNone(c *gin.Context) {
 }
 
 func Wanted(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := c.Query("infohash")
 	want, err := client.Wanted(infohash)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)

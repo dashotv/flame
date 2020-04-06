@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -23,9 +24,46 @@ func TestClient_Add(t *testing.T) {
 
 func TestClient_List(t *testing.T) {
 	c := NewClient(nzbgetURL)
+
 	r, err := c.List()
 	require.NoError(t, err)
 	require.NotNil(t, r)
+	printList(r)
+}
+
+func TestClient_Pause(t *testing.T) {
+	c := NewClient(nzbgetURL)
+
+	r, err := c.List()
+	require.NoError(t, err)
+	require.NotNil(t, r)
+
+	err = c.Pause(r[0].ID)
+	require.NoError(t, err)
+
+	time.Sleep(10 * time.Second)
+	r, err = c.List()
+	require.NoError(t, err)
+	require.NotNil(t, r)
+	require.Equal(t, "PAUSED", r[0].Status)
+	printList(r)
+}
+
+func TestClient_Resume(t *testing.T) {
+	c := NewClient(nzbgetURL)
+
+	r, err := c.List()
+	require.NoError(t, err)
+	require.NotNil(t, r)
+
+	err = c.Resume(r[0].ID)
+	require.NoError(t, err)
+
+	time.Sleep(1 * time.Second)
+	r, err = c.List()
+	require.NoError(t, err)
+	require.NotNil(t, r)
+	require.Equal(t, "DOWNLOADING", r[0].Status)
 	printList(r)
 }
 
@@ -83,7 +121,7 @@ func TestClient_Version(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err, "should not return error")
 	}
-	require.Equal(t, v, "21.0")
+	require.Equal(t, "21.0", v)
 }
 
 func TestClient_PauseAll(t *testing.T) {

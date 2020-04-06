@@ -53,6 +53,14 @@ func (c *Client) Destroy(number int) error {
 	return c.EditQueue("HistoryFinalDelete", "", []int{number})
 }
 
+func (c *Client) Pause(number int) error {
+	return c.EditQueue("GroupPause", "", []int{number})
+}
+
+func (c *Client) Resume(number int) error {
+	return c.EditQueue("GroupResume", "", []int{number})
+}
+
 func (c *Client) PauseAll() error {
 	r, err := c.rpc.Call("pausedownload", nil)
 	if err != nil {

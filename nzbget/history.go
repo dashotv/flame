@@ -1,16 +1,13 @@
 package nzbget
 
-import "net/url"
-
 type History struct {
-	ID                 int
+	ID                 int `json:"nzbid"`
 	Name               string
 	RemainingFileCount int
 	RetryData          bool
 	HistoryTime        int
 	Status             string
 	Log                []string
-	NZBID              int
 	NZBName            string
 	NZBNicename        string
 	Kind               string
@@ -71,13 +68,4 @@ type ServerStat struct {
 type HistoryResponse struct {
 	*Response
 	Result []History `json:"result"`
-}
-
-func (c *Client) History() ([]History, error) {
-	r := &HistoryResponse{}
-	err := c.request("history", url.Values{}, r)
-	if err != nil {
-		return nil, err
-	}
-	return r.Result, nil
 }

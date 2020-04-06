@@ -1,16 +1,5 @@
 package nzbget
 
-import "net/url"
-
-func (c *Client) Status() (Status, error) {
-	r := &StatusResponse{}
-	err := c.request("status", url.Values{}, r)
-	if err != nil {
-		return r.Result, err
-	}
-	return r.Result, nil
-}
-
 type Status struct {
 	//RemainingSizeLo     int  // 0
 	//RemainingSizeHi     int  // 0

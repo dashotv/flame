@@ -2,49 +2,15 @@ package nzbget
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"encoding/xml"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 
-	"github.com/andrewstuart/go-nzb"
+	nzb "github.com/andrewstuart/go-nzb"
 	"github.com/pkg/errors"
 )
-
-func (c *Client) Add(URL string) (int64, error) {
-	path, err := downloadURL(URL)
-	if err != nil {
-		return 0, errors.Wrap(err, "could not download url")
-	}
-
-	str, err := readFile(path)
-	if err != nil {
-		return 0, errors.Wrap(err, "could not read downloaded file")
-	}
-
-	name, err := nzbName(str)
-	if err != nil {
-		return 0, errors.Wrap(err, "could not get nzb name")
-	}
-	enc := base64encode(str)
-
-	r, err := c.rpc.Call("append", name, enc, "", 0, false, false, "", 0, "SCORE", []int{})
-	if err != nil {
-		if r != nil && r.Error != nil {
-			return 0, errors.Wrap(err, r.Error.Error())
-		}
-		return 0, err
-	}
-
-	n := r.Result.(json.Number)
-	i, err := n.Int64()
-	if err != nil {
-		return 0, err
-	}
-
-	return i, nil
-}
 
 func readFile(path string) (string, error) {
 	b, err := ioutil.ReadFile(path)
@@ -92,4 +58,16 @@ func nzbName(data string) (string, error) {
 	}
 
 	return nzb.Meta["name"], nil
+}
+
+func printList(list []Group) {
+	for _, s := range list {
+		fmt.Printf("%5d %25s %s\n", s.ID, s.Status, s.NZBName)
+	}
+}
+
+func printHistory(list []History) {
+	for _, s := range list {
+		fmt.Printf("%5d %25s %s\n", s.ID, s.Status, s.Name)
+	}
 }

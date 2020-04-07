@@ -55,8 +55,46 @@ RSpec.describe Flame do
 
   context :utorrent do
     let(:client) { Flame::Client.new("http://localhost:3001", {}) }
-    # it "can list" do
-    #   expect { client.utorrent.list }.not_to raise_error
-    # end
+    let(:hash) { "6f8cd699135b491513e65d967a052a7087750d9c" }
+    let(:torrent) { "http://www.slackware.com/torrents/slackware-14.1-install-d1.torrent" }
+    it "can list" do
+      expect { client.utorrent.list }.not_to raise_error
+    end
+
+    it "can add" do
+      r = client.utorrent.add(torrent)
+      expect(r["infohash"]).to eq(hash)
+    end
+
+    it "can pause" do
+      sleep 3
+      l = client.utorrent.list
+      r = client.utorrent.pause(l["Torrents"].first["Hash"])
+      expect(r["error"]).to be false
+    end
+
+    it "can resume" do
+      l = client.utorrent.list
+      r = client.utorrent.resume(l["Torrents"].first["Hash"])
+      expect(r["error"]).to be false
+    end
+
+    it "can start" do
+      l = client.utorrent.list
+      r = client.utorrent.start(l["Torrents"].first["Hash"])
+      expect(r["error"]).to be false
+    end
+
+    it "can stop" do
+      l = client.utorrent.list
+      r = client.utorrent.stop(l["Torrents"].first["Hash"])
+      expect(r["error"]).to be false
+    end
+
+    it "can remove" do
+      l = client.utorrent.list
+      r = client.utorrent.remove(l["Torrents"].first["Hash"])
+      expect(r["error"]).to be false
+    end
   end
 end

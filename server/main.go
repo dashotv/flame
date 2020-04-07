@@ -56,7 +56,9 @@ func New(cfg *config.Config) (*Server, error) {
 		DB:   15, // use default DB
 	})
 
+	s.log.Infof("configuring utorrent: %s", s.cfg.Utorrent.URL)
 	s.torrent = utorrent.NewClient(s.cfg.Utorrent.URL)
+	s.log.Infof("configuring nzbget: %s", s.cfg.Nzbget.URL)
 	s.nzb = nzbget.NewClient(s.cfg.Nzbget.URL)
 
 	return s, nil

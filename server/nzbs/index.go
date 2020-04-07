@@ -15,7 +15,7 @@ var client *nzbget.Client
 func Routes(red *redis.Client, c *nzbget.Client, e *gin.Engine) {
 	cache = red
 	client = c
-	r := e.Group("/torrents")
+	r := e.Group("/nzbs")
 	r.GET("/", Index)
 	r.GET("/add", Add)
 	r.GET("/remove", Remove)

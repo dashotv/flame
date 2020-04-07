@@ -84,10 +84,11 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	//if err := viper.ReadInConfig(); err != nil {
-	//	//fmt.Println("Using config file:", viper.ConfigFileUsed())
-	//	logrus.Fatalf("error: %s\n", err)
-	//}
+	if err := viper.ReadInConfig(); err != nil {
+		//fmt.Println("Using config file:", viper.ConfigFileUsed())
+		logrus.Fatalf("error: %s\n", err)
+	}
+
 	cfg = &config.Config{}
 	if err := viper.Unmarshal(cfg); err != nil {
 		logrus.Fatalf("error reading config: %s", err)

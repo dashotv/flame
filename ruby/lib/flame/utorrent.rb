@@ -5,7 +5,8 @@ module Flame
     end
 
     def add(uri)
-      request("add", { url: uri })
+      u = Base64.encode64(uri).chomp
+      request("add", { url: u })
     end
 
     %i{

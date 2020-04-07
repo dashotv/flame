@@ -1,6 +1,7 @@
 package torrents
 
 import (
+	"encoding/base64"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,7 +9,12 @@ import (
 
 func Add(c *gin.Context) {
 	URL := c.Query("url")
-	infohash, err := client.Add(URL)
+	b, err := base64.StdEncoding.DecodeString(URL)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	infohash, err := client.Add(string(b))
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)
 		return

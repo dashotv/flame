@@ -30,7 +30,7 @@ func Routes(red *redis.Client, c *utorrent.Client, e *gin.Engine) {
 
 func Index(c *gin.Context) {
 	// read the json string from cache
-	res, err := cache.Get("flame").Result()
+	res, err := cache.Get("flame-torrents").Result()
 	if err != nil {
 		_ = c.Error(err)
 		return

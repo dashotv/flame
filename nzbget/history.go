@@ -67,5 +67,5 @@ type ServerStat struct {
 
 type HistoryResponse struct {
 	*Response
-	Result []History `json:"result"`
+	Result []History `json:"Result"`
 }

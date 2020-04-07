@@ -2,6 +2,7 @@ package nzbs
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
@@ -19,8 +20,10 @@ func Routes(red *redis.Client, c *nzbget.Client, e *gin.Engine) {
 	r.GET("/", Index)
 	r.GET("/add", Add)
 	r.GET("/remove", Remove)
+	r.GET("/destroy", Destroy)
 	r.GET("/pause", Pause)
 	r.GET("/resume", Resume)
+	r.GET("/history", History)
 }
 
 func Index(c *gin.Context) {
@@ -32,4 +35,15 @@ func Index(c *gin.Context) {
 	}
 
 	c.String(http.StatusOK, res)
+}
+
+func History(c *gin.Context) {
+	hidden := c.Query("hidden") == "true"
+	r, err := client.History(hidden)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, nzbget.HistoryResponse{Response: &nzbget.Response{Timestamp: time.Now()}, Result: r})
 }

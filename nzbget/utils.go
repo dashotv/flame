@@ -27,6 +27,14 @@ func base64encode(s string) string {
 	return str
 }
 
+func base64decode(s string) string {
+	b, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		return ""
+	}
+	return string(b)
+}
+
 func downloadURL(URL string) (string, error) {
 	// Get the data
 	resp, err := http.Get(URL)

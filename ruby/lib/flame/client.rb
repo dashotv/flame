@@ -19,17 +19,17 @@ module Flame
 
     private
 
-    def request(url, data)
-      query = query(data)
+    def request(path, data)
+      query = data.count > 0 ? "?"+query(data) : ""
+      url = "#{@base}/#{path}#{query}"
       opt = {
         :method => :get,
-        :url => "#{@base}/#{url}?#{query}",
+        :url => url,
         :headers => @headers,
         :verify_ssl => false,
       }
       json = RestClient::Request.execute(opt)
-      puts "json: #{json}"
-      raise :empty_response unless json && json != ''
+      raise "empty or failed response" unless json && json != ''
       ::JSON.parse(json)
     end
 

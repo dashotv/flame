@@ -38,8 +38,13 @@ func New(cfg *config.Config) (*Server, error) {
 	var err error
 	s := &Server{cfg: cfg}
 
+	//if cfg.Mode == "dev" {
+	//	logrus.SetLevel(logrus.DebugLevel)
+	//}
+
 	host, _ := os.Hostname()
 	s.log = logrus.WithField("prefix", host)
+	s.log.Level = logrus.DebugLevel
 
 	s.merc, err = mercury.New("flame", nats.DefaultURL)
 	if err != nil {

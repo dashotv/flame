@@ -25,7 +25,7 @@ func TestClient_Add(t *testing.T) {
 func TestClient_List(t *testing.T) {
 	c := NewClient(nzbgetURL)
 
-	r, err := c.List()
+	r, err := c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
 	printList(r)
@@ -34,7 +34,7 @@ func TestClient_List(t *testing.T) {
 func TestClient_Pause(t *testing.T) {
 	c := NewClient(nzbgetURL)
 
-	r, err := c.List()
+	r, err := c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
 
@@ -42,7 +42,7 @@ func TestClient_Pause(t *testing.T) {
 	require.NoError(t, err)
 
 	time.Sleep(10 * time.Second)
-	r, err = c.List()
+	r, err = c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
 	require.Equal(t, "PAUSED", r[0].Status)
@@ -52,7 +52,7 @@ func TestClient_Pause(t *testing.T) {
 func TestClient_Resume(t *testing.T) {
 	c := NewClient(nzbgetURL)
 
-	r, err := c.List()
+	r, err := c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
 
@@ -60,7 +60,7 @@ func TestClient_Resume(t *testing.T) {
 	require.NoError(t, err)
 
 	time.Sleep(1 * time.Second)
-	r, err = c.List()
+	r, err = c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
 	require.Equal(t, "DOWNLOADING", r[0].Status)
@@ -69,7 +69,7 @@ func TestClient_Resume(t *testing.T) {
 
 func TestClient_Remove(t *testing.T) {
 	c := NewClient(nzbgetURL)
-	r, err := c.List()
+	r, err := c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
 	err = c.Remove(r[0].ID)

@@ -18,7 +18,6 @@ package cmd
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
 	"github.com/dashotv/flame/server"
 )
@@ -29,10 +28,7 @@ var serverCmd = &cobra.Command{
 	Short: "run the server",
 	Long:  "run the server",
 	Run: func(cmd *cobra.Command, args []string) {
-		url := viper.GetString("url")
-		mode := viper.GetString("mode")
-		port := viper.GetInt("port")
-		s, err := server.New(url, mode, port)
+		s, err := server.New(cfg)
 		if err != nil {
 			logrus.Fatalf("error: %s", err)
 		}

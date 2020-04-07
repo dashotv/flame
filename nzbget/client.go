@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -29,13 +30,19 @@ func NewClient(endpoint string) *Client {
 type Response struct {
 	APIVersion string `json:"version"`
 	Error      string
+	Timestamp  time.Time
 }
 
-func (c *Client) List() ([]Group, error) {
-	r := &GroupResponse{}
+func (c *Client) List() (*GroupResponse, error) {
+	r := &GroupResponse{Response: &Response{Timestamp: time.Now()}}
 	err := c.request("listgroups", nil, r)
+	return r, err
+}
+
+func (c *Client) Groups() ([]Group, error) {
+	r, err := c.List()
 	if err != nil {
-		return nil, errors.New("list failed")
+		return nil, errors.Wrap(err, "could not get list")
 	}
 	return r.Result, nil
 }

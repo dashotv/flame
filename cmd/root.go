@@ -19,12 +19,15 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/dashotv/flame/config"
+
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
+var cfg *config.Config
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
@@ -81,8 +84,12 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err != nil {
-		//fmt.Println("Using config file:", viper.ConfigFileUsed())
-		logrus.Fatalf("error: %s\n", err)
+	//if err := viper.ReadInConfig(); err != nil {
+	//	//fmt.Println("Using config file:", viper.ConfigFileUsed())
+	//	logrus.Fatalf("error: %s\n", err)
+	//}
+	cfg = &config.Config{}
+	if err := viper.Unmarshal(cfg); err != nil {
+		logrus.Fatalf("error reading config: %s", err)
 	}
 }

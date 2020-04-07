@@ -7,34 +7,36 @@ import (
 	"os"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/dashotv/flame/server/nzbs"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
 	nats "github.com/nats-io/nats.go"
+	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 
+	"github.com/dashotv/flame/config"
+	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/server/torrents"
 	"github.com/dashotv/flame/utorrent"
 	"github.com/dashotv/mercury"
 )
 
 type Server struct {
-	URL  string
-	Port int
-	Mode string
-
-	log     *logrus.Entry
-	merc    *mercury.Mercury
-	channel chan *utorrent.Response
-	client  *utorrent.Client
-	cache   *redis.Client
+	cfg            *config.Config
+	log            *logrus.Entry
+	merc           *mercury.Mercury
+	torrentChannel chan *utorrent.Response
+	nzbChannel     chan *nzbget.GroupResponse
+	torrent        *utorrent.Client
+	nzb            *nzbget.Client
+	cache          *redis.Client
 }
 
-func New(URL, mode string, port int) (*Server, error) {
+func New(cfg *config.Config) (*Server, error) {
 	var err error
-	s := &Server{URL: URL, Mode: mode, Port: port}
+	s := &Server{cfg: cfg}
 
 	host, _ := os.Hostname()
 	s.log = logrus.WithField("prefix", host)
@@ -44,8 +46,8 @@ func New(URL, mode string, port int) (*Server, error) {
 		return nil, errors.Wrap(err, "creating mercury")
 	}
 
-	s.channel = make(chan *utorrent.Response, 5)
-	if err := s.merc.Sender("flame.torrents", s.channel); err != nil {
+	s.torrentChannel = make(chan *utorrent.Response, 5)
+	if err := s.merc.Sender("flame.torrents", s.torrentChannel); err != nil {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
 
@@ -54,7 +56,8 @@ func New(URL, mode string, port int) (*Server, error) {
 		DB:   15, // use default DB
 	})
 
-	s.client = utorrent.NewClient(URL)
+	s.torrent = utorrent.NewClient(s.cfg.Utorrent.URL)
+	s.nzb = nzbget.NewClient(s.cfg.Nzbget.URL)
 
 	return s, nil
 }
@@ -63,7 +66,10 @@ func (s *Server) Start() error {
 	s.log.Info("starting flame...")
 
 	c := cron.New(cron.WithSeconds())
-	if _, err := c.AddFunc("* * * * * *", s.Sender); err != nil {
+	if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
+		return errors.Wrap(err, "adding cron function")
+	}
+	if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
 		return errors.Wrap(err, "adding cron function")
 	}
 
@@ -72,36 +78,54 @@ func (s *Server) Start() error {
 		c.Start()
 	}()
 
-	if s.Mode == "release" {
-		gin.SetMode(s.Mode)
+	if s.cfg.Mode == "release" {
+		gin.SetMode(s.cfg.Mode)
 	}
 	router := gin.Default()
 	router.GET("/", homeIndex)
-	torrents.Routes(s.cache, s.client, router)
+	torrents.Routes(s.cache, s.torrent, router)
+	nzbs.Routes(s.cache, s.nzb, router)
 
 	s.log.Info("starting web...")
-	if err := router.Run(fmt.Sprintf(":%d", s.Port)); err != nil {
+	if err := router.Run(fmt.Sprintf(":%d", s.cfg.Port)); err != nil {
 		return errors.Wrap(err, "starting router")
 	}
 
 	return nil
 }
 
-func (s *Server) Sender() {
-	resp, err := s.client.List()
+func (s *Server) SendTorrents() {
+	resp, err := s.torrent.List()
 	if err != nil {
-		logrus.Errorf("flame list error: %s", err)
+		logrus.Errorf("couldn't get torrent list: %s", err)
 		return
 	}
 
 	b, err := json.Marshal(&resp)
 	if err != nil {
-		logrus.Errorf("json marshall error: %s", err)
+		logrus.Errorf("couldn't marshal torrents: %s", err)
 		return
 	}
 
-	s.cache.Set("flame", string(b), time.Minute)
-	s.channel <- resp
+	s.cache.Set("flame-torrents", string(b), time.Minute)
+	s.torrentChannel <- resp
+}
+
+func (s *Server) SendNzbs() {
+	resp, err := s.nzb.List()
+	if err != nil {
+		logrus.Errorf("couldn't get nzb list: %s", err)
+		return
+	}
+
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		logrus.Errorf("couldn't marshal nzbs: %s", err)
+		return
+	}
+
+	s.cache.Set("flame-nzbs", string(b), time.Minute)
+	s.nzbChannel <- resp
 }
 
 func homeIndex(c *gin.Context) {

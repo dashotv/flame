@@ -6,6 +6,7 @@ require (
 	github.com/anacrolix/torrent v1.15.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
+	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-redis/redis/v7 v7.0.0-beta.4

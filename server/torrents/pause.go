@@ -14,7 +14,7 @@ func Pause(c *gin.Context) {
 	}
 	err := client.Pause(infohash)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -23,7 +23,7 @@ func Pause(c *gin.Context) {
 func PauseAll(c *gin.Context) {
 	err := client.PauseAll()
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})

@@ -9,7 +9,7 @@ import (
 func Pause(c *gin.Context) {
 	id, err := QueryInteger(c, "id")
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	if id == -1 {
@@ -19,7 +19,7 @@ func Pause(c *gin.Context) {
 
 	err = client.Pause(id)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -28,7 +28,7 @@ func Pause(c *gin.Context) {
 func PauseAll(c *gin.Context) {
 	err := client.PauseAll()
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -37,7 +37,7 @@ func PauseAll(c *gin.Context) {
 func Resume(c *gin.Context) {
 	id, err := QueryInteger(c, "id")
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	if id == -1 {
@@ -46,7 +46,7 @@ func Resume(c *gin.Context) {
 	}
 	err = client.Resume(id)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -55,7 +55,7 @@ func Resume(c *gin.Context) {
 func ResumeAll(c *gin.Context) {
 	err := client.ResumeAll()
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})

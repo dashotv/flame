@@ -17,13 +17,13 @@ func Want(c *gin.Context) {
 	}
 	ids, err := filesToIds(files)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	err = client.Want(infohash, ids)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -45,7 +45,7 @@ func filesToIds(files string) ([]int, error) {
 func WantNone(c *gin.Context, infohash string) {
 	err := client.WantNone(infohash)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -55,7 +55,7 @@ func Wanted(c *gin.Context) {
 	infohash := c.Query("infohash")
 	want, err := client.Wanted(infohash)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false, "wanted": want})

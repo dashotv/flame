@@ -11,7 +11,7 @@ func Label(c *gin.Context) {
 	label := c.Query("label")
 	err := client.Label(infohash, label)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})

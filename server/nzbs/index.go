@@ -30,7 +30,7 @@ func Index(c *gin.Context) {
 	// read the json string from cache
 	res, err := cache.Get("flame-nzbs").Result()
 	if err != nil {
-		_ = c.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
@@ -41,7 +41,7 @@ func History(c *gin.Context) {
 	hidden := c.Query("hidden") == "true"
 	r, err := client.History(hidden)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 

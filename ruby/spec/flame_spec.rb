@@ -57,6 +57,7 @@ RSpec.describe Flame do
     let(:client) { Flame::Client.new("http://localhost:3001", {}) }
     let(:hash) { "6f8cd699135b491513e65d967a052a7087750d9c" }
     let(:torrent) { "http://www.slackware.com/torrents/slackware-14.1-install-d1.torrent" }
+
     it "can list" do
       expect { client.utorrent.list }.not_to raise_error
     end

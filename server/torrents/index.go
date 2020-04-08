@@ -32,7 +32,7 @@ func Index(c *gin.Context) {
 	// read the json string from cache
 	res, err := cache.Get("flame-torrents").Result()
 	if err != nil {
-		_ = c.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

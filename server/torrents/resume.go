@@ -14,7 +14,7 @@ func Resume(c *gin.Context) {
 	}
 	err := client.Resume(infohash)
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})
@@ -23,7 +23,7 @@ func Resume(c *gin.Context) {
 func ResumeAll(c *gin.Context) {
 	err := client.ResumeAll()
 	if err != nil {
-		_ = c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"error": false})

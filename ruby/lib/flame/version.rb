@@ -1,3 +1,10 @@
 module Flame
-  VERSION = "0.1.0"
+  module Version
+    MAJOR  = 0
+    MINOR  = 4
+    TINY   = 0
+    TAG    = nil
+    LIST   = [MAJOR, MINOR, TINY, TAG]
+    STRING = LIST.compact.join('.')
+  end
 end

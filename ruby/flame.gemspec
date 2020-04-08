@@ -4,7 +4,7 @@ require "flame/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "flame"
-  spec.version       = Flame::VERSION
+  spec.version       = Flame::Version::STRING
   spec.authors       = ["Shawn Catanzarite"]
   spec.email         = ["me@shawncatz.com"]
 

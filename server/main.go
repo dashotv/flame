@@ -56,6 +56,11 @@ func New(cfg *config.Config) (*Server, error) {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
 
+	s.nzbChannel = make(chan *nzbget.GroupResponse, 5)
+	if err := s.merc.Sender("flame.nzbs", s.nzbChannel); err != nil {
+		return nil, errors.Wrap(err, "mercury sender")
+	}
+
 	s.cache = redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 		DB:   15, // use default DB

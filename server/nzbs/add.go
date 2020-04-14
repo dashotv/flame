@@ -4,18 +4,31 @@ import (
 	"encoding/base64"
 	"net/http"
 
+	"github.com/dashotv/flame/nzbget"
+
 	"github.com/gin-gonic/gin"
 )
 
 func Add(c *gin.Context) {
 	URL := c.Query("url")
+	cat := c.Query("category")
+	pri, err := QueryInteger(c, "priority")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	b, err := base64.StdEncoding.DecodeString(URL)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := client.Add(string(b))
+	options := nzbget.NewOptions()
+	options.Category = cat
+	options.Priority = pri
+
+	id, err := client.Add(string(b), options)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

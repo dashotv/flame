@@ -6,9 +6,9 @@ module Flame
       request("", {})
     end
 
-    def add(url)
+    def add(url, options={})
       u = Base64.encode64(url).chomp
-      request("add", { url: u })
+      request("add", { url: u }.merge(options))
     end
 
     %i{

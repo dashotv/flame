@@ -14,9 +14,38 @@ import (
 	"github.com/dashotv/flame/jsonrpc"
 )
 
+const PriorityVeryLow = -100
+const PriorityLow = -50
+const PriorityNormal = 0
+const PriorityHigh = 50
+const PriorityVeryHigh = 100
+const PriorityForce = 900
+
 type Client struct {
 	URL string
 	rpc jsonrpc.RPCClient
+}
+
+type AppendOptions struct {
+	Category   string
+	Priority   int
+	AddToTop   bool
+	AddPaused  bool
+	DupeKey    string
+	DupeScore  int
+	DupeMode   string
+	Parameters []struct {
+		Name  string
+		Value string
+	}
+}
+
+func NewOptions() *AppendOptions {
+	return &AppendOptions{
+		Category: "",
+		Priority: PriorityNormal,
+		DupeMode: "SCORE",
+	}
 }
 
 func NewClient(endpoint string) *Client {
@@ -110,7 +139,7 @@ func (c *Client) EditQueue(command, param string, ids []int) error {
 	return nil
 }
 
-func (c *Client) Add(URL string) (int64, error) {
+func (c *Client) Add(URL string, options *AppendOptions) (int64, error) {
 	path, err := downloadURL(URL)
 	if err != nil {
 		return 0, errors.Wrap(err, "could not download url")
@@ -127,7 +156,7 @@ func (c *Client) Add(URL string) (int64, error) {
 	}
 	enc := base64encode(str)
 
-	r, err := c.rpc.Call("append", name, enc, "", 0, false, false, "", 0, "SCORE", []int{})
+	r, err := c.rpc.Call("append", name, enc, options.Category, options.Priority, options.AddToTop, options.AddPaused, options.DupeKey, options.DupeScore, options.DupeMode, options.Parameters)
 	if err != nil {
 		if r != nil && r.Error != nil {
 			return 0, errors.Wrap(err, r.Error.Error())

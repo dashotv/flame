@@ -253,6 +253,10 @@ func (c *Client) request(action string, params url.Values, target map[string]int
 		return c.error(err, "authentication failed")
 	}
 
+	if !c.authenticated {
+		return c.error(nil, "authenticated: false")
+	}
+
 	url = fmt.Sprintf("%s/%s", c.Url, action)
 
 	if request, err = http.NewRequest("GET", url, nil); err != nil {
@@ -292,6 +296,7 @@ func (c *Client) request(action string, params url.Values, target map[string]int
 
 func (c *Client) error(err error, msg string) error {
 	c.token = ""
+	c.authenticated = false
 
 	if err != nil {
 		return errors.Wrap(err, msg)

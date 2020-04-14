@@ -38,9 +38,9 @@ func New(cfg *config.Config) (*Server, error) {
 	var err error
 	s := &Server{cfg: cfg}
 
-	//if cfg.Mode == "dev" {
-	//	logrus.SetLevel(logrus.DebugLevel)
-	//}
+	if cfg.Mode == "dev" {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
 
 	host, _ := os.Hostname()
 	s.log = logrus.WithField("prefix", host)

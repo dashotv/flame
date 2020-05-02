@@ -50,7 +50,7 @@ type History struct {
 	MessageCount       int
 	ExtraParBlocks     int
 	Parameters         []Parameter
-	ScriptStatuses     []string
+	ScriptStatuses     []ScriptStatus
 	ServerStats        []ServerStat
 }
 

@@ -1,6 +1,7 @@
 # Flame
 
-Torrent client for DashoTV
+This service manages (or will eventually manage) all interactions with
+torrent and nzb servies, as well as manage downloads.
 
 [![Build Status](https://travis-ci.org/dashotv/flame.svg?branch=master)](https://travis-ci.org/dashotv/flame)
 
@@ -26,3 +27,15 @@ Run an instance of the server:
 Run a receiver:
 
 * Subscribes to nats message and prints flame.Response
+
+## jsonrpc
+
+Forked package to fix one problem with decoder
+
+## utorrent and nzbget
+
+Clients for these services
+
+## ruby
+
+A ruby gem intended to interface with the Flame service

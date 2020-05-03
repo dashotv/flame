@@ -14,7 +14,7 @@ func QueryInteger(c *gin.Context, name string) (int, error) {
 func QueryDefaultInteger(c *gin.Context, name string, def int) (int, error) {
 	v := c.Query(name)
 	if v == "" {
-		return def, fmt.Errorf("not set")
+		return def, fmt.Errorf("integer not set: query %s", name)
 	}
 
 	n, err := strconv.Atoi(v)

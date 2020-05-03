@@ -12,11 +12,11 @@ import (
 func Add(c *gin.Context) {
 	URL := c.Query("url")
 	cat := c.Query("category")
-	pri, err := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	pri, _ := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
+	//if err != nil {
+	//	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//	return
+	//}
 
 	b, err := base64.StdEncoding.DecodeString(URL)
 	if err != nil {

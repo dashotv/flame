@@ -10,6 +10,6 @@ server:
 	go run main.go server
 
 receiver:
-	cd receiver && go run main.go
+	go run main.go receiver
 
 .PHONY: server receiver test

@@ -52,5 +52,5 @@ type NewsServer struct {
 
 type StatusResponse struct {
 	*Response
-	Result Status
+	Result *Status
 }

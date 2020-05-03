@@ -59,12 +59,18 @@ func NewClient(endpoint string) *Client {
 type Response struct {
 	APIVersion string `json:"version"`
 	Error      string
+	Status     *Status
 	Timestamp  time.Time
 }
 
 func (c *Client) List() (*GroupResponse, error) {
-	r := &GroupResponse{Response: &Response{Timestamp: time.Now()}}
-	err := c.request("listgroups", nil, r)
+	s, err := c.Status()
+	if err != nil {
+		return nil, err
+	}
+
+	r := &GroupResponse{Response: &Response{Timestamp: time.Now(), Status: s}}
+	err = c.request("listgroups", nil, r)
 	return r, err
 }
 
@@ -182,7 +188,7 @@ func (c *Client) History(hidden bool) ([]History, error) {
 	return r.Result, nil
 }
 
-func (c *Client) Status() (Status, error) {
+func (c *Client) Status() (*Status, error) {
 	r := &StatusResponse{}
 	err := c.request("status", url.Values{}, r)
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 func Add(c *gin.Context) {
 	URL := c.Query("url")
 	cat := c.Query("category")
-	pri, err := QueryInteger(c, "priority")
+	pri, err := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

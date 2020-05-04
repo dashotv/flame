@@ -3,7 +3,6 @@ package nzbget
 import (
 	"encoding/base64"
 	"encoding/xml"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -59,23 +58,23 @@ func downloadURL(URL string) (string, error) {
 }
 
 func nzbName(data string) (string, error) {
-	nzb := nzb.NZB{}
-	err := xml.Unmarshal([]byte(data), &nzb)
+	n := nzb.NZB{}
+	err := xml.Unmarshal([]byte(data), &n)
 	if err != nil {
 		return "", errors.Wrap(err, "could not unmarshal")
 	}
 
-	return nzb.Meta["name"], nil
+	return n.Meta["name"], nil
 }
 
 func printList(list []Group) {
-	for _, s := range list {
-		fmt.Printf("%5d %25s %s\n", s.ID, s.Status, s.NZBName)
-	}
+	//for _, s := range list {
+	//	fmt.Printf("%5d %25s %s\n", s.ID, s.Status, s.NZBName)
+	//}
 }
 
 func printHistory(list []History) {
-	for _, s := range list {
-		fmt.Printf("%5d %25s %s\n", s.ID, s.Status, s.Name)
-	}
+	//for _, s := range list {
+	//	fmt.Printf("%5d %25s %s\n", s.ID, s.Status, s.Name)
+	//}
 }

@@ -13,6 +13,7 @@ import (
 func Add(c *gin.Context) {
 	URL := c.Query("url")
 	cat := c.Query("category")
+	name := c.Query("name")
 	pri, err := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -30,6 +31,9 @@ func Add(c *gin.Context) {
 	options := nzbget.NewOptions()
 	options.Category = cat
 	options.Priority = pri
+	if name != "" {
+		options.NiceName = name
+	}
 
 	id, err := client.Add(u, options)
 	if err != nil {

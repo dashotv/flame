@@ -27,6 +27,7 @@ type Client struct {
 }
 
 type AppendOptions struct {
+	NiceName   string
 	Category   string
 	Priority   int
 	AddToTop   bool
@@ -161,6 +162,10 @@ func (c *Client) Add(URL string, options *AppendOptions) (int64, error) {
 		return 0, errors.Wrap(err, "could not get nzb name")
 	}
 	enc := base64encode(str)
+
+	if options.NiceName != "" {
+		name = options.NiceName
+	}
 
 	r, err := c.rpc.Call("append", name, enc, options.Category, options.Priority, options.AddToTop, options.AddPaused, options.DupeKey, options.DupeScore, options.DupeMode, options.Parameters)
 	if err != nil {

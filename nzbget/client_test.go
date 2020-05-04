@@ -6,7 +6,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/stretchr/testify/require"
+	"gotest.tools/v3/poll"
 )
 
 var nzbgetURL string
@@ -18,6 +21,7 @@ func init() {
 func TestClient_Add(t *testing.T) {
 	c := NewClient(nzbgetURL)
 	o := NewOptions()
+	o.NiceName = "testing nice name"
 	i, err := c.Add("https://api.nzbgeek.info/api?t=get&apikey=2b2f7303f77672ad619df8589e88b5d3&id=c4d0c7dee6bab6a35d9b74592ade0bb7", o)
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, i, int64(1))
@@ -42,12 +46,18 @@ func TestClient_Pause(t *testing.T) {
 	err = c.Pause(r[0].ID)
 	require.NoError(t, err)
 
-	time.Sleep(10 * time.Second)
-	r, err = c.Groups()
-	require.NoError(t, err)
-	require.NotNil(t, r)
-	require.Equal(t, "PAUSED", r[0].Status)
-	printList(r)
+	check := func(l poll.LogT) poll.Result {
+		r, err = c.Groups()
+		if err != nil {
+			poll.Error(errors.Wrap(err, "failed to get groups"))
+		}
+		if r[0].Status == "PAUSED" {
+			return poll.Success()
+		}
+		return poll.Continue("Status != PAUSED (%s)", r[0].Status)
+	}
+
+	poll.WaitOn(t, check, poll.WithTimeout(10*time.Second), poll.WithDelay(1*time.Second))
 }
 
 func TestClient_Resume(t *testing.T) {

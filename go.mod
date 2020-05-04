@@ -30,4 +30,5 @@ require (
 	golang.org/x/crypto v0.0.0-20191122220453-ac88ee75c92c // indirect
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.0 // indirect
+	gotest.tools/v3 v3.0.2
 )

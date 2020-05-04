@@ -7,17 +7,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/dashotv/flame/server/nzbs"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
-	nats "github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 
 	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/flame/server/nzbs"
 	"github.com/dashotv/flame/server/torrents"
 	"github.com/dashotv/flame/utorrent"
 	"github.com/dashotv/mercury"

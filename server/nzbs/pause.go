@@ -6,18 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Pause(c *gin.Context) {
-	id, err := QueryInteger(c, "id")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+func Pause(c *gin.Context, id int) {
+	var err error
+
 	if id == -1 {
 		PauseAll(c)
 		return
 	}
 
-	err = client.Pause(id)
+	err = app.Nzbget.Pause(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -26,7 +23,7 @@ func Pause(c *gin.Context) {
 }
 
 func PauseAll(c *gin.Context) {
-	err := client.PauseAll()
+	err := app.Nzbget.PauseAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -34,17 +31,14 @@ func PauseAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func Resume(c *gin.Context) {
-	id, err := QueryInteger(c, "id")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+func Resume(c *gin.Context, id int) {
+	var err error
+
 	if id == -1 {
 		ResumeAll(c)
 		return
 	}
-	err = client.Resume(id)
+	err = app.Nzbget.Resume(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -53,7 +47,7 @@ func Resume(c *gin.Context) {
 }
 
 func ResumeAll(c *gin.Context) {
-	err := client.ResumeAll()
+	err := app.Nzbget.ResumeAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

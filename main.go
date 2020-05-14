@@ -16,14 +16,9 @@ limitations under the License.
 package main
 
 import (
-	"github.com/sirupsen/logrus"
-	prefixed "github.com/x-cray/logrus-prefixed-formatter"
-
 	"github.com/dashotv/flame/cmd"
 )
 
 func main() {
-	logrus.SetLevel(logrus.InfoLevel)
-	logrus.SetFormatter(&prefixed.TextFormatter{DisableTimestamp: false, FullTimestamp: true})
 	cmd.Execute()
 }

@@ -3,54 +3,50 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v7"
 	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 
+	"github.com/dashotv/flame/application"
 	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/flame/server/nzbs"
-	"github.com/dashotv/flame/server/torrents"
-	"github.com/dashotv/flame/utorrent"
+	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/mercury"
 )
 
 type Server struct {
-	cfg            *config.Config
-	log            *logrus.Entry
+	Router *gin.Engine
+	Log    *logrus.Entry
+	App    *application.App
+	Config *config.Config
+
 	merc           *mercury.Mercury
-	torrentChannel chan *utorrent.Response
+	torrentChannel chan *qbt.Response
 	nzbChannel     chan *nzbget.GroupResponse
-	torrent        *utorrent.Client
-	nzb            *nzbget.Client
-	cache          *redis.Client
 }
 
-func New(cfg *config.Config) (*Server, error) {
+func New() (*Server, error) {
 	var err error
-	s := &Server{cfg: cfg}
-
-	if cfg.Mode == "dev" {
-		logrus.SetLevel(logrus.DebugLevel)
+	cfg := config.Instance()
+	app := application.Instance()
+	log := app.Log.WithField("prefix", "server")
+	s := &Server{
+		Log:    log,
+		Router: app.Router,
+		App:    app,
+		Config: cfg,
 	}
-
-	host, _ := os.Hostname()
-	s.log = logrus.WithField("prefix", host)
-	s.log.Level = logrus.DebugLevel
 
 	s.merc, err = mercury.New("flame", nats.DefaultURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "creating mercury")
 	}
 
-	s.torrentChannel = make(chan *utorrent.Response, 5)
+	s.torrentChannel = make(chan *qbt.Response, 5)
 	if err := s.merc.Sender("flame.torrents", s.torrentChannel); err != nil {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
@@ -59,22 +55,11 @@ func New(cfg *config.Config) (*Server, error) {
 	if err := s.merc.Sender("flame.nzbs", s.nzbChannel); err != nil {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
-
-	s.cache = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		DB:   15, // use default DB
-	})
-
-	s.log.Infof("configuring utorrent: %s", s.cfg.Utorrent.URL)
-	s.torrent = utorrent.NewClient(s.cfg.Utorrent.URL)
-	s.log.Infof("configuring nzbget: %s", s.cfg.Nzbget.URL)
-	s.nzb = nzbget.NewClient(s.cfg.Nzbget.URL)
-
 	return s, nil
 }
 
 func (s *Server) Start() error {
-	s.log.Info("starting flame...")
+	s.Log.Info("starting flame...")
 
 	c := cron.New(cron.WithSeconds())
 	if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
@@ -85,20 +70,14 @@ func (s *Server) Start() error {
 	}
 
 	go func() {
-		s.log.Info("starting cron...")
+		s.Log.Info("starting cron...")
 		c.Start()
 	}()
 
-	if s.cfg.Mode == "release" {
-		gin.SetMode(s.cfg.Mode)
-	}
-	router := gin.Default()
-	router.GET("/", homeIndex)
-	torrents.Routes(s.cache, s.torrent, router)
-	nzbs.Routes(s.cache, s.nzb, router)
+	s.Routes()
 
-	s.log.Info("starting web...")
-	if err := router.Run(fmt.Sprintf(":%d", s.cfg.Port)); err != nil {
+	s.Log.Info("starting web...")
+	if err := s.Router.Run(fmt.Sprintf(":%d", s.Config.Port)); err != nil {
 		return errors.Wrap(err, "starting router")
 	}
 
@@ -106,7 +85,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) SendTorrents() {
-	resp, err := s.torrent.List()
+	resp, err := s.App.Qbittorrent.List()
 	if err != nil {
 		logrus.Errorf("couldn't get torrent list: %s", err)
 		return
@@ -118,12 +97,12 @@ func (s *Server) SendTorrents() {
 		return
 	}
 
-	s.cache.Set("flame-torrents", string(b), time.Minute)
+	s.App.Cache.Set("flame-torrents", string(b), time.Minute)
 	s.torrentChannel <- resp
 }
 
 func (s *Server) SendNzbs() {
-	resp, err := s.nzb.List()
+	resp, err := s.App.Nzbget.List()
 	if err != nil {
 		logrus.Errorf("couldn't get nzb list: %s", err)
 		return
@@ -135,10 +114,6 @@ func (s *Server) SendNzbs() {
 		return
 	}
 
-	s.cache.Set("flame-nzbs", string(b), time.Minute)
+	s.App.Cache.Set("flame-nzbs", string(b), time.Minute)
 	s.nzbChannel <- resp
-}
-
-func homeIndex(c *gin.Context) {
-	c.String(http.StatusOK, "home")
 }

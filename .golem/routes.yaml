@@ -1,0 +1,83 @@
+name: flame
+repo: github.com/dashotv/flame
+groups:
+  downloads:
+    path: /downloads
+    routes:
+      index:
+        path: /
+  nzbs:
+    path: /nzbs
+    routes:
+      index:
+        path: /
+      add:
+        path: /add
+        params:
+          - {name: url, type: string}
+          - {name: category, type: string}
+          - {name: name, type: string}
+      remove:
+        path: /remove
+        params:
+          - {name: id, type: int}
+      destroy:
+        path: /destroy
+        params:
+          - {name: id, type: int}
+      pause:
+        path: /pause
+        params:
+          - {name: id, type: int}
+      resume:
+        path: /resume
+        params:
+          - {name: id, type: int}
+      history:
+        path: /history
+        params:
+          - {name: hidden, type: bool}
+  torrents:
+    path: /torrents
+    routes:
+      index:
+        path: /
+      add:
+        path: /add
+        params:
+          - {name: url, type: string}
+      remove:
+        path: /remove
+        params:
+          - {name: infohash, type: string}
+          - {name: delete, type: bool}
+      pause:
+        path: /pause
+        params:
+          - {name: infohash, type: string}
+      resume:
+        path: /resume
+        params:
+          - {name: infohash, type: string}
+#      start:
+#        path: /start
+#        params:
+#          - {name: infohash, type: string}
+#      stop:
+#        path: /stop
+#        params:
+#          - {name: infohash, type: string}
+      label:
+        path: /label
+        params:
+          - {name: infohash, type: string}
+          - {name: label, type: string}
+      want:
+        path: /want
+        params:
+          - {name: infohash, type: string}
+          - {name: files, type: string}
+      wanted:
+        path: /wanted
+        params:
+          - {name: infohash, type: string}

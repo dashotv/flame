@@ -1,0 +1,82 @@
+name: medium
+type: model
+imports:
+  - time
+  - go.mongodb.org/mongo-driver/bson/primitive
+fields:
+  - name: type
+    type: string
+    bson: _type
+  - name: kind
+    type: primitive.Symbol
+  - name: source
+    type: string
+  - name: source_id
+    type: string
+  - name: title
+    type: string
+  - name: description
+    type: string
+  - name: slug
+    type: string
+  - name: text
+    type: '[]string'
+  - name: display
+    type: string
+  - name: directory
+    type: string
+  - name: search
+    type: string
+  #  - name: search_params
+  #    type: SearchParam
+  - name: search_params
+    type: struct
+    fields:
+      - name: type
+        type: string
+      - name: verified
+        type: bool
+      - name: group
+        type: string
+      - name: author
+        type: string
+      - name: resolution
+        type: int
+      - name: source
+        type: string
+      - name: uncensored
+        type: bool
+      - name: bluray
+        type: bool
+  - name: active
+    type: bool
+  - name: downloaded
+    type: bool
+  - name: completed
+    type: bool
+  - name: skipped
+    type: bool
+  - name: watched
+    type: bool
+  - name: broken
+    type: bool
+  - name: release_date
+    type: time.Time
+  - name: paths
+    type: '[]struct'
+    fields:
+      - name: ID
+        type: primitive.ObjectID
+      - name: type
+        type: primitive.Symbol
+      - name: remote
+        type: string
+      - name: local
+        type: string
+      - name: extension
+        type: string
+      - name: size
+        type: int
+      - name: updated_at
+        type: time.Time
+

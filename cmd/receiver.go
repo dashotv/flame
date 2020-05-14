@@ -18,15 +18,14 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"sort"
 	"time"
-
-	"github.com/dashotv/flame/nzbget"
 
 	"github.com/nats-io/nats.go"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
+	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/flame/utorrent"
 	"github.com/dashotv/mercury"
 )
@@ -49,7 +48,7 @@ var receiverCmd = &cobra.Command{
 		}
 
 		fmt.Println("starting receiver...")
-		torrents := make(chan *utorrent.Response, 5)
+		torrents := make(chan *qbt.Response, 5)
 		if err := m.Receiver("flame.torrents", torrents); err != nil {
 			logrus.Fatalf("flame torrents receiver: %w", err)
 		}
@@ -65,12 +64,10 @@ var receiverCmd = &cobra.Command{
 		for {
 			select {
 			case r := <-torrents:
-				//logrus.Infof("received message")
-				sort.Sort(TorrentsByIndex(r.Torrents))
-				logrus.Infof("received torrents message")
-				for _, t := range r.Torrents {
-					logrus.Infof("%3.0f %6.2f%% %10.2fmb %8.8s %s\n", t.Queue, t.Progress, t.SizeMb(), t.State, t.Name)
-				}
+				logrus.Infof("received torrents message: %#v", r)
+				//for _, t := range r.Torrents {
+				//	logrus.Infof("%3.0f %6.2f%% %10.2fmb %8.8s %s\n", t.Queue, t.Progress, t.SizeMb(), t.State, t.Name)
+				//}
 			case r := <-nzbs:
 				logrus.Infof("received nzbs message: %#v", r)
 				for _, g := range r.Result {

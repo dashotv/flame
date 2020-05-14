@@ -1,0 +1,60 @@
+name: release
+type: model
+imports:
+  - time
+fields:
+  - name: type
+    type: string
+  - name: source
+    type: string
+  - name: raw
+    type: string
+  - name: title
+    type: string
+  - name: description
+    type: string
+  - name: size
+    type: string
+  - name: view
+    type: string
+  - name: download
+    type: string
+  - name: infohash
+    type: string
+  - name: name
+    type: string
+  - name: season
+    type: int
+  - name: episode
+    type: int
+  - name: volume
+    type: int
+  - name: checksum
+    type: string
+  - name: group
+    type: string
+  - name: author
+    type: string
+  - name: verified
+    type: bool
+  - name: widescreen
+    type: bool
+  - name: uncensored
+    type: bool
+  - name: bluray
+    type: bool
+  - name: resolution
+    type: string
+  - name: encoding
+    type: string
+  - name: quality
+    type: string
+  - name: published
+    type: time.Time
+    bson: published_at
+#  - name: created
+#    type: time.Time
+#    bson: created_at
+#  - name: updated
+#    type: time.Time
+#    bson: updated_at

@@ -8,13 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/golem/web"
 )
 
-func Add(c *gin.Context) {
-	URL := c.Query("url")
-	cat := c.Query("category")
-	name := c.Query("name")
-	pri, err := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
+func Add(c *gin.Context, URL, cat, name string) {
+	pri, err := web.QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -35,7 +33,7 @@ func Add(c *gin.Context) {
 		options.NiceName = name
 	}
 
-	id, err := client.Add(u, options)
+	id, err := app.Nzbget.Add(u, options)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -43,17 +41,13 @@ func Add(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"error": false, "id": id})
 }
 
-func Remove(c *gin.Context) {
-	id, err := QueryInteger(c, "id")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+func Remove(c *gin.Context, id int) {
+	var err error
 
 	if c.Query("delete") == "true" {
-		err = client.Delete(id)
+		err = app.Nzbget.Delete(id)
 	} else {
-		err = client.Remove(id)
+		err = app.Nzbget.Remove(id)
 	}
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -62,14 +56,10 @@ func Remove(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func Destroy(c *gin.Context) {
-	id, err := QueryInteger(c, "id")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+func Destroy(c *gin.Context, id int) {
+	var err error
 
-	err = client.Destroy(id)
+	err = app.Nzbget.Destroy(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

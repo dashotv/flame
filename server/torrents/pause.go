@@ -6,13 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Pause(c *gin.Context) {
-	infohash := c.Query("infohash")
+func Pause(c *gin.Context, infohash string) {
 	if infohash == "" {
 		PauseAll(c)
 		return
 	}
-	err := client.Pause(infohash)
+	_, err := app.Qbittorrent.Pause(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -21,7 +20,7 @@ func Pause(c *gin.Context) {
 }
 
 func PauseAll(c *gin.Context) {
-	err := client.PauseAll()
+	_, err := app.Qbittorrent.PauseAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

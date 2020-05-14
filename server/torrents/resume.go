@@ -6,13 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Resume(c *gin.Context) {
-	infohash := c.Query("infohash")
+func Resume(c *gin.Context, infohash string) {
 	if infohash == "" {
 		ResumeAll(c)
 		return
 	}
-	err := client.Resume(infohash)
+	_, err := app.Qbittorrent.Resume(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -21,7 +20,7 @@ func Resume(c *gin.Context) {
 }
 
 func ResumeAll(c *gin.Context) {
-	err := client.ResumeAll()
+	_, err := app.Qbittorrent.ResumeAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

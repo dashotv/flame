@@ -89,8 +89,12 @@ func initConfig() {
 		return
 	}
 
-	cfg = &config.Config{}
+	cfg = config.Instance()
 	if err := viper.Unmarshal(cfg); err != nil {
 		logrus.Fatalf("error reading config: %s", err)
+	}
+
+	if err := cfg.Validate(); err != nil {
+		logrus.Fatalf("failed to validate config: %s", err)
 	}
 }

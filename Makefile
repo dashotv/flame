@@ -3,10 +3,13 @@ all: test
 test:
 	[ -f .env ] && source .env; go test -v -count=1 ./...
 
-build:
+generate:
+	golem generate
+
+build: generate
 	go build
 
-server:
+server: generate
 	go run main.go server
 
 receiver:

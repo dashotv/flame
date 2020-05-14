@@ -5,30 +5,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v7"
 
 	"github.com/dashotv/flame/nzbget"
 )
 
-var cache *redis.Client
-var client *nzbget.Client
-
-func Routes(red *redis.Client, c *nzbget.Client, e *gin.Engine) {
-	cache = red
-	client = c
-	r := e.Group("/nzbs")
-	r.GET("/", Index)
-	r.GET("/add", Add)
-	r.GET("/remove", Remove)
-	r.GET("/destroy", Destroy)
-	r.GET("/pause", Pause)
-	r.GET("/resume", Resume)
-	r.GET("/history", History)
-}
-
 func Index(c *gin.Context) {
 	// read the json string from cache
-	res, err := cache.Get("flame-nzbs").Result()
+	res, err := app.Cache.Get("flame-nzbs").Result()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return
@@ -37,9 +20,8 @@ func Index(c *gin.Context) {
 	c.String(http.StatusOK, res)
 }
 
-func History(c *gin.Context) {
-	hidden := c.Query("hidden") == "true"
-	r, err := client.History(hidden)
+func History(c *gin.Context, hidden bool) {
+	r, err := app.Nzbget.History(hidden)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return

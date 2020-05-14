@@ -1,0 +1,49 @@
+name: download
+type: model
+imports:
+  - time
+fields:
+  - name: medium_id
+    type: primitive.ObjectID
+  - name: auto
+    type: bool
+  - name: multi
+    type: bool
+  - name: force
+    type: bool
+  - name: url
+    type: string
+  - name: release_id
+    type: string
+    bson: tdo_id
+  - name: thash
+    type: string
+  - name: timestamps
+    type: struct
+    fields:
+      - name: found
+        type: time.Time
+      - name: loaded
+        type: time.Time
+      - name: downloaded
+        type: time.Time
+      - name: completed
+        type: time.Time
+      - name: deleted
+        type: time.Time
+  - name: selected
+    type: string
+  - name: status
+    type: string
+  - name: files
+    type: '[]struct'
+    json: download_files
+    bson: download_files
+    fields:
+      - name: id
+        type: primitive.ObjectID
+        bson: _id
+      - name: medium_id
+        type: primitive.ObjectID
+      - name: num
+        type: int

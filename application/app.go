@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
-	redis "github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	ginlogrus "github.com/toorop/gin-logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"

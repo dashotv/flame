@@ -10,8 +10,7 @@ require (
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-redis/redis/v7 v7.0.0-beta.4
-	github.com/golang/protobuf v1.4.1 // indirect
+	github.com/go-redis/redis/v8 v8.0.0-beta.7
 	github.com/grengojbo/goquery v0.3.3-0.20140927085902-581f5a57e7db
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
@@ -23,12 +22,13 @@ require (
 	github.com/sirupsen/logrus v1.5.0
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.6.3
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/toorop/gin-logrus v0.0.0-20190701131413-6c374ad36b67
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
 	go.mongodb.org/mongo-driver v1.3.4
+	go.opentelemetry.io/otel v0.10.0 // indirect
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
-	golang.org/x/sys v0.0.0-20200511232937-7e40ca221e25 // indirect
+	google.golang.org/grpc v1.31.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gotest.tools/v3 v3.0.2
 )

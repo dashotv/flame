@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -17,6 +18,8 @@ import (
 	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/mercury"
 )
+
+var ctx = context.Background()
 
 type Server struct {
 	Router *gin.Engine
@@ -97,7 +100,7 @@ func (s *Server) SendTorrents() {
 		return
 	}
 
-	s.App.Cache.Set("flame-torrents", string(b), time.Minute)
+	s.App.Cache.Set(ctx, "flame-torrents", string(b), time.Minute)
 	s.torrentChannel <- resp
 }
 
@@ -114,6 +117,6 @@ func (s *Server) SendNzbs() {
 		return
 	}
 
-	s.App.Cache.Set("flame-nzbs", string(b), time.Minute)
+	s.App.Cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
 	s.nzbChannel <- resp
 }

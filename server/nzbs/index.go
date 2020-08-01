@@ -1,6 +1,7 @@
 package nzbs
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -9,9 +10,11 @@ import (
 	"github.com/dashotv/flame/nzbget"
 )
 
+var ctx = context.Background()
+
 func Index(c *gin.Context) {
 	// read the json string from cache
-	res, err := app.Cache.Get("flame-nzbs").Result()
+	res, err := app.Cache.Get(ctx, "flame-nzbs").Result()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return

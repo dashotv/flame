@@ -4,15 +4,14 @@ import (
 	"os"
 	"sync"
 
-	"github.com/dashotv/flame/models"
-
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v7"
+	redis "github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	ginlogrus "github.com/toorop/gin-logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 
 	"github.com/dashotv/flame/config"
+	"github.com/dashotv/flame/models"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/flame/utorrent"

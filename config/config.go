@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"sync"
 )
 
@@ -19,8 +20,15 @@ type Config struct {
 	Nzbget struct {
 		URL string
 	}
-	Port int
-	Mode string
+	Port        int
+	Mode        string
+	Connections map[string]*Connection `yaml:"connections"`
+}
+
+type Connection struct {
+	URI        string `yaml:"uri,omitempty"`
+	Database   string `yaml:"database,omitempty"`
+	Collection string `yaml:"collection,omitempty"`
 }
 
 func Instance() *Config {
@@ -31,7 +39,35 @@ func Instance() *Config {
 }
 
 func (c *Config) Validate() error {
-	// Add validations for your configuration
+	if err := c.validateDefaultConnection(); err != nil {
+		return err
+	}
+	// TODO: add more validations?
+	return nil
+}
+
+func (c *Config) validateDefaultConnection() error {
+	if len(c.Connections) == 0 {
+		return errors.New("you must specify a default connection")
+	}
+
+	var def *Connection
+	for n, c := range c.Connections {
+		if n == "default" || n == "Default" {
+			def = c
+			break
+		}
+	}
+
+	if def == nil {
+		return errors.New("no 'default' found in connections list")
+	}
+	if def.Database == "" {
+		return errors.New("default connection must specify database")
+	}
+	if def.URI == "" {
+		return errors.New("default connection must specify URI")
+	}
 
 	return nil
 }

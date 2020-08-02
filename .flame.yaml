@@ -1,0 +1,17 @@
+mode: release
+port: 9001
+Qbittorrent:
+  URL: http://qbittorrent.dasho.net/
+  Username: admin
+  Password: adminadmin
+Nzbget:
+  URL: http://nzbget.dasho.net/jsonrpc
+Utorrent:
+  URL: http://admin:utorrent@utorrent.dasho.net/gui
+connections:
+  default:
+    uri: mongodb://localhost:27017
+    database: database
+  download:
+    database: seer_development
+    collection: downloads

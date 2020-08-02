@@ -105,6 +105,7 @@ func (s *DownloadStore) Query() *DownloadQuery {
 		values: values,
 		limit:  25,
 		skip:   0,
+		sort:   bson.D{},
 	}
 }
 
@@ -113,6 +114,20 @@ type DownloadQuery struct {
 	values bson.M
 	limit  int64
 	skip   int64
+	sort   bson.D
+}
+
+func (q *DownloadQuery) addSort(field string, value int) *DownloadQuery {
+	q.sort = append(q.sort, bson.E{Key: field, Value: value})
+	return q
+}
+
+func (q *DownloadQuery) Asc(field string) *DownloadQuery {
+	return q.addSort(field, 1)
+}
+
+func (q *DownloadQuery) Desc(field string) *DownloadQuery {
+	return q.addSort(field, -1)
 }
 
 func (q *DownloadQuery) Limit(limit int) *DownloadQuery {
@@ -129,6 +144,7 @@ func (q *DownloadQuery) options() *options.FindOptions {
 	o := &options.FindOptions{}
 	o.SetLimit(q.limit)
 	o.SetSkip(q.skip)
+	o.SetSort(q.sort)
 	return o
 }
 

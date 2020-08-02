@@ -1,5 +1,5 @@
 /*
-Copyright © 2019 Shawn Catanzarite <me@shawncatz.com>
+Copyright © 2020 Shawn Catanzarite <me@shawncatz.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@ limitations under the License.
 */
 package main
 
-import (
-	"github.com/dashotv/flame/cmd"
-)
+// go:generate golem generate
+
+import "github.com/dashotv/flame/cmd"
 
 func main() {
 	cmd.Execute()

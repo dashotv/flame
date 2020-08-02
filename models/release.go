@@ -108,6 +108,7 @@ func (s *ReleaseStore) Query() *ReleaseQuery {
 		values: values,
 		limit:  25,
 		skip:   0,
+		sort:   bson.D{},
 	}
 }
 
@@ -116,6 +117,20 @@ type ReleaseQuery struct {
 	values bson.M
 	limit  int64
 	skip   int64
+	sort   bson.D
+}
+
+func (q *ReleaseQuery) addSort(field string, value int) *ReleaseQuery {
+	q.sort = append(q.sort, bson.E{Key: field, Value: value})
+	return q
+}
+
+func (q *ReleaseQuery) Asc(field string) *ReleaseQuery {
+	return q.addSort(field, 1)
+}
+
+func (q *ReleaseQuery) Desc(field string) *ReleaseQuery {
+	return q.addSort(field, -1)
 }
 
 func (q *ReleaseQuery) Limit(limit int) *ReleaseQuery {
@@ -132,6 +147,7 @@ func (q *ReleaseQuery) options() *options.FindOptions {
 	o := &options.FindOptions{}
 	o.SetLimit(q.limit)
 	o.SetSkip(q.skip)
+	o.SetSort(q.sort)
 	return o
 }
 

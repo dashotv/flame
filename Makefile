@@ -1,6 +1,9 @@
+NAME := flame
+PORT := 9001
+
 all: test
 
-test:
+test: generate
 	[ -f .env ] && source .env; go test -v -count=1 ./...
 
 generate:
@@ -9,10 +12,23 @@ generate:
 build: generate
 	go build
 
-server: generate
+install: build
+	go install
+
+server:
 	go run main.go server
 
 receiver:
 	go run main.go receiver
 
-.PHONY: server receiver test
+docker:
+	docker build -t $(NAME) .
+
+docker-run:
+	docker run -d --rm --name $(NAME) -p $(PORT):$(PORT) $(NAME)
+
+deps:
+	go get golang.org/x/tools/cmd/goimports
+	go get github.com/dashotv/golem
+
+.PHONY: server receiver test deps docker docker-run

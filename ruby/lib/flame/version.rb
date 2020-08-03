@@ -1,7 +1,7 @@
 module Flame
   module Version
     MAJOR  = 0
-    MINOR  = 4
+    MINOR  = 5
     TINY   = 0
     TAG    = nil
     LIST   = [MAJOR, MINOR, TINY, TAG]

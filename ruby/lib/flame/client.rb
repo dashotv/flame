@@ -20,14 +20,13 @@ module Flame
     end
 
     def qbittorrent
-      @utorrent ||= Flame::Qbittorrent.new("#{@base}/torrents", @options)
+      @utorrent ||= Flame::Qbittorrent.new("#{@base}/qbittorrents", @options)
     end
 
     private
 
     def request(path, params)
-      query = params.count > 0 ? "?"+query(params) : ""
-      url  = "#{@base}/#{path}#{query}"
+      url  = "#{@base}/#{path}?#{params.to_query}"
       opt  = {
         method:     :get,
         url:        url,
@@ -45,10 +44,6 @@ module Flame
       parsed = ::JSON.parse(json)
       raise BadRequestError.new("#{err.message}: #{parsed["error"]}") if err
       parsed
-    end
-
-    def query(hash)
-      hash.map { |k, v| "#{k}=#{v}" }.join('&')
     end
   end
 end

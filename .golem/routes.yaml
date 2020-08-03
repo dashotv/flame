@@ -50,7 +50,7 @@ groups:
         path: /remove
         params:
           - {name: infohash, type: string}
-          - {name: delete, type: bool}
+          - {name: del, type: bool}
       pause:
         path: /pause
         params:
@@ -95,7 +95,7 @@ groups:
         path: /remove
         params:
           - {name: infohash, type: string}
-          - {name: delete, type: bool}
+          - {name: del, type: bool}
       pause:
         path: /pause
         params:
@@ -104,14 +104,6 @@ groups:
         path: /resume
         params:
           - {name: infohash, type: string}
-      #      start:
-      #        path: /start
-      #        params:
-      #          - {name: infohash, type: string}
-      #      stop:
-      #        path: /stop
-      #        params:
-      #          - {name: infohash, type: string}
       label:
         path: /label
         params:

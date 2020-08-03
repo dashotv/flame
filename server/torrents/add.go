@@ -5,8 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/dashotv/flame/qbt"
 )
 
 func Add(c *gin.Context, URL string) {
@@ -15,35 +13,17 @@ func Add(c *gin.Context, URL string) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	u := string(b)
 
-	infohash, err := qbt.InfohashFromURL(u)
+	infohash, err := app.Utorrent.Add(string(b))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	_, err = app.Qbittorrent.DownloadFromLink(u, nil)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	//if resp.StatusCode != http.StatusOK {
-	//	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": resp.Status})
-	//	return
-	//}
-
 	c.JSON(http.StatusOK, gin.H{"error": false, "infohash": infohash})
 }
 
 func Remove(c *gin.Context, infohash string, delete bool) {
-	var err error
-
-	if delete {
-		_, err = app.Qbittorrent.DeletePermanently([]string{infohash})
-	} else {
-		_, err = app.Qbittorrent.DeleteTemp([]string{infohash})
-	}
+	err := app.Utorrent.Remove(infohash, delete)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

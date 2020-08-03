@@ -24,6 +24,8 @@ func Routes() {
 	r.GET("/pause", pauseHandler)
 	r.GET("/remove", removeHandler)
 	r.GET("/resume", resumeHandler)
+	r.GET("/start", startHandler)
+	r.GET("/stop", stopHandler)
 	r.GET("/want", wantHandler)
 	r.GET("/wanted", wantedHandler)
 
@@ -55,15 +57,27 @@ func pauseHandler(c *gin.Context) {
 
 func removeHandler(c *gin.Context) {
 	infohash := web.QueryString(c, "infohash")
-	delete := web.QueryBool(c, "delete")
+	del := web.QueryBool(c, "del")
 
-	Remove(c, infohash, delete)
+	Remove(c, infohash, del)
 }
 
 func resumeHandler(c *gin.Context) {
 	infohash := web.QueryString(c, "infohash")
 
 	Resume(c, infohash)
+}
+
+func startHandler(c *gin.Context) {
+	infohash := web.QueryString(c, "infohash")
+
+	Start(c, infohash)
+}
+
+func stopHandler(c *gin.Context) {
+	infohash := web.QueryString(c, "infohash")
+
+	Stop(c, infohash)
 }
 
 func wantHandler(c *gin.Context) {

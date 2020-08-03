@@ -10,6 +10,7 @@ require (
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
+	github.com/go-redis/redis/v7 v7.4.0 // indirect
 	github.com/go-redis/redis/v8 v8.0.0-beta.7
 	github.com/grengojbo/goquery v0.3.3-0.20140927085902-581f5a57e7db
 	github.com/mattn/go-colorable v0.1.4 // indirect

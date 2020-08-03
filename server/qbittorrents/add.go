@@ -1,4 +1,4 @@
-package torrents
+package qbittorrents
 
 import (
 	"encoding/base64"
@@ -36,10 +36,10 @@ func Add(c *gin.Context, URL string) {
 	c.JSON(http.StatusOK, gin.H{"error": false, "infohash": infohash})
 }
 
-func Remove(c *gin.Context, infohash string, delete bool) {
+func Remove(c *gin.Context, infohash string, del bool) {
 	var err error
 
-	if delete {
+	if del {
 		_, err = app.Qbittorrent.DeletePermanently([]string{infohash})
 	} else {
 		_, err = app.Qbittorrent.DeleteTemp([]string{infohash})

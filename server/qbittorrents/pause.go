@@ -1,4 +1,4 @@
-package torrents
+package qbittorrents
 
 import (
 	"net/http"

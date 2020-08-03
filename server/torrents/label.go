@@ -7,7 +7,7 @@ import (
 )
 
 func Label(c *gin.Context, infohash, label string) {
-	_, err := app.Qbittorrent.SetLabel([]string{infohash}, label)
+	err := app.Utorrent.Label(infohash, label)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

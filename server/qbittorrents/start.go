@@ -1,4 +1,4 @@
-package torrents
+package qbittorrents
 
 //func Start(c *gin.Context, infohash string) {
 //	err := app.Qbittorrent.Start(infohash)

@@ -16,9 +16,10 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"time"
+
+	"github.com/dashotv/flame/application"
 
 	"github.com/nats-io/nats.go"
 	"github.com/sirupsen/logrus"
@@ -42,41 +43,53 @@ var receiverCmd = &cobra.Command{
 	Short: "run flame receiver",
 	Long:  "run flame receiver",
 	Run: func(cmd *cobra.Command, args []string) {
+		app := application.Instance()
+
 		m, err := mercury.New("mercury", nats.DefaultURL)
 		if err != nil {
 			logrus.Fatalf("creating mercury: %w", err)
 		}
 
-		fmt.Println("starting receiver...")
-		torrents := make(chan *qbt.Response, 5)
+		app.Log.Infof("starting receiver...")
+
+		torrents := make(chan *utorrent.Response, 5)
 		if err := m.Receiver("flame.torrents", torrents); err != nil {
 			logrus.Fatalf("flame torrents receiver: %w", err)
 		}
+
+		qbittorrents := make(chan *qbt.Response, 5)
+		if err := m.Receiver("flame.qbittorrents", qbittorrents); err != nil {
+			logrus.Fatalf("flame torrents receiver: %w", err)
+		}
+
 		nzbs := make(chan *nzbget.GroupResponse, 5)
 		if err := m.Receiver("flame.nzbs", nzbs); err != nil {
 			logrus.Fatalf("flame nzbs receiver: %w", err)
 		}
+
 		downloads := make(chan string, 5)
-		if m.Receiver("seer.downloads", downloads); err != nil {
+		if err := m.Receiver("seer.downloads", downloads); err != nil {
 			logrus.Fatalf("seer downloads receiver: %w", err)
 		}
 
 		for {
 			select {
 			case r := <-torrents:
-				logrus.Infof("received torrents message: %#v", r)
+				app.Log.WithField("prefix", "utt").Infof("%T %s", r, r.Timestamp)
 				//for _, t := range r.Torrents {
 				//	logrus.Infof("%3.0f %6.2f%% %10.2fmb %8.8s %s\n", t.Queue, t.Progress, t.SizeMb(), t.State, t.Name)
 				//}
+			case r := <-qbittorrents:
+				app.Log.WithField("prefix", "qbt").Infof("%T %s", r, r.Timestamp)
 			case r := <-nzbs:
-				logrus.Infof("received nzbs message: %#v", r)
-				for _, g := range r.Result {
-					logrus.Infof("%5d %25s %s\n", g.ID, g.Status, g.NZBName)
-				}
+				app.Log.WithField("prefix", "nzb").Infof("%T %s", r, r.Timestamp)
+				//for _, g := range r.Result {
+				//	logrus.Infof("%5d %25s %s\n", g.ID, g.Status, g.NZBName)
+				//}
 			case s := <-downloads:
-				fmt.Printf("received downloads: %#v\n", s)
+				app.Log.WithField("prefix", "dls").Infof("%#v\n", s)
 			case <-time.After(30 * time.Second):
-				fmt.Println("timeout")
+				app.Log.Warn("timeout")
 				os.Exit(0)
 			}
 		}

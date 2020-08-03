@@ -16,6 +16,7 @@ import (
 	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/flame/utorrent"
 	"github.com/dashotv/mercury"
 )
 
@@ -27,9 +28,10 @@ type Server struct {
 	App    *application.App
 	Config *config.Config
 
-	merc           *mercury.Mercury
-	torrentChannel chan *qbt.Response
-	nzbChannel     chan *nzbget.GroupResponse
+	merc       *mercury.Mercury
+	utChannel  chan *utorrent.Response
+	qbtChannel chan *qbt.Response
+	nzbChannel chan *nzbget.GroupResponse
 }
 
 func New() (*Server, error) {
@@ -49,8 +51,13 @@ func New() (*Server, error) {
 		return nil, errors.Wrap(err, "creating mercury")
 	}
 
-	s.torrentChannel = make(chan *qbt.Response, 5)
-	if err := s.merc.Sender("flame.torrents", s.torrentChannel); err != nil {
+	s.utChannel = make(chan *utorrent.Response, 5)
+	if err := s.merc.Sender("flame.torrents", s.utChannel); err != nil {
+		return nil, errors.Wrap(err, "mercury sender")
+	}
+
+	s.qbtChannel = make(chan *qbt.Response, 5)
+	if err := s.merc.Sender("flame.qbittorrents", s.qbtChannel); err != nil {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
 
@@ -58,6 +65,7 @@ func New() (*Server, error) {
 	if err := s.merc.Sender("flame.nzbs", s.nzbChannel); err != nil {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
+
 	return s, nil
 }
 
@@ -66,6 +74,9 @@ func (s *Server) Start() error {
 
 	c := cron.New(cron.WithSeconds())
 	if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
+		return errors.Wrap(err, "adding cron function")
+	}
+	if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
 		return errors.Wrap(err, "adding cron function")
 	}
 	if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
@@ -88,7 +99,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) SendTorrents() {
-	resp, err := s.App.Qbittorrent.List()
+	resp, err := s.App.Utorrent.List()
 	if err != nil {
 		logrus.Errorf("couldn't get torrent list: %s", err)
 		return
@@ -101,7 +112,24 @@ func (s *Server) SendTorrents() {
 	}
 
 	s.App.Cache.Set(ctx, "flame-torrents", string(b), time.Minute)
-	s.torrentChannel <- resp
+	s.utChannel <- resp
+}
+
+func (s *Server) SendQbittorrents() {
+	resp, err := s.App.Qbittorrent.List()
+	if err != nil {
+		logrus.Errorf("couldn't get torrent list: %s", err)
+		return
+	}
+
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		logrus.Errorf("couldn't marshal torrents: %s", err)
+		return
+	}
+
+	s.App.Cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
+	s.qbtChannel <- resp
 }
 
 func (s *Server) SendNzbs() {

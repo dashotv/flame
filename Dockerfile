@@ -29,4 +29,4 @@ FROM alpine
 WORKDIR /root/
 COPY --from=builder /go/bin/flame .
 COPY --from=builder /go/src/app/.flame.production.yaml ./.flame.yaml
-CMD ["./tower", "server"]
+CMD ["./flame", "server"]

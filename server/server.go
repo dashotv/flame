@@ -15,7 +15,7 @@ import (
 	"github.com/dashotv/flame/application"
 	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/flame/utorrent"
+	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/mercury"
 )
 
@@ -28,7 +28,7 @@ type Server struct {
 	Config *config.Config
 
 	merc           *mercury.Mercury
-	torrentChannel chan *utorrent.Response
+	torrentChannel chan *qbt.Response
 	nzbChannel     chan *nzbget.GroupResponse
 }
 
@@ -49,7 +49,7 @@ func New() (*Server, error) {
 		return nil, errors.Wrap(err, "creating mercury")
 	}
 
-	s.torrentChannel = make(chan *utorrent.Response, 5)
+	s.torrentChannel = make(chan *qbt.Response, 5)
 	if err := s.merc.Sender("flame.torrents", s.torrentChannel); err != nil {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
@@ -88,7 +88,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) SendTorrents() {
-	resp, err := s.App.Utorrent.List()
+	resp, err := s.App.Qbittorrent.List()
 	if err != nil {
 		logrus.Errorf("couldn't get torrent list: %s", err)
 		return

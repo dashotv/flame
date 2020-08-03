@@ -59,14 +59,59 @@ groups:
         path: /resume
         params:
           - {name: infohash, type: string}
-#      start:
-#        path: /start
-#        params:
-#          - {name: infohash, type: string}
-#      stop:
-#        path: /stop
-#        params:
-#          - {name: infohash, type: string}
+      start:
+        path: /start
+        params:
+          - {name: infohash, type: string}
+      stop:
+        path: /stop
+        params:
+          - {name: infohash, type: string}
+      label:
+        path: /label
+        params:
+          - {name: infohash, type: string}
+          - {name: label, type: string}
+      want:
+        path: /want
+        params:
+          - {name: infohash, type: string}
+          - {name: files, type: string}
+      wanted:
+        path: /wanted
+        params:
+          - {name: infohash, type: string}
+
+  qbittorrents:
+    path: /qbittorrents
+    routes:
+      index:
+        path: /
+      add:
+        path: /add
+        params:
+          - {name: url, type: string}
+      remove:
+        path: /remove
+        params:
+          - {name: infohash, type: string}
+          - {name: delete, type: bool}
+      pause:
+        path: /pause
+        params:
+          - {name: infohash, type: string}
+      resume:
+        path: /resume
+        params:
+          - {name: infohash, type: string}
+      #      start:
+      #        path: /start
+      #        params:
+      #          - {name: infohash, type: string}
+      #      stop:
+      #        path: /stop
+      #        params:
+      #          - {name: infohash, type: string}
       label:
         path: /label
         params:

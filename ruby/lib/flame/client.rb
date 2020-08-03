@@ -19,6 +19,10 @@ module Flame
       @utorrent ||= Flame::Utorrent.new("#{@base}/torrents", @options)
     end
 
+    def qbittorrent
+      @utorrent ||= Flame::Qbittorrent.new("#{@base}/torrents", @options)
+    end
+
     private
 
     def request(path, params)

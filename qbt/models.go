@@ -110,7 +110,7 @@ func (t *Torrent) MarshalJSON() ([]byte, error) {
 	out.Label = t.Category
 	out.Queue = float64(t.Priority)
 	out.Files = t.Files
-	out.Path = t.SavePath
+	out.Path = "/mnt/qbittorrent/completed"
 	return json.Marshal(out)
 }
 

@@ -75,6 +75,7 @@ type TorrentJSON struct {
 	//Availability   float64 // in 1/65535ths
 	Queue float64
 	//Remaining      float64 // in bytes
+	Path  string
 	Files []*TorrentFile
 }
 
@@ -109,6 +110,7 @@ func (t *Torrent) MarshalJSON() ([]byte, error) {
 	out.Label = t.Category
 	out.Queue = float64(t.Priority)
 	out.Files = t.Files
+	out.Path = t.SavePath
 	return json.Marshal(out)
 }
 

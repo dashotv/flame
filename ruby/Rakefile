@@ -1,6 +1,32 @@
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
+require_relative "lib/flame"
 
 RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
+
+def client
+  @client ||= Flame::Client.new("http://localhost:9001")
+end
+
+namespace :utorrent do
+  desc "utorrent list"
+  task :list do
+    puts client.utorrent.list.inspect
+  end
+end
+
+namespace :nzbget do
+  desc "nzbget list"
+  task :list do
+    puts client.nzbget.list.inspect
+  end
+end
+
+namespace :qbittorrent do
+  desc "qbittorrent list"
+  task :list do
+    puts client.qbittorrent.list.inspect
+  end
+end

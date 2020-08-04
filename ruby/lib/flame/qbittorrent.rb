@@ -1,7 +1,7 @@
 require 'ostruct'
 
 module Flame
-  class Utorrent < Client
+  class Qbittorrent < Client
     def list
       data = request("", {})
       response(data)
@@ -17,8 +17,6 @@ module Flame
       pause
       resume
       want_none
-      stop
-      start
     }.each do |n|
       define_method(n) do |infohash|
         request("#{n}", { infohash: infohash })
@@ -37,8 +35,8 @@ module Flame
 
     def response(data)
       r = Flame::Response.new(self)
-      up = 0
-      down = 0
+      up = data["UploadRate"].to_i
+      down = data["DownloadRate"].to_i
       data['Torrents'].each do |d|
         t = OpenStruct.new(d)
 
@@ -48,18 +46,11 @@ module Flame
         torrent.name = t.Name
         torrent.label = t.Label
         torrent.progress = t.Progress
-        torrent.seeds = t.SeedsConnected
-        torrent.total_seeds = t.SeedsTotal
-        torrent.peers = t.PeersConnected
-        torrent.total_peers = t.PeersTotal
         torrent.eta = t.Finish
         torrent.queue = t.Queue
         torrent.size = t.Size
         torrent.state = t.State
         torrent.path = t.Path
-
-        up += t.UploadRate
-        down += t.DownloadRate
 
         torrent.stats.load({
             upload: {rate: t.UploadRate/1000.0},
@@ -69,8 +60,8 @@ module Flame
         t.Files.each do |df|
           f = OpenStruct.new(df)
 
-          file = Flame::File.new(name: "#{torrent.path}/#{f.Name}", num: f.Number, size: f.Size, priority: f.Priority)
-          file.progress = (f.Downloaded / f.Size.to_f) * 100
+          file = Flame::File.new(name: "#{torrent.path}/#{f.name}", num: f.id, size: f.size, priority: f.priority)
+          file.progress = f.progress
           torrent.add_file(file)
         end
 

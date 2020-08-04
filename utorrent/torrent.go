@@ -23,6 +23,7 @@ type Torrent struct {
 	Availability   float64 // in 1/65535ths
 	Queue          float64
 	Remaining      float64 // in bytes
+	Path           string
 	Files          []*File
 }
 
@@ -47,6 +48,7 @@ func (t *Torrent) Load(values []interface{}) {
 	t.Queue = getFloat64(values[17])
 	t.Remaining = getFloat64(values[18])
 	t.State = getString(values[21])
+	t.Path = getString(values[26])
 }
 
 func (t *Torrent) AddFile(file *File) {

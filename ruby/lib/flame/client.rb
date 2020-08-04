@@ -1,4 +1,5 @@
 require 'rest-client'
+require 'uri'
 require 'json'
 
 module Flame
@@ -20,13 +21,13 @@ module Flame
     end
 
     def qbittorrent
-      @utorrent ||= Flame::Qbittorrent.new("#{@base}/qbittorrents", @options)
+      @qbittorrent ||= Flame::Qbittorrent.new("#{@base}/qbittorrents", @options)
     end
 
     private
 
     def request(path, params)
-      url  = "#{@base}/#{path}?#{params.to_query}"
+      url  = "#{@base}/#{path}?#{URI.encode_www_form(params)}"
       opt  = {
         method:     :get,
         url:        url,

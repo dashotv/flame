@@ -5,8 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/dashotv/flame/qbt"
 )
 
 func Add(c *gin.Context, URL string) {
@@ -17,21 +15,13 @@ func Add(c *gin.Context, URL string) {
 	}
 	u := string(b)
 
-	infohash, err := qbt.InfohashFromURL(u)
+	infohash, err := app.Qbittorrent.Add(u, nil)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	_, err = app.Qbittorrent.DownloadFromLink(u, nil)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	//if resp.StatusCode != http.StatusOK {
-	//	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": resp.Status})
-	//	return
-	//}
+	app.Log.Infof("added: %s", infohash)
 
 	c.JSON(http.StatusOK, gin.H{"error": false, "infohash": infohash})
 }

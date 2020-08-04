@@ -8,11 +8,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/cookiejar"
-	"time"
-
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	wrapper "github.com/pkg/errors"
 	"golang.org/x/net/publicsuffix"
@@ -292,8 +291,12 @@ func (client *Client) Add(link string, options map[string]string) (string, error
 
 //DownloadFromLink starts downloading a torrent from a link
 func (client *Client) DownloadFromLink(link string, options map[string]string) (*http.Response, error) {
-	options["urls"] = link
-	return client.postMultipartData("torrents/add", options)
+	params := map[string]string{}
+	params["urls"] = link
+	for k, v := range options {
+		params[k] = v
+	}
+	return client.postMultipartData("torrents/add", params)
 }
 
 //DownloadFromFile starts downloading a torrent from a file
@@ -302,25 +305,25 @@ func (client *Client) DownloadFromFile(file string, options map[string]string) (
 }
 
 //AddTrackers adds trackers to a specific torrent matching infoHash
-func (client *Client) AddTrackers(infoHash string, trackers string) (*http.Response, error) {
-	params := make(map[string]string)
-	params["hash"] = strings.ToLower(infoHash)
-	params["urls"] = trackers
-
-	return client.post("command/addTrackers", params)
-}
+//func (client *Client) AddTrackers(infoHash string, trackers string) (*http.Response, error) {
+//	params := make(map[string]string)
+//	params["hash"] = strings.ToLower(infoHash)
+//	params["urls"] = trackers
+//
+//	return client.post("command/addTrackers", params)
+//}
 
 //Pause pauses a specific torrent matching infoHash
 func (client *Client) Pause(infoHash string) (*http.Response, error) {
 	params := make(map[string]string)
-	params["hash"] = strings.ToLower(infoHash)
+	params["hashes"] = infoHash
 
-	return client.post("command/pause", params)
+	return client.get("torrents/pause", params)
 }
 
 //PauseAll pauses all torrents
 func (client *Client) PauseAll() (*http.Response, error) {
-	return client.get("command/pause", map[string]string{"hashes": "all"})
+	return client.get("torrents/pause", map[string]string{"hashes": "all"})
 }
 
 ////PauseMultiple pauses a list of torrents matching the infoHashes
@@ -332,13 +335,13 @@ func (client *Client) PauseAll() (*http.Response, error) {
 //Resume resumes a specific torrent matching infoHash
 func (client *Client) Resume(infoHash string) (*http.Response, error) {
 	params := make(map[string]string)
-	params["hash"] = strings.ToLower(infoHash)
-	return client.post("command/resume", params)
+	params["hashes"] = infoHash
+	return client.get("torrents/resume", params)
 }
 
 //ResumeAll resumes all torrents matching infoHashes
 func (client *Client) ResumeAll() (*http.Response, error) {
-	return client.get("command/resume", map[string]string{"hashes": "all"})
+	return client.get("torrents/resume", map[string]string{"hashes": "all"})
 }
 
 //ResumeMultiple resumes a list of torrents matching infoHashes
@@ -378,6 +381,7 @@ func (client *Client) Delete(infohash string, perm bool) (*http.Response, error)
 //DeleteTemp deletes the temporary files for a list of torrents matching infoHashes
 func (client *Client) DeleteTemp(infoHashList []string) (*http.Response, error) {
 	params := client.processInfoHashList(infoHashList)
+	params["deleteFiles"] = "false"
 	return client.get("torrents/delete", params)
 }
 

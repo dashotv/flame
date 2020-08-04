@@ -1,5 +1,6 @@
 mode: release
 port: 9001
+cron: true
 Qbittorrent:
   URL: http://qbittorrent.dasho.net/
   Username: admin

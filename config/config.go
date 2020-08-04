@@ -22,6 +22,7 @@ type Config struct {
 	}
 	Port        int
 	Mode        string
+	Cron        bool
 	Connections map[string]*Connection `yaml:"connections"`
 }
 

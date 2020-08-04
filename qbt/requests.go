@@ -19,8 +19,6 @@ func (client *Client) get(endpoint string, opts map[string]string) (*http.Respon
 		return nil, wrapper.Wrap(err, "failed to build request")
 	}
 
-	//fmt.Printf("req: %s\n", req.URL)
-
 	// add user-agent header to allow qbittorrent to identify us
 	req.Header.Set("User-Agent", "dashotv/flame/qbt v0.1")
 
@@ -32,6 +30,8 @@ func (client *Client) get(endpoint string, opts map[string]string) (*http.Respon
 		}
 		req.URL.RawQuery = query.Encode()
 	}
+
+	//fmt.Printf("req: %s\n", req.URL)
 
 	resp, err := client.http.Do(req)
 	if err != nil {

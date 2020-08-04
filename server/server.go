@@ -73,14 +73,16 @@ func (s *Server) Start() error {
 	s.Log.Info("starting flame...")
 
 	c := cron.New(cron.WithSeconds())
-	if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
-		return errors.Wrap(err, "adding cron function")
-	}
-	if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
-		return errors.Wrap(err, "adding cron function")
-	}
-	if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
-		return errors.Wrap(err, "adding cron function")
+	if s.Config.Cron {
+		if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
+			return errors.Wrap(err, "adding cron function")
+		}
+		if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
+			return errors.Wrap(err, "adding cron function")
+		}
+		if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
+			return errors.Wrap(err, "adding cron function")
+		}
 	}
 
 	go func() {

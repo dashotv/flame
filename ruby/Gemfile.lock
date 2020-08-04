@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    flame (0.5.0)
+    flame (0.5.4)
       rest-client
 
 GEM

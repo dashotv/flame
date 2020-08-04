@@ -20,6 +20,7 @@ type Response struct {
 
 func NewResponse() *Response {
 	return &Response{
+		Torrents:  make([]*Torrent, 0),
 		Timestamp: time.Now(),
 	}
 }

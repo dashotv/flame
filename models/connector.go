@@ -8,6 +8,8 @@ import (
 
 type Connector struct {
 	Download *DownloadStore
+	Medium   *MediumStore
+	Release  *ReleaseStore
 }
 
 var cfg *config.Config
@@ -27,8 +29,30 @@ func NewConnector() (*Connector, error) {
 		return nil, err
 	}
 
+	s, err = settingsFor("medium")
+	if err != nil {
+		return nil, err
+	}
+
+	medium, err := NewMediumStore(s.URI, s.Database, s.Collection)
+	if err != nil {
+		return nil, err
+	}
+
+	s, err = settingsFor("release")
+	if err != nil {
+		return nil, err
+	}
+
+	release, err := NewReleaseStore(s.URI, s.Database, s.Collection)
+	if err != nil {
+		return nil, err
+	}
+
 	c := &Connector{
 		Download: download,
+		Medium:   medium,
+		Release:  release,
 	}
 
 	return c, nil

@@ -39,7 +39,7 @@ module Flame
           headers:    @headers,
           verify_ssl: false,
       }
-      puts "request: #{url}"
+      # puts "request: #{url}"
       err = nil
       begin
         json = RestClient::Request.execute(opt)

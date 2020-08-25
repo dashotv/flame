@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/nats-io/nats.go"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
@@ -74,9 +74,9 @@ func (s *Server) Start() error {
 
 	c := cron.New(cron.WithSeconds())
 	if s.Config.Cron {
-		if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
-			return errors.Wrap(err, "adding cron function")
-		}
+		//if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
+		//	return errors.Wrap(err, "adding cron function")
+		//}
 		if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
 			return errors.Wrap(err, "adding cron function")
 		}

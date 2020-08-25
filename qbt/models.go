@@ -177,8 +177,19 @@ type TorrentFile struct {
 }
 
 func (f *TorrentFile) Pretty() string {
-	return fmt.Sprintf("%3d %6.2f%% %s\n", f.Priority, f.Progress*100, f.Name)
+	return fmt.Sprintf("%3d %6.2f%% %s\n", f.Priority, f.Progress, f.Name)
 }
+
+//func (f *TorrentFile) MarshalJSON()  ([]byte, error) {
+//	n := &TorrentFile{}
+//	n.ID = f.ID
+//	n.Name = f.Name
+//	n.Size = f.Size
+//	n.Progress = f.Progress * 100
+//	n.Priority = f.Priority
+//	n.IsSeed = f.IsSeed
+//	return json.Marshal(n)
+//}
 
 //Sync holds the sync response struct which contains
 //the server state and a map of infohashes to Torrents

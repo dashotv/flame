@@ -81,6 +81,12 @@ var receiverCmd = &cobra.Command{
 				//}
 			case r := <-qbittorrents:
 				app.Log.WithField("prefix", "qbt").Infof("%T %s", r, r.Timestamp)
+				for _, t := range r.Torrents {
+					app.Log.WithField("prefix", "qbt").Infof("%3d %6.2f%% %10.2fmb %8.8s %s", t.Priority, t.Progress, t.SizeMb(), t.State, t.Name)
+					for _, f := range t.Files {
+						app.Log.WithField("prefix", "qbt").Infof("%3d %6.2f%% %s", f.Priority, f.Progress, f.Name)
+					}
+				}
 			case r := <-nzbs:
 				app.Log.WithField("prefix", "nzb").Infof("%T %s", r, r.Timestamp)
 				//for _, g := range r.Result {

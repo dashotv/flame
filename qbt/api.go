@@ -250,6 +250,7 @@ func (client *Client) TorrentFiles(infoHash string) ([]*TorrentFile, error) {
 
 	for i, f := range files {
 		f.ID = i
+		f.Progress = f.Progress * 100
 	}
 
 	return files, nil

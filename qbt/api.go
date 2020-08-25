@@ -463,11 +463,8 @@ func (client *Client) Wanted(infohash string) (bool, error) {
 //SetFilePriority sets the file priorities for torrent matching infoHash
 func (client *Client) SetFilePriority(infoHash string, fileIDs []string, priority string) (*http.Response, error) {
 	// disallow certain priorities that are not allowed by the WEBUI API
-	priorities := [...]string{"0", "1", "2", "7"}
-	for _, v := range priorities {
-		if v == priority {
-			return nil, ErrBadPriority
-		}
+	if !validPriority(priority) {
+		return nil, ErrBadPriority
 	}
 
 	ids := strings.Join(fileIDs, "|")
@@ -478,6 +475,15 @@ func (client *Client) SetFilePriority(infoHash string, fileIDs []string, priorit
 	params["priority"] = priority
 
 	return client.post("torrents/filePrio", params)
+}
+
+func validPriority(priority string) bool {
+	switch priority {
+	case "0", "1", "2", "7":
+		return true
+	default:
+		return false
+	}
 }
 
 //GetTorrentDownloadLimit gets the download limit for a list of torrents

@@ -7,7 +7,7 @@ module Flame
     end
 
     def add(url, options={})
-      u = Base64.encode64(url).chomp
+      u = Base64.encode64(url).chomp.gsub(/[\r\n]+/, '')
       request("add", { url: u }.merge(options))
     end
 

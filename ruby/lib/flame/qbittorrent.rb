@@ -15,7 +15,6 @@ module Flame
     %i{
       pause
       resume
-      want_none
     }.each do |n|
       define_method(n) do |infohash|
         request("#{n}", { infohash: infohash })
@@ -24,6 +23,10 @@ module Flame
 
     def remove(infohash, delete = false)
       request("remove", { infohash: infohash, delete: delete })
+    end
+
+    def want_none(infohash)
+      want(infohash, 'none')
     end
 
     def want(infohash, ids)

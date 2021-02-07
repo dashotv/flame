@@ -30,7 +30,7 @@ module Flame
     end
 
     def want(infohash, ids)
-      request("want", { infohash: infohash, ids: ids })
+      request("want", { infohash: infohash, files: ids })
     end
 
     def wanted?(infohash)

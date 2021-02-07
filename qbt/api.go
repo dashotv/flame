@@ -17,7 +17,7 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-//ErrBadPriority means the priority is not allowd by qbittorrent
+//ErrBadPriority means the priority is not allowed by qbittorrent
 var ErrBadPriority = errors.New("priority not available")
 
 //ErrBadResponse means that qbittorrent sent back an unexpected response

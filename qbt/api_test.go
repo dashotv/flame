@@ -32,6 +32,13 @@ func init() {
 	pass = "adminadmin"
 }
 
+func printList(list *Response) {
+	fmt.Println(list.Pretty())
+	for _, t := range list.Torrents {
+		fmt.Println(t.Pretty())
+	}
+}
+
 func TestClient_Login(t *testing.T) {
 	ok, err := qb.Login(user, pass)
 	assert.NoError(t, err, "logging in")
@@ -73,6 +80,40 @@ func TestClient_Add(t *testing.T) {
 	//printResponse(r)
 }
 
+
+func TestClient_WantNone(t *testing.T) {
+	//if r, err = c.List(); err != nil {
+	//	require.NoError(t, err, "should be able to list")
+	//}
+	//printResponse(r)
+
+	opts := map[string]string{}
+	hash := "6f8cd699135b491513e65d967a052a7087750d9c"
+	url := URLs[hash]
+
+	s, err := qb.Add(url, opts)
+	assert.NoError(t, err, "should be able to add: ", hash)
+	assert.Equal(t, hash, s, "hashes should match")
+
+	time.Sleep(1 * time.Second)
+	TestClient_List(t)
+	err = qb.WantNone(hash)
+	assert.NoError(t, err, "should be able to want none: ", hash)
+
+	time.Sleep(1 * time.Second)
+	torrent, err := qb.Torrent(hash)
+	for i, file := range torrent.Files {
+		if file.Priority != 0 {
+			assert.NoError(t, err, "should not be wanted: ", i)
+		}
+	}
+
+	time.Sleep(1 * time.Second)
+	TestClient_List(t)
+	_, err = qb.Delete(hash, true)
+	assert.NoError(t, err, "shouldn't fail to remove")
+}
+
 func TestClient_Sync(t *testing.T) {
 	sync, err := qb.Sync("0")
 	assert.NoError(t, err, "should be able to get sync")
@@ -88,8 +129,5 @@ func TestClient_Torrents(t *testing.T) {
 func TestClient_List(t *testing.T) {
 	list, err := qb.List()
 	require.NoError(t, err, "should be able to get list")
-	fmt.Println(list.Pretty())
-	for _, t := range list.Torrents {
-		fmt.Println(t.Pretty())
-	}
+	printList(list)
 }

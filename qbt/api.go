@@ -468,14 +468,22 @@ func (client *Client) SetFilePriority(infoHash string, fileIDs []string, priorit
 		return nil, ErrBadPriority
 	}
 
-	ids := strings.Join(fileIDs, "|")
+	list := []string{}
+	for _, s := range fileIDs {
+		if s != "" {
+			list = append(list, s)
+		}
+	}
+
+	ids := strings.Join(list, "|")
 
 	params := make(map[string]string)
 	params["hash"] = infoHash
 	params["id"] = ids
 	params["priority"] = priority
 
-	return client.post("torrents/filePrio", params)
+	//return client.post("torrents/filePrio", params)
+	return client.get("torrents/filePrio", params)
 }
 
 func validPriority(priority string) bool {

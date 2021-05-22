@@ -80,7 +80,6 @@ func TestClient_Add(t *testing.T) {
 	//printResponse(r)
 }
 
-
 func TestClient_WantNone(t *testing.T) {
 	//if r, err = c.List(); err != nil {
 	//	require.NoError(t, err, "should be able to list")
@@ -110,6 +109,29 @@ func TestClient_WantNone(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 	TestClient_List(t)
+	_, err = qb.Delete(hash, true)
+	assert.NoError(t, err, "shouldn't fail to remove")
+}
+
+func TestClient_WantedCount(t *testing.T) {
+	//if r, err = c.List(); err != nil {
+	//	require.NoError(t, err, "should be able to list")
+	//}
+	//printResponse(r)
+
+	opts := map[string]string{}
+	hash := "6f8cd699135b491513e65d967a052a7087750d9c"
+	url := URLs[hash]
+
+	s, err := qb.Add(url, opts)
+	assert.NoError(t, err, "should be able to add: ", hash)
+	assert.Equal(t, hash, s, "hashes should match")
+
+	time.Sleep(1 * time.Second)
+	count, err := qb.WantedCount(hash)
+	assert.NoError(t, err, "should be able to want none: ", hash)
+	assert.Equal(t, count, 4, "wanted count should be 4")
+
 	_, err = qb.Delete(hash, true)
 	assert.NoError(t, err, "shouldn't fail to remove")
 }

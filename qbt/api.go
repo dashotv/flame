@@ -1,6 +1,7 @@
+package qbt
+
 // shamelessly stolen from https://github.com/superturkey650/go-qbittorrent
 // Updated to support API v2.5.1 (Qbittorrent v4.2.5)
-package qbt
 
 import (
 	"encoding/json"
@@ -459,6 +460,23 @@ func (client *Client) Wanted(infohash string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+//WantedCount is a convenience function that returns true if any file of given torrent is wanted
+func (client *Client) WantedCount(infohash string) (int, error) {
+	count := 0
+	torrent, err := client.Torrent(infohash)
+	if err != nil {
+		return -1, err
+	}
+
+	for _, f := range torrent.Files {
+		if f.Priority > 0 {
+			count++
+		}
+	}
+
+	return count, nil
 }
 
 //SetFilePriority sets the file priorities for torrent matching infoHash

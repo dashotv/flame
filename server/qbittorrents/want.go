@@ -34,11 +34,11 @@ func WantNone(c *gin.Context, infohash string) {
 }
 
 func Wanted(c *gin.Context, infohash string) {
-	want, err := app.Qbittorrent.Wanted(infohash)
+	want, err := app.Qbittorrent.WantedCount(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"error": false, "wanted": want})
+	c.JSON(http.StatusOK, gin.H{"error": false, "wanted": want > 0, "count": want})
 }

@@ -3,7 +3,6 @@ module github.com/dashotv/flame
 go 1.13
 
 require (
-	github.com/Kamva/mgm/v2 v2.0.0 // indirect
 	github.com/Kamva/mgm/v3 v3.0.1
 	github.com/anacrolix/torrent v1.15.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
@@ -26,11 +25,12 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/toorop/gin-logrus v0.0.0-20190701131413-6c374ad36b67
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
-	go.mongodb.org/mongo-driver v1.3.4
+	go.mongodb.org/mongo-driver v1.5.1
 	go.opentelemetry.io/otel v0.10.0 // indirect
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d
-	golang.org/x/tools v0.1.6 // indirect
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/grpc v1.31.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gotest.tools/v3 v3.0.2
 )

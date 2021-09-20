@@ -20,6 +20,9 @@ type Config struct {
 	Nzbget struct {
 		URL string
 	}
+	Nats struct {
+		URL string
+	}
 	Port        int
 	Mode        string
 	Cron        bool

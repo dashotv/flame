@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nats-io/nats.go"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
@@ -46,7 +45,7 @@ func New() (*Server, error) {
 		Config: cfg,
 	}
 
-	s.merc, err = mercury.New("flame", nats.DefaultURL)
+	s.merc, err = mercury.New("flame", s.Config.Nats.URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "creating mercury")
 	}

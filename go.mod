@@ -3,10 +3,11 @@ module github.com/dashotv/flame
 go 1.13
 
 require (
+	github.com/Kamva/mgm/v2 v2.0.0 // indirect
 	github.com/Kamva/mgm/v3 v3.0.1
 	github.com/anacrolix/torrent v1.15.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
-	github.com/dashotv/golem v0.0.0-20200511213908-c3d5aa3c38aa
+	github.com/dashotv/golem v0.0.0-20200804213207-b3bb1ced83f6
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
@@ -27,7 +28,8 @@ require (
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
 	go.mongodb.org/mongo-driver v1.3.4
 	go.opentelemetry.io/otel v0.10.0 // indirect
-	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
+	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d
+	golang.org/x/tools v0.1.6 // indirect
 	google.golang.org/grpc v1.31.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gotest.tools/v3 v3.0.2

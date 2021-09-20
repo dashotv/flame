@@ -9,6 +9,8 @@ Nzbget:
   URL: http://nzbget.dasho.net/jsonrpc
 Utorrent:
   URL: http://admin:utorrent@utorrent.dasho.net/gui
+Nats:
+  URL: nats://127.0.0.1:4222
 connections:
   default:
     uri: mongodb://localhost:27017

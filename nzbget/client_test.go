@@ -132,7 +132,7 @@ func TestClient_Version(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err, "should not return error")
 	}
-	require.Equal(t, "21.0", v)
+	require.Equal(t, "21.1", v)
 }
 
 func TestClient_PauseAll(t *testing.T) {

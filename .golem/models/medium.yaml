@@ -60,6 +60,8 @@ fields:
     type: bool
   - name: broken
     type: bool
+  - name: missing
+    type: bool
   - name: release_date
     type: time.Time
   - name: paths

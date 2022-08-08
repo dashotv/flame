@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/dashotv/flame/server/downloads"
+	"github.com/dashotv/flame/server/media"
 	"github.com/dashotv/flame/server/nzbs"
 	"github.com/dashotv/flame/server/qbittorrents"
 )
@@ -16,6 +17,7 @@ func (s *Server) Routes() {
 	s.Router.GET("/", homeHandler)
 
 	downloads.Routes()
+	media.Routes()
 	nzbs.Routes()
 	qbittorrents.Routes()
 

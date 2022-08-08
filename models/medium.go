@@ -43,6 +43,7 @@ type Medium struct {
 	Skipped     bool      `json:"skipped" bson:"skipped"`
 	Watched     bool      `json:"watched" bson:"watched"`
 	Broken      bool      `json:"broken" bson:"broken"`
+	Missing     bool      `json:"missing" bson:"missing"`
 	ReleaseDate time.Time `json:"release_date" bson:"release_date"`
 	Paths       []struct {
 		Id        primitive.ObjectID `json:"ID" bson:"ID"`

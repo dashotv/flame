@@ -40,6 +40,7 @@ type MediumSchema struct {
     Skipped *FieldSchema
     Watched *FieldSchema
     Broken *FieldSchema
+    Missing *FieldSchema
     ReleaseDate *FieldSchema
     Paths *FieldSchema
     
@@ -196,6 +197,10 @@ var Schema = &GolemSchema {
         },
         Broken: &FieldSchema{
             Name: "broken",
+            Type: "bool",
+        },
+        Missing: &FieldSchema{
+            Name: "missing",
             Type: "bool",
         },
         ReleaseDate: &FieldSchema{

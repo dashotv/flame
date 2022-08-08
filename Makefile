@@ -1,4 +1,4 @@
-NAME := flame
+NAME := shawncatz/flame
 PORT := 9001
 
 all: test

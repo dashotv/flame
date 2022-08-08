@@ -1,7 +1,7 @@
 ############################
 # STEP 1 build executable binary
 ############################
-FROM golang:1.17-alpine AS builder
+FROM golang:1.18-alpine AS builder
 
 RUN apk add --no-cache --update curl \
     bash \

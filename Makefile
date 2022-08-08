@@ -28,7 +28,7 @@ docker-run:
 	docker run -d --rm --name $(NAME) -p $(PORT):$(PORT) $(NAME)
 
 deps:
-	go get golang.org/x/tools/cmd/goimports
-	go get github.com/dashotv/golem
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install github.com/dashotv/golem@latest
 
 .PHONY: server receiver test deps docker docker-run

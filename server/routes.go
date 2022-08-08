@@ -18,6 +18,7 @@ func (s *Server) Routes() {
 	downloads.Routes()
 	nzbs.Routes()
 	qbittorrents.Routes()
+
 }
 
 func homeHandler(c *gin.Context) {

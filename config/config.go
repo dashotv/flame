@@ -14,9 +14,6 @@ type Config struct {
 		Username string
 		Password string
 	}
-	Utorrent struct {
-		URL string
-	}
 	Nzbget struct {
 		URL string
 	}

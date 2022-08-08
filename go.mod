@@ -1,20 +1,17 @@
-module flame
+module github.com/dashotv/flame
 
 go 1.17
 
 require (
 	github.com/anacrolix/torrent v1.46.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
-	github.com/dashotv/flame v0.5.5
 	github.com/dashotv/golem v0.0.0-20220806101154-99e9f7f9bcfd
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/grengojbo/goquery v0.3.3-0.20140927085902-581f5a57e7db
 	github.com/kamva/mgm/v3 v3.4.1
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/nats-io/nats.go v1.16.0
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.0
@@ -29,7 +26,6 @@ require (
 )
 
 require (
-	github.com/Kamva/mgm/v3 v3.0.1 // indirect
 	github.com/anacrolix/missinggo v1.3.0 // indirect
 	github.com/anacrolix/missinggo/v2 v2.7.0 // indirect
 	github.com/bradfitz/iter v0.0.0-20191230175014-e8f45d346db8 // indirect
@@ -59,6 +55,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/nats-io/nats.go v1.16.0 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect

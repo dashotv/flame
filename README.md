@@ -32,7 +32,7 @@ Run a receiver:
 
 Forked package to fix one problem with decoder
 
-## utorrent and nzbget
+## qbittorrent and nzbget
 
 Clients for these services
 

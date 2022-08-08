@@ -14,7 +14,6 @@ import (
 	"github.com/dashotv/flame/models"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
-	"github.com/dashotv/flame/utorrent"
 )
 
 var once sync.Once
@@ -28,7 +27,6 @@ type App struct {
 	DB     *models.Connector
 
 	Nzbget      *nzbget.Client
-	Utorrent    *utorrent.Client
 	Qbittorrent *qbt.Client
 }
 
@@ -68,9 +66,6 @@ func initialize() *App {
 	log.Infof("connecting nzbget: %s", cfg.Nzbget.URL)
 	nzb := nzbget.NewClient(cfg.Nzbget.URL)
 
-	log.Infof("connecting utorrent: %s", cfg.Utorrent.URL)
-	ut := utorrent.NewClient(cfg.Utorrent.URL)
-
 	log.Infof("connecting qbittorrent: %s", cfg.Qbittorrent.URL)
 	qb := qbt.NewClient(cfg.Qbittorrent.URL)
 	ok, err := qb.Login(cfg.Qbittorrent.Username, cfg.Qbittorrent.Password)
@@ -85,7 +80,6 @@ func initialize() *App {
 		Config:      cfg,
 		DB:          db,
 		Nzbget:      nzb,
-		Utorrent:    ut,
 		Qbittorrent: qb,
 		Router:      router,
 		Cache:       cache,

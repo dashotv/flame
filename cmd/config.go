@@ -33,7 +33,6 @@ var configCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg := &config.Config{}
 		cfg.Nzbget.URL = "http://nzbget"
-		cfg.Utorrent.URL = "http://utorrent"
 		cfg.Mode = "release"
 		cfg.Port = 3001
 

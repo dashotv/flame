@@ -6,8 +6,6 @@ Qbittorrent:
   Password: adminadmin
 Nzbget:
   URL: http://nzbget.dasho.net/jsonrpc
-Utorrent:
-  URL: http://admin:utorrent@utorrent.dasho.net/gui
 Nats:
   URL: nats://nats:680a4c58fbbc180b1f2d7a1beab63491@dokku-nats-nats:4222
 connections:

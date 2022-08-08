@@ -15,7 +15,6 @@ import (
 	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
-	"github.com/dashotv/flame/utorrent"
 	"github.com/dashotv/mercury"
 )
 
@@ -28,7 +27,6 @@ type Server struct {
 	Config *config.Config
 
 	merc       *mercury.Mercury
-	utChannel  chan *utorrent.Response
 	qbtChannel chan *qbt.Response
 	nzbChannel chan *nzbget.GroupResponse
 }
@@ -48,11 +46,6 @@ func New() (*Server, error) {
 	s.merc, err = mercury.New("flame", s.Config.Nats.URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "creating mercury")
-	}
-
-	s.utChannel = make(chan *utorrent.Response, 5)
-	if err := s.merc.Sender("flame.torrents", s.utChannel); err != nil {
-		return nil, errors.Wrap(err, "mercury sender")
 	}
 
 	s.qbtChannel = make(chan *qbt.Response, 5)
@@ -97,23 +90,6 @@ func (s *Server) Start() error {
 	}
 
 	return nil
-}
-
-func (s *Server) SendTorrents() {
-	resp, err := s.App.Utorrent.List()
-	if err != nil {
-		logrus.Errorf("couldn't get torrent list: %s", err)
-		return
-	}
-
-	b, err := json.Marshal(&resp)
-	if err != nil {
-		logrus.Errorf("couldn't marshal torrents: %s", err)
-		return
-	}
-
-	s.App.Cache.Set(ctx, "flame-torrents", string(b), time.Minute)
-	s.utChannel <- resp
 }
 
 func (s *Server) SendQbittorrents() {

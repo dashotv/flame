@@ -10,7 +10,6 @@ import (
 	"github.com/dashotv/flame/server/downloads"
 	"github.com/dashotv/flame/server/nzbs"
 	"github.com/dashotv/flame/server/qbittorrents"
-	"github.com/dashotv/flame/server/torrents"
 )
 
 func (s *Server) Routes() {
@@ -19,8 +18,6 @@ func (s *Server) Routes() {
 	downloads.Routes()
 	nzbs.Routes()
 	qbittorrents.Routes()
-	torrents.Routes()
-
 }
 
 func homeHandler(c *gin.Context) {

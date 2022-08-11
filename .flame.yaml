@@ -8,7 +8,7 @@ Qbittorrent:
 Nzbget:
   URL: http://nzbget.dasho.net/jsonrpc
 Nats:
-  URL: nats://127.0.0.1:4222
+  URL: nats://nats:4222
 connections:
   default:
     uri: mongodb://localhost:27017

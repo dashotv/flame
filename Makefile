@@ -30,5 +30,6 @@ docker-run:
 deps:
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/dashotv/golem@latest
+	go install github.com/codegangsta/gin@latest
 
 .PHONY: server receiver test deps docker docker-run

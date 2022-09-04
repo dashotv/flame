@@ -3,16 +3,13 @@ package models
 import (
 	"time"
 
-	"github.com/kamva/mgm/v3"
-	"github.com/kamva/mgm/v3/operator"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/dashotv/grimoire"
 )
 
 type Download struct {
-	Document `bson:",inline"` // include mgm.DefaultModel
+	grimoire.Document `bson:",inline"` // include mgm.DefaultModel
 	//ID        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	//CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 	//UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
@@ -41,159 +38,4 @@ type Download struct {
 
 func NewDownload() *Download {
 	return &Download{}
-}
-
-type DownloadStore struct {
-	Client     *mongo.Client
-	Database   *mongo.Database
-	Collection *mgm.Collection
-}
-
-func NewDownloadStore(URI, db, name string) (*DownloadStore, error) {
-	client, err := mgm.NewClient(CustomClientOptions(URI))
-	if err != nil {
-		return nil, err
-	}
-
-	database := client.Database(db)
-	collection := mgm.NewCollection(database, name)
-
-	store := &DownloadStore{
-		Client:     client,
-		Database:   database,
-		Collection: collection,
-	}
-
-	return store, nil
-}
-
-func (s *DownloadStore) FindByID(id primitive.ObjectID) (*Download, error) {
-	c := NewDownload()
-	err := s.Collection.FindByID(id, c)
-	if err != nil {
-		return nil, err
-	}
-
-	return c, nil
-}
-
-func (s *DownloadStore) Find(id string) (*Download, error) {
-	oid, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-	return s.FindByID(oid)
-}
-
-func (s *DownloadStore) Save(o *Download) error {
-	// TODO: if id is nil create otherwise, call update
-	return s.Collection.Create(o)
-}
-
-func (s *DownloadStore) Update(o *Download) error {
-	return s.Collection.Update(o)
-}
-
-func (s *DownloadStore) Delete(o *Download) error {
-	return s.Collection.Delete(o)
-}
-
-func (s *DownloadStore) Query() *DownloadQuery {
-	values := make(bson.M)
-	return &DownloadQuery{
-		store:  s,
-		values: values,
-		limit:  25,
-		skip:   0,
-		sort:   bson.D{},
-	}
-}
-
-type DownloadQuery struct {
-	store  *DownloadStore
-	values bson.M
-	limit  int64
-	skip   int64
-	sort   bson.D
-}
-
-func (q *DownloadQuery) addSort(field string, value int) *DownloadQuery {
-	q.sort = append(q.sort, bson.E{Key: field, Value: value})
-	return q
-}
-
-func (q *DownloadQuery) Asc(field string) *DownloadQuery {
-	return q.addSort(field, 1)
-}
-
-func (q *DownloadQuery) Desc(field string) *DownloadQuery {
-	return q.addSort(field, -1)
-}
-
-func (q *DownloadQuery) Limit(limit int) *DownloadQuery {
-	q.limit = int64(limit)
-	return q
-}
-
-func (q *DownloadQuery) Skip(skip int) *DownloadQuery {
-	q.skip = int64(skip)
-	return q
-}
-
-func (q *DownloadQuery) options() *options.FindOptions {
-	o := &options.FindOptions{}
-	o.SetLimit(q.limit)
-	o.SetSkip(q.skip)
-	o.SetSort(q.sort)
-	return o
-}
-
-func (q *DownloadQuery) Run() ([]Download, error) {
-	result := make([]Download, 0)
-	err := q.store.Collection.SimpleFind(&result, q.values, q.options())
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (q *DownloadQuery) Where(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Eq: value}
-	return q
-}
-
-func (q *DownloadQuery) In(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.In: value}
-	return q
-}
-
-func (q *DownloadQuery) NotIn(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Nin: value}
-	return q
-}
-
-func (q *DownloadQuery) NotEqual(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Ne: value}
-	return q
-}
-
-func (q *DownloadQuery) LessThan(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Lt: value}
-	return q
-}
-
-func (q *DownloadQuery) LessThanEqual(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Lte: value}
-	return q
-}
-
-func (q *DownloadQuery) GreaterThan(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Gt: value}
-	return q
-}
-
-func (q *DownloadQuery) GreaterThanEqual(key string, value interface{}) *DownloadQuery {
-	q.values[key] = bson.M{operator.Gte: value}
-	return q
 }

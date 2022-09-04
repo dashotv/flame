@@ -11,8 +11,11 @@ Nats:
   URL: nats://nats:4222
 connections:
   default:
-    uri: mongodb://localhost:27017
+    uri: mongodb://db:27017
     database: database
   download:
     database: seer_development
     collection: downloads
+  media:
+    database: seer_development
+    collection: media

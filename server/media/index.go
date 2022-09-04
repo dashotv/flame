@@ -7,7 +7,7 @@ import (
 )
 
 func Index(c *gin.Context) {
-	results, err := app.DB.Medium.Upcoming()
+	results, err := app.DB.Upcoming()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

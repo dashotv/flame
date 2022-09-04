@@ -4,12 +4,14 @@ import (
 	"fmt"
 
 	"github.com/dashotv/flame/config"
+	"github.com/dashotv/grimoire"
 )
 
+// Connector manages the connections to the Grimoire Database Stores
 type Connector struct {
-	Download *DownloadStore
-	Medium   *MediumStore
-	Release  *ReleaseStore
+	Download *grimoire.Store[*Download]
+	Medium   *grimoire.Store[*Medium]
+	Release  *grimoire.Store[*Release]
 }
 
 var cfg *config.Config
@@ -24,7 +26,7 @@ func NewConnector() (*Connector, error) {
 		return nil, err
 	}
 
-	download, err := NewDownloadStore(s.URI, s.Database, s.Collection)
+	download, err := grimoire.New[*Download](s.URI, s.Database, s.Collection)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +36,7 @@ func NewConnector() (*Connector, error) {
 		return nil, err
 	}
 
-	medium, err := NewMediumStore(s.URI, s.Database, s.Collection)
+	medium, err := grimoire.New[*Medium](s.URI, s.Database, s.Collection)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +46,7 @@ func NewConnector() (*Connector, error) {
 		return nil, err
 	}
 
-	release, err := NewReleaseStore(s.URI, s.Database, s.Collection)
+	release, err := grimoire.New[*Release](s.URI, s.Database, s.Collection)
 	if err != nil {
 		return nil, err
 	}

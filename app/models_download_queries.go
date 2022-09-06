@@ -1,4 +1,4 @@
-package models
+package app
 
 func (c *Connector) ActiveDownloads() ([]*Download, error) {
 	q := c.Download.Query()

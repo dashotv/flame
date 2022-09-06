@@ -1,13 +1,12 @@
-package models
+package app
 
 import (
 	"fmt"
 
-	"github.com/dashotv/flame/app"
 	"github.com/dashotv/grimoire"
 )
 
-var cfg *app.Config
+var cfg *Config
 
 type Connector struct {
 	Download *grimoire.Store[*Download]
@@ -16,8 +15,8 @@ type Connector struct {
 }
 
 func NewConnector() (*Connector, error) {
-	cfg = app.ConfigInstance()
-	var s *app.Connection
+	cfg = ConfigInstance()
+	var s *Connection
 	var err error
 
 	s, err = settingsFor("download")
@@ -59,9 +58,9 @@ func NewConnector() (*Connector, error) {
 	return c, nil
 }
 
-func settingsFor(name string) (*app.Connection, error) {
+func settingsFor(name string) (*Connection, error) {
 	if cfg.Connections["default"] == nil {
-		return nil, fmt.Errorf("no connection configuration for %s", name)
+		return nil, fmt.Errorf("no default config while configuring %s", name)
 	}
 
 	if _, ok := cfg.Connections[name]; !ok {

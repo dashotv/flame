@@ -23,6 +23,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
+	"github.com/dashotv/flame/app"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/mercury"
@@ -34,7 +35,7 @@ var receiverCmd = &cobra.Command{
 	Short: "run flame receiver",
 	Long:  "run flame receiver",
 	Run: func(cmd *cobra.Command, args []string) {
-		app := app.Instance()
+		app := app.App()
 
 		m, err := mercury.New("mercury", nats.DefaultURL)
 		if err != nil {

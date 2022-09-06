@@ -3,8 +3,8 @@ name: flame
 repo: github.com/dashotv/flame
 models:
   enabled: true
-  package: models
-  output: models
+  package: app
+  output: app
   definitions: .golem/models
 routes:
   enabled: true

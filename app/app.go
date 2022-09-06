@@ -10,7 +10,6 @@ import (
 	ginlogrus "github.com/toorop/gin-logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 
-	"github.com/dashotv/flame/models"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 )
@@ -23,7 +22,7 @@ type Application struct {
 	Router *gin.Engine
 	Cache  *redis.Client
 	Log    *logrus.Entry
-	DB     *models.Connector
+	DB     *Connector
 
 	Nzbget      *nzbget.Client
 	Qbittorrent *qbt.Client
@@ -40,7 +39,7 @@ func initialize() *Application {
 	cfg := ConfigInstance()
 	log := logger()
 
-	db, err := models.NewConnector()
+	db, err := NewConnector()
 	if err != nil {
 		log.Errorf("database connection failed: %s", err)
 	}

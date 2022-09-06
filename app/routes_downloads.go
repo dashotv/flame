@@ -4,8 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/dashotv/flame/models"
 )
 
 func DownloadsIndex(c *gin.Context) {
@@ -16,7 +14,7 @@ func DownloadsIndex(c *gin.Context) {
 	}
 
 	for _, d := range results {
-		m := &models.Medium{}
+		m := &Medium{}
 
 		if err := App().DB.Medium.FindByID(d.MediumId, m); err != nil {
 			App().Log.Errorf("could not find medium: %s", d.MediumId)

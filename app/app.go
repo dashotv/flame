@@ -1,4 +1,4 @@
-package application
+package app
 
 import (
 	"os"
@@ -10,17 +10,16 @@ import (
 	ginlogrus "github.com/toorop/gin-logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 
-	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/models"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 )
 
 var once sync.Once
-var instance *App
+var instance *Application
 
-type App struct {
-	Config *config.Config
+type Application struct {
+	Config *Config
 	Router *gin.Engine
 	Cache  *redis.Client
 	Log    *logrus.Entry
@@ -37,8 +36,8 @@ func logger() *logrus.Entry {
 	return logrus.WithField("prefix", host)
 }
 
-func initialize() *App {
-	cfg := config.Instance()
+func initialize() *Application {
+	cfg := ConfigInstance()
 	log := logger()
 
 	db, err := models.NewConnector()
@@ -76,7 +75,7 @@ func initialize() *App {
 		log.Errorf("qbittorrent: login false")
 	}
 
-	return &App{
+	return &Application{
 		Config:      cfg,
 		DB:          db,
 		Nzbget:      nzb,
@@ -87,7 +86,7 @@ func initialize() *App {
 	}
 }
 
-func Instance() *App {
+func App() *Application {
 	once.Do(func() {
 		instance = initialize()
 	})

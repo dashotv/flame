@@ -1,4 +1,4 @@
-package media
+package app
 
 import (
 	"net/http"
@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Index(c *gin.Context) {
-	results, err := app.DB.Upcoming()
+func MediaIndex(c *gin.Context) {
+	results, err := App().DB.Upcoming()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

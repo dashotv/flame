@@ -3,22 +3,21 @@ package models
 import (
 	"fmt"
 
-	"github.com/dashotv/flame/config"
+	"github.com/dashotv/flame/app"
 	"github.com/dashotv/grimoire"
 )
 
-// Connector manages the connections to the Grimoire Database Stores
+var cfg *app.Config
+
 type Connector struct {
 	Download *grimoire.Store[*Download]
 	Medium   *grimoire.Store[*Medium]
 	Release  *grimoire.Store[*Release]
 }
 
-var cfg *config.Config
-
 func NewConnector() (*Connector, error) {
-	cfg = config.Instance()
-	var s *config.Connection
+	cfg = app.ConfigInstance()
+	var s *app.Connection
 	var err error
 
 	s, err = settingsFor("download")
@@ -60,7 +59,7 @@ func NewConnector() (*Connector, error) {
 	return c, nil
 }
 
-func settingsFor(name string) (*config.Connection, error) {
+func settingsFor(name string) (*app.Connection, error) {
 	if cfg.Connections["default"] == nil {
 		return nil, fmt.Errorf("no connection configuration for %s", name)
 	}

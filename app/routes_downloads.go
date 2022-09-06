@@ -1,4 +1,4 @@
-package downloads
+package app
 
 import (
 	"net/http"
@@ -8,8 +8,8 @@ import (
 	"github.com/dashotv/flame/models"
 )
 
-func Index(c *gin.Context) {
-	results, err := app.DB.ActiveDownloads()
+func DownloadsIndex(c *gin.Context) {
+	results, err := App().DB.ActiveDownloads()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -18,12 +18,12 @@ func Index(c *gin.Context) {
 	for _, d := range results {
 		m := &models.Medium{}
 
-		if err := app.DB.Medium.FindByID(d.MediumId, m); err != nil {
-			app.Log.Errorf("could not find medium: %s", d.MediumId)
+		if err := App().DB.Medium.FindByID(d.MediumId, m); err != nil {
+			App().Log.Errorf("could not find medium: %s", d.MediumId)
 			continue
 		}
 
-		app.Log.Infof("found %s: %s", m.ID, m.Title)
+		App().Log.Infof("found %s: %s", m.ID, m.Title)
 	}
 
 	c.JSON(http.StatusOK, results)

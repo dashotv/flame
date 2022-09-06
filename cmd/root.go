@@ -24,11 +24,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/dashotv/flame/config"
+	"github.com/dashotv/flame/app"
 )
 
 var cfgFile string
-var cfg *config.Config
+var cfg *app.Config
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -95,7 +95,7 @@ func initConfig() {
 		return
 	}
 
-	cfg = config.Instance()
+	cfg = app.ConfigInstance()
 	if err := viper.Unmarshal(cfg); err != nil {
 		logrus.Fatalf("failed to unmarshal configuration file: %s", err)
 	}

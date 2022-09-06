@@ -1,12 +1,12 @@
-package config
+package app
 
 import (
 	"errors"
 	"sync"
 )
 
-var once sync.Once
-var instance *Config
+var configOnce sync.Once
+var configInstance *Config
 
 type Config struct {
 	Qbittorrent struct {
@@ -32,11 +32,11 @@ type Connection struct {
 	Collection string `yaml:"collection,omitempty"`
 }
 
-func Instance() *Config {
+func ConfigInstance() *Config {
 	once.Do(func() {
-		instance = &Config{}
+		configInstance = &Config{}
 	})
-	return instance
+	return configInstance
 }
 
 func (c *Config) Validate() error {

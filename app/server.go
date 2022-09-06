@@ -1,4 +1,4 @@
-package server
+package app
 
 import (
 	"context"
@@ -11,8 +11,6 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 
-	"github.com/dashotv/flame/application"
-	"github.com/dashotv/flame/config"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/mercury"
@@ -23,8 +21,8 @@ var ctx = context.Background()
 type Server struct {
 	Router *gin.Engine
 	Log    *logrus.Entry
-	App    *application.App
-	Config *config.Config
+	App    *Application
+	Config *Config
 
 	merc       *mercury.Mercury
 	qbtChannel chan *qbt.Response
@@ -33,8 +31,8 @@ type Server struct {
 
 func New() (*Server, error) {
 	var err error
-	cfg := config.Instance()
-	app := application.Instance()
+	cfg := ConfigInstance()
+	app := App()
 	log := app.Log.WithField("prefix", "server")
 	s := &Server{
 		Log:    log,

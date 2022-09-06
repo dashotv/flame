@@ -10,7 +10,7 @@ routes:
   enabled: true
   name: ""
   definition: .golem/routes.yaml
-  output: server
+  output: app
   repo: github.com/dashotv/flame
 jobs:
   enabled: false

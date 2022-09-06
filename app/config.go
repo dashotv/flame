@@ -33,7 +33,7 @@ type Connection struct {
 }
 
 func ConfigInstance() *Config {
-	once.Do(func() {
+	configOnce.Do(func() {
 		configInstance = &Config{}
 	})
 	return configInstance

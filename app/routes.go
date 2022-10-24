@@ -5,6 +5,8 @@ package app
 import (
 	"net/http"
 
+	"github.com/dashotv/golem/web"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -68,13 +70,13 @@ func nzbsAddHandler(c *gin.Context) {
 }
 
 func nzbsDestroyHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := web.QueryInt(c, "id")
 
 	NzbsDestroy(c, id)
 }
 
 func nzbsHistoryHandler(c *gin.Context) {
-	hidden := c.Param("hidden")
+	hidden := web.QueryBool(c, "hidden")
 
 	NzbsHistory(c, hidden)
 }
@@ -85,26 +87,26 @@ func nzbsIndexHandler(c *gin.Context) {
 }
 
 func nzbsPauseHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := web.QueryInt(c, "id")
 
 	NzbsPause(c, id)
 }
 
 func nzbsRemoveHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := web.QueryInt(c, "id")
 
 	NzbsRemove(c, id)
 }
 
 func nzbsResumeHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := web.QueryInt(c, "id")
 
 	NzbsResume(c, id)
 }
 
 // /qbittorrents
 func qbittorrentsAddHandler(c *gin.Context) {
-	url := c.Param("url")
+	url := web.QueryString(c, "url")
 
 	QbittorrentsAdd(c, url)
 }
@@ -115,40 +117,40 @@ func qbittorrentsIndexHandler(c *gin.Context) {
 }
 
 func qbittorrentsLabelHandler(c *gin.Context) {
-	infohash := c.Param("infohash")
-	label := c.Param("label")
+	infohash := web.QueryString(c, "infohash")
+	label := web.QueryString(c, "label")
 
 	QbittorrentsLabel(c, infohash, label)
 }
 
 func qbittorrentsPauseHandler(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := web.QueryString(c, "infohash")
 
 	QbittorrentsPause(c, infohash)
 }
 
 func qbittorrentsRemoveHandler(c *gin.Context) {
-	infohash := c.Param("infohash")
-	del := c.Param("del")
+	infohash := web.QueryString(c, "infohash")
+	del := web.QueryBool(c, "del")
 
 	QbittorrentsRemove(c, infohash, del)
 }
 
 func qbittorrentsResumeHandler(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := web.QueryString(c, "infohash")
 
 	QbittorrentsResume(c, infohash)
 }
 
 func qbittorrentsWantHandler(c *gin.Context) {
-	infohash := c.Param("infohash")
-	files := c.Param("files")
+	infohash := web.QueryString(c, "infohash")
+	files := web.QueryString(c, "files")
 
 	QbittorrentsWant(c, infohash, files)
 }
 
 func qbittorrentsWantedHandler(c *gin.Context) {
-	infohash := c.Param("infohash")
+	infohash := web.QueryString(c, "infohash")
 
 	QbittorrentsWanted(c, infohash)
 }

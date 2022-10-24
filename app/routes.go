@@ -5,7 +5,6 @@ package app
 import (
 	"net/http"
 
-	"github.com/dashotv/golem/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -61,21 +60,21 @@ func mediaIndexHandler(c *gin.Context) {
 
 // /nzbs
 func nzbsAddHandler(c *gin.Context) {
-	url := web.QueryString(c, "url")
-	category := web.QueryString(c, "category")
-	name := web.QueryString(c, "name")
+	url := c.Param("url")
+	category := c.Param("category")
+	name := c.Param("name")
 
 	NzbsAdd(c, url, category, name)
 }
 
 func nzbsDestroyHandler(c *gin.Context) {
-	id := web.QueryInt(c, "id")
+	id := c.Param("id")
 
 	NzbsDestroy(c, id)
 }
 
 func nzbsHistoryHandler(c *gin.Context) {
-	hidden := web.QueryBool(c, "hidden")
+	hidden := c.Param("hidden")
 
 	NzbsHistory(c, hidden)
 }
@@ -86,26 +85,26 @@ func nzbsIndexHandler(c *gin.Context) {
 }
 
 func nzbsPauseHandler(c *gin.Context) {
-	id := web.QueryInt(c, "id")
+	id := c.Param("id")
 
 	NzbsPause(c, id)
 }
 
 func nzbsRemoveHandler(c *gin.Context) {
-	id := web.QueryInt(c, "id")
+	id := c.Param("id")
 
 	NzbsRemove(c, id)
 }
 
 func nzbsResumeHandler(c *gin.Context) {
-	id := web.QueryInt(c, "id")
+	id := c.Param("id")
 
 	NzbsResume(c, id)
 }
 
 // /qbittorrents
 func qbittorrentsAddHandler(c *gin.Context) {
-	url := web.QueryString(c, "url")
+	url := c.Param("url")
 
 	QbittorrentsAdd(c, url)
 }
@@ -116,40 +115,40 @@ func qbittorrentsIndexHandler(c *gin.Context) {
 }
 
 func qbittorrentsLabelHandler(c *gin.Context) {
-	infohash := web.QueryString(c, "infohash")
-	label := web.QueryString(c, "label")
+	infohash := c.Param("infohash")
+	label := c.Param("label")
 
 	QbittorrentsLabel(c, infohash, label)
 }
 
 func qbittorrentsPauseHandler(c *gin.Context) {
-	infohash := web.QueryString(c, "infohash")
+	infohash := c.Param("infohash")
 
 	QbittorrentsPause(c, infohash)
 }
 
 func qbittorrentsRemoveHandler(c *gin.Context) {
-	infohash := web.QueryString(c, "infohash")
-	del := web.QueryBool(c, "del")
+	infohash := c.Param("infohash")
+	del := c.Param("del")
 
 	QbittorrentsRemove(c, infohash, del)
 }
 
 func qbittorrentsResumeHandler(c *gin.Context) {
-	infohash := web.QueryString(c, "infohash")
+	infohash := c.Param("infohash")
 
 	QbittorrentsResume(c, infohash)
 }
 
 func qbittorrentsWantHandler(c *gin.Context) {
-	infohash := web.QueryString(c, "infohash")
-	files := web.QueryString(c, "files")
+	infohash := c.Param("infohash")
+	files := c.Param("files")
 
 	QbittorrentsWant(c, infohash, files)
 }
 
 func qbittorrentsWantedHandler(c *gin.Context) {
-	infohash := web.QueryString(c, "infohash")
+	infohash := c.Param("infohash")
 
 	QbittorrentsWanted(c, infohash)
 }

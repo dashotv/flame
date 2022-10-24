@@ -97,10 +97,6 @@ github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46t
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/dashotv/golem v0.0.0-20220806101154-99e9f7f9bcfd h1:KMy2m/j0FXaqIOAoJBnTKw0y2jfNrhAYrs1ZD4OCvXo=
 github.com/dashotv/golem v0.0.0-20220806101154-99e9f7f9bcfd/go.mod h1:wSVIR111AKLgwoVeNn6M17VeDeonznAu1E26oYOXofs=
-github.com/dashotv/grimoire v0.0.0-20220904035830-f053c510f53a h1:G2UFUbxsf+E/nkvHwVZAkTLNN2YK6FAT5Yc4TZ9Xzx8=
-github.com/dashotv/grimoire v0.0.0-20220904035830-f053c510f53a/go.mod h1:7/VD0Av0YkLECb5GEnDfVTsZmk7Okrov4ezGd5yUbgA=
-github.com/dashotv/grimoire v0.1.0 h1:3oQJT0Dmr8LhD91EX6IbBAHzyAPXh+lscATRaZtepv8=
-github.com/dashotv/grimoire v0.1.0/go.mod h1:7/VD0Av0YkLECb5GEnDfVTsZmk7Okrov4ezGd5yUbgA=
 github.com/dashotv/grimoire v0.1.1 h1:yUXJL0zOHexjD+oltL/y1tmfiva/fe92inHU43lhHJk=
 github.com/dashotv/grimoire v0.1.1/go.mod h1:Eo0AEi2+85255r80PajLeU62Ske4NmQFFMPDlmHWysk=
 github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd h1:dvozsbK7TJrfE8h/KsxGStvzzpBjs45uDPgnjAyUEvw=

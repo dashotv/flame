@@ -65,12 +65,11 @@ func (s *Server) Start() error {
 
 	c := cron.New(cron.WithSeconds())
 	if s.Config.Cron {
-		//if _, err := c.AddFunc("* * * * * *", s.SendTorrents); err != nil {
-		//	return errors.Wrap(err, "adding cron function")
-		//}
+		// every second SendQbittorrents
 		if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
 			return errors.Wrap(err, "adding cron function")
 		}
+		// every second SendQbittorrents
 		if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
 			return errors.Wrap(err, "adding cron function")
 		}

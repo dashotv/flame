@@ -7,11 +7,14 @@ Qbittorrent:
 Nzbget:
   URL: http://nzbget.dasho.net/jsonrpc
 Nats:
-  URL: nats://nats:680a4c58fbbc180b1f2d7a1beab63491@dokku-nats-nats:4222
+  URL: nats://host.docker.internal:4222
 connections:
   default:
-    uri: mongodb://localhost:27017
+    uri: mongodb://host.docker.internal:27017
     database: database
   download:
-    database: seer_development
+    database: seer_production
     collection: downloads
+  media:
+    database: seer_production
+    collection: media

@@ -4,7 +4,7 @@ PORT := 9001
 all: test
 
 test: generate
-	[ -f .env ] && source .env; go test -v -count=1 ./qbt ./nzbget
+	[ -f .env ] && source .env; go test -v ./qbt ./nzbget
 
 generate:
 	golem generate

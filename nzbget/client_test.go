@@ -21,8 +21,8 @@ func init() {
 func TestClient_Add(t *testing.T) {
 	c := NewClient(nzbgetURL)
 	o := NewOptions()
-	o.NiceName = "testing nice name"
-	i, err := c.Add("https://api.nzbgeek.info/api?t=get&id=906549dfb7be9683bff9920ace855bf1&apikey=eISG7JzxXnmWskK632mjY3CHRylfVuiX", o)
+	o.NiceName = "dr strange in the multiverse of madness"
+	i, err := c.Add("https://api.nzbgeek.info/api?t=get&amp;id=b8071f3fd1cb6b8a09fd3b3b25ee6bb7&amp;apikey=eISG7JzxXnmWskK632mjY3CHRylfVuiX", o)
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, i, int64(1))
 }

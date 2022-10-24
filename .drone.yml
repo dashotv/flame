@@ -1,0 +1,38 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build
+    image: golang
+    commands:
+      #      - go test -v ./... # not working and requires nzbget and qbt
+      - go build
+  - name: publish
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: dockerhub_username
+      password:
+        from_secret: dockerhub_password
+      repo: dashotv/flame
+      tags:
+        - latest
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        - 10.0.4.61
+      port: 22
+      username: deploy
+      key:
+        from_secret: ssh_key
+      command_timeout: 2m
+      script:
+        - sudo service flame restart
+
+trigger:
+  branch:
+    - main
+  event:
+    - push

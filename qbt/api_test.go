@@ -2,6 +2,7 @@ package qbt
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -27,9 +28,9 @@ var (
 )
 
 func init() {
-	qb = NewClient("http://qbittorrent.dasho.net/")
-	user = "admin"
-	pass = "adminadmin"
+	qb = NewClient(os.Getenv("QBT_URL"))
+	user = os.Getenv("QBT_USER")
+	pass = os.Getenv("QBT_PASS")
 }
 
 func printList(list *Response) {
@@ -91,19 +92,19 @@ func TestClient_WantNone(t *testing.T) {
 	url := URLs[hash]
 
 	s, err := qb.Add(url, opts)
-	assert.NoError(t, err, "should be able to add: ", hash)
+	assert.NoError(t, err, "should be able to add: %s", hash)
 	assert.Equal(t, hash, s, "hashes should match")
 
 	time.Sleep(1 * time.Second)
 	TestClient_List(t)
 	err = qb.WantNone(hash)
-	assert.NoError(t, err, "should be able to want none: ", hash)
+	assert.NoError(t, err, "should be able to want none: %s", hash)
 
 	time.Sleep(1 * time.Second)
 	torrent, err := qb.Torrent(hash)
 	for i, file := range torrent.Files {
 		if file.Priority != 0 {
-			assert.NoError(t, err, "should not be wanted: ", i)
+			assert.NoError(t, err, "should not be wanted: %s", i)
 		}
 	}
 

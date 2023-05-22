@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/cookiejar"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -217,8 +218,7 @@ func (a *Api) Add(link string, options map[string]string) (string, error) {
 }
 
 func (a *Api) Delete(hash string, perm bool) error {
-	params := map[string]string{"hashes": hash}
-	params["deleteFiles"] = fmt.Sprintf("%t", perm)
+	params := map[string]string{"hashes": hash, "deleteFiles": fmt.Sprintf("%t", perm)}
 
 	buffer, content, err := setupParams(params)
 	if err != nil {
@@ -233,5 +233,223 @@ func (a *Api) Delete(hash string, perm bool) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("delete error status code %d: %s", resp.StatusCode, resp.Status)
 	}
+	return nil
+}
+
+func (a *Api) Pause(hash string) error {
+	params := map[string]string{"hashes": hash}
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsPausePostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("pause error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
+	return nil
+}
+
+func (a *Api) PauseAll() error {
+	return a.Pause("all")
+}
+
+func (a *Api) Resume(hash string) error {
+	params := map[string]string{"hashes": hash}
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsResumePostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("resume error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
+	return nil
+}
+
+func (a *Api) ResumeAll() error {
+	return a.Resume("all")
+}
+
+func (a *Api) SetTag(hashes []string, tag string) error {
+	params := processInfoHashList(hashes)
+	params["tag"] = tag
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsAddTagsPostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("tag error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
+	return nil
+}
+
+func (a *Api) SetLabel(hashes []string, label string) error {
+	return a.SetTag(hashes, label)
+}
+
+func (a *Api) Recheck(hashes []string) error {
+	params := processInfoHashList(hashes)
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsRecheckPostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("recheck error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
+	return nil
+}
+
+func (a *Api) IncreasePriority(hashes []string) error {
+	params := processInfoHashList(hashes)
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsIncreasePrioPostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("increase priority error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
+	return nil
+}
+
+func (a *Api) DecreasePriority(hashes []string) error {
+	params := processInfoHashList(hashes)
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsDecreasePrioPostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("decrease priority error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
+	return nil
+}
+
+func (a *Api) Want(hash string, fileIDs []string) error {
+	return a.SetFilePriority(hash, fileIDs, "1")
+}
+
+func (a *Api) WantNone(hash string) error {
+	files, err := a.TorrentFiles(hash)
+	if err != nil {
+		return err
+	}
+
+	ids := make([]string, len(files))
+	for _, f := range files {
+		ids = append(ids, fmt.Sprintf("%d", f.ID))
+	}
+
+	return a.SetFilePriority(hash, ids, "0")
+}
+
+func (a *Api) Wanted(hash string) (bool, error) {
+	files, err := a.TorrentFiles(hash)
+	if err != nil {
+		return false, err
+	}
+
+	for _, f := range files {
+		if f.Priority > 0 {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+func (a *Api) WantedCount(hash string) (int, error) {
+	count := 0
+	files, err := a.TorrentFiles(hash)
+	if err != nil {
+		return -1, err
+	}
+
+	for _, f := range files {
+		if f.Priority > 0 {
+			count++
+		}
+	}
+
+	return count, nil
+}
+
+func (a *Api) SetFilePriority(hash string, fileIDs []string, priority string) error {
+	if !validPriority(priority) {
+		return fmt.Errorf("bad priority %s", priority)
+	}
+
+	list := []string{}
+	for _, s := range fileIDs {
+		if s != "" {
+			list = append(list, s)
+		}
+	}
+
+	ids := strings.Join(list, "|")
+
+	params := make(map[string]string)
+	params["hash"] = hash
+	params["id"] = ids
+	params["priority"] = priority
+
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
+	}
+
+	resp, err := a.Client.TorrentsFilePrioPostWithBody(a.Ctx, content, buffer)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("set file priority error status code %d: %s", resp.StatusCode, resp.Status)
+	}
+
 	return nil
 }

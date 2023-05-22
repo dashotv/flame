@@ -28,13 +28,8 @@ func QbittorrentsAdd(c *gin.Context, URL string) {
 }
 
 func QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
-	var err error
+	err := App().Qbittorrent.Delete(infohash, del)
 
-	if del {
-		_, err = App().Qbittorrent.DeletePermanently([]string{infohash})
-	} else {
-		_, err = App().Qbittorrent.DeleteTemp([]string{infohash})
-	}
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -55,7 +50,7 @@ func QbittorrentsIndex(c *gin.Context) {
 }
 
 func QbittorrentsLabel(c *gin.Context, infohash, label string) {
-	_, err := App().Qbittorrent.SetLabel([]string{infohash}, label)
+	err := App().Qbittorrent.SetLabel([]string{infohash}, label)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -69,7 +64,7 @@ func QbittorrentsPause(c *gin.Context, infohash string) {
 		QbittorrentsPauseAll(c)
 		return
 	}
-	_, err := App().Qbittorrent.Pause(infohash)
+	err := App().Qbittorrent.Pause(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -78,7 +73,7 @@ func QbittorrentsPause(c *gin.Context, infohash string) {
 }
 
 func QbittorrentsPauseAll(c *gin.Context) {
-	_, err := App().Qbittorrent.PauseAll()
+	err := App().Qbittorrent.PauseAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -92,7 +87,7 @@ func QbittorrentsResume(c *gin.Context, infohash string) {
 		return
 	}
 
-	_, err := App().Qbittorrent.Resume(infohash)
+	err := App().Qbittorrent.Resume(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -102,7 +97,7 @@ func QbittorrentsResume(c *gin.Context, infohash string) {
 }
 
 func QbittorrentsResumeAll(c *gin.Context) {
-	_, err := App().Qbittorrent.ResumeAll()
+	err := App().Qbittorrent.ResumeAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

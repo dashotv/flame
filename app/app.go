@@ -25,7 +25,7 @@ type Application struct {
 	DB     *Connector
 
 	Nzbget      *nzbget.Client
-	Qbittorrent *qbt.Client
+	Qbittorrent *qbt.Api
 }
 
 func logger() *logrus.Entry {
@@ -65,7 +65,7 @@ func initialize() *Application {
 	nzb := nzbget.NewClient(cfg.Nzbget.URL)
 
 	log.Infof("connecting qbittorrent: %s", cfg.Qbittorrent.URL)
-	qb := qbt.NewClient(cfg.Qbittorrent.URL)
+	qb := qbt.NewApi(cfg.Qbittorrent.URL)
 	ok, err := qb.Login(cfg.Qbittorrent.Username, cfg.Qbittorrent.Password)
 	if err != nil {
 		log.Errorf("qbittorrent: could not login: %s", err)

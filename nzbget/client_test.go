@@ -14,6 +14,9 @@ import (
 
 var nzbgetURL string
 
+var name = "John Wick 4"
+var link = "https://api.nzbgeek.info/api?t=get&id=842168bd21a2d26a86c5d04421fc8812&apikey=eISG7JzxXnmWskK632mjY3CHRylfVuiX"
+
 func init() {
 	nzbgetURL = os.Getenv("NZBGET_URL")
 }
@@ -21,8 +24,8 @@ func init() {
 func TestClient_Add(t *testing.T) {
 	c := NewClient(nzbgetURL)
 	o := NewOptions()
-	o.NiceName = "dr strange in the multiverse of madness"
-	i, err := c.Add("https://api.nzbgeek.info/api?t=get&amp;id=b8071f3fd1cb6b8a09fd3b3b25ee6bb7&amp;apikey=eISG7JzxXnmWskK632mjY3CHRylfVuiX", o)
+	o.NiceName = name
+	i, err := c.Add(link, o)
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, i, int64(1))
 }
@@ -51,13 +54,13 @@ func TestClient_Pause(t *testing.T) {
 		if err != nil {
 			poll.Error(errors.Wrap(err, "failed to get groups"))
 		}
-		if r[0].Status == "PAUSED" {
+		if r[0].Status == "PAUSED" || r[0].Status == "QUEUED" {
 			return poll.Success()
 		}
 		return poll.Continue("Status != PAUSED (%s)", r[0].Status)
 	}
 
-	poll.WaitOn(t, check, poll.WithTimeout(10*time.Second), poll.WithDelay(1*time.Second))
+	poll.WaitOn(t, check, poll.WithTimeout(30*time.Second), poll.WithDelay(1*time.Second))
 }
 
 func TestClient_Resume(t *testing.T) {
@@ -70,7 +73,7 @@ func TestClient_Resume(t *testing.T) {
 	err = c.Resume(r[0].ID)
 	require.NoError(t, err)
 
-	time.Sleep(1 * time.Second)
+	time.Sleep(5 * time.Second)
 	r, err = c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)

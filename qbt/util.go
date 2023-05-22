@@ -1,8 +1,10 @@
 package qbt
 
 import (
+	"bytes"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strings"
@@ -97,4 +99,17 @@ func processInfoHashList(infoHashList []string) (hashMap map[string]string) {
 	params := map[string]string{}
 	params["hashes"] = strings.Join(infoHashList, "|")
 	return params
+}
+
+func setupParams(params map[string]string) (*bytes.Buffer, string, error) {
+	buffer := &bytes.Buffer{}
+	writer := multipart.NewWriter(buffer)
+	for key, val := range params {
+		writer.WriteField(key, val)
+	}
+	if err := writer.Close(); err != nil {
+		return nil, "", errors.Wrap(err, "failed to close writer")
+	}
+
+	return buffer, writer.FormDataContentType(), nil
 }

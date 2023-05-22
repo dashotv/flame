@@ -1,11 +1,9 @@
 package qbt
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"mime/multipart"
 	"net/http"
 	"net/http/cookiejar"
 	"time"
@@ -201,16 +199,12 @@ func (a *Api) Add(link string, options map[string]string) (string, error) {
 		params[k] = v
 	}
 
-	var buffer bytes.Buffer
-	writer := multipart.NewWriter(&buffer)
-	for key, val := range params {
-		writer.WriteField(key, val)
-	}
-	if err := writer.Close(); err != nil {
-		return "", errors.Wrap(err, "failed to close writer")
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return "", errors.Wrap(err, "setup params")
 	}
 
-	resp, err := a.Client.TorrentsAddPostWithBody(a.Ctx, writer.FormDataContentType(), &buffer)
+	resp, err := a.Client.TorrentsAddPostWithBody(a.Ctx, content, buffer)
 	if err != nil {
 		return "", err
 	}
@@ -226,16 +220,12 @@ func (a *Api) Delete(hash string, perm bool) error {
 	params := map[string]string{"hashes": hash}
 	params["deleteFiles"] = fmt.Sprintf("%t", perm)
 
-	var buffer bytes.Buffer
-	writer := multipart.NewWriter(&buffer)
-	for key, val := range params {
-		writer.WriteField(key, val)
-	}
-	if err := writer.Close(); err != nil {
-		return errors.Wrap(err, "failed to close writer")
+	buffer, content, err := setupParams(params)
+	if err != nil {
+		return errors.Wrap(err, "setup params")
 	}
 
-	resp, err := a.Client.TorrentsDeletePostWithBody(a.Ctx, writer.FormDataContentType(), &buffer)
+	resp, err := a.Client.TorrentsDeletePostWithBody(a.Ctx, content, buffer)
 	if err != nil {
 		return err
 	}

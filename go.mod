@@ -7,7 +7,7 @@ go 1.18
 require (
 	github.com/anacrolix/torrent v1.46.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
-	github.com/dashotv/golem v0.6.2
+	github.com/dashotv/golem v0.6.3
 	github.com/dashotv/grimoire v0.2.2
 	github.com/dashotv/mercury v0.0.0-20191123112423-0a4863e890cd
 	github.com/deepmap/oapi-codegen v1.12.4
@@ -52,6 +52,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
+	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/invopop/yaml v0.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -61,6 +62,7 @@ require (
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

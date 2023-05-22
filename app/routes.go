@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/dashotv/golem/web"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -62,9 +61,9 @@ func mediaIndexHandler(c *gin.Context) {
 
 // /nzbs
 func nzbsAddHandler(c *gin.Context) {
-	url := c.Param("url")
-	category := c.Param("category")
-	name := c.Param("name")
+	url := web.QueryString(c, "url")
+	category := web.QueryString(c, "category")
+	name := web.QueryString(c, "name")
 
 	NzbsAdd(c, url, category, name)
 }

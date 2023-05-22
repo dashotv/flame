@@ -153,7 +153,7 @@ func (t *Torrent) MarshalJSON() ([]byte, error) {
 //	UpSpeedAvg             int     `json:"up_speed_avg"`
 //}
 
-//Tracker holds a tracker object from qbittorrent
+// Tracker holds a tracker object from qbittorrent
 type Tracker struct {
 	Msg      string `json:"msg"`
 	NumPeers int    `json:"num_peers"`
@@ -161,12 +161,12 @@ type Tracker struct {
 	URL      string `json:"url"`
 }
 
-//WebSeed holds a webseed object from qbittorrent
+// WebSeed holds a webseed object from qbittorrent
 type WebSeed struct {
 	URL string `json:"url"`
 }
 
-//TorrentFile holds a torrent file object from qbittorrent
+// TorrentFile holds a torrent file object from qbittorrent
 type TorrentFile struct {
 	ID       int     `json:"id"`
 	Name     string  `json:"name"`
@@ -191,8 +191,8 @@ func (f *TorrentFile) Pretty() string {
 //	return json.Marshal(n)
 //}
 
-//Sync holds the sync response struct which contains
-//the server state and a map of infohashes to Torrents
+// Sync holds the sync response struct which contains
+// the server state and a map of infohashes to Torrents
 type Sync struct {
 	Rid        int                `json:"rid"`
 	FullUpdate bool               `json:"full_update"`

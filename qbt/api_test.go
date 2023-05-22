@@ -1,17 +1,12 @@
 package qbt
 
 import (
-	"fmt"
-	"os"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-var qb *Client
-var user, pass string
 var (
 	URLs = map[string]string{
 		"6f8cd699135b491513e65d967a052a7087750d9c": "http://www.slackware.com/torrents/slackware-14.1-install-d1.torrent",
@@ -27,130 +22,30 @@ var (
 	}
 )
 
-func init() {
-	qb = NewClient(os.Getenv("QBT_URL"))
-	user = os.Getenv("QBT_USER")
-	pass = os.Getenv("QBT_PASS")
+func TestApi_Login(t *testing.T) {
+	api := NewApi("http://qbittorrent.dasho.net")
+	ok, err := api.Login("admin", "adminadmin")
+
+	assert.True(t, ok)
+	assert.NoError(t, err)
+
+	r, err := api.List()
+
+	assert.NoError(t, err)
+	assert.NotNil(t, r)
 }
 
-func printList(list *Response) {
-	fmt.Println(list.Pretty())
-	for _, t := range list.Torrents {
-		fmt.Println(t.Pretty())
-	}
-}
-
-func TestClient_Login(t *testing.T) {
-	ok, err := qb.Login(user, pass)
-	assert.NoError(t, err, "logging in")
-	assert.Equal(t, true, ok, "logged in")
-}
-
-//func TestClient_Logout(t *testing.T) {
-//	ok, err := qb.Logout()
-//	if err != nil {
-//		t.Errorf("error logging out: %s", err)
-//	}
-//	if ok {
-//		t.Error("logged out but still logged in")
-//	}
-//}
-
-func TestClient_Add(t *testing.T) {
-	//if r, err = c.List(); err != nil {
-	//	require.NoError(t, err, "should be able to list")
-	//}
-	//printResponse(r)
-
+func TestApi_Add(t *testing.T) {
+	api := NewApi("http://qbittorrent.dasho.net")
 	opts := map[string]string{}
 
 	for k, v := range URLs {
-		s, err := qb.Add(v, opts)
+		s, err := api.Add(v, opts)
 		assert.NoError(t, err, "should be able to add: ", v)
 		assert.Equal(t, k, s, "hashes should match")
 
 		time.Sleep(1 * time.Second)
-		_, err = qb.Delete(k, true)
+		err = api.Delete(k, true)
 		assert.NoError(t, err, "shouldn't fail to remove")
 	}
-
-	//time.Sleep(1 * time.Second)
-	//if r, err = c.List(); err != nil {
-	//	require.NoError(t, err, "should be able to list")
-	//}
-	//printResponse(r)
-}
-
-func TestClient_WantNone(t *testing.T) {
-	//if r, err = c.List(); err != nil {
-	//	require.NoError(t, err, "should be able to list")
-	//}
-	//printResponse(r)
-
-	opts := map[string]string{}
-	hash := "6f8cd699135b491513e65d967a052a7087750d9c"
-	url := URLs[hash]
-
-	s, err := qb.Add(url, opts)
-	assert.NoError(t, err, "should be able to add: %s", hash)
-	assert.Equal(t, hash, s, "hashes should match")
-
-	time.Sleep(1 * time.Second)
-	TestClient_List(t)
-	err = qb.WantNone(hash)
-	assert.NoError(t, err, "should be able to want none: %s", hash)
-
-	time.Sleep(1 * time.Second)
-	torrent, err := qb.Torrent(hash)
-	for i, file := range torrent.Files {
-		if file.Priority != 0 {
-			assert.NoError(t, err, "should not be wanted: %s", i)
-		}
-	}
-
-	time.Sleep(1 * time.Second)
-	TestClient_List(t)
-	_, err = qb.Delete(hash, true)
-	assert.NoError(t, err, "shouldn't fail to remove")
-}
-
-func TestClient_WantedCount(t *testing.T) {
-	//if r, err = c.List(); err != nil {
-	//	require.NoError(t, err, "should be able to list")
-	//}
-	//printResponse(r)
-
-	opts := map[string]string{}
-	hash := "6f8cd699135b491513e65d967a052a7087750d9c"
-	url := URLs[hash]
-
-	s, err := qb.Add(url, opts)
-	assert.NoError(t, err, "should be able to add: ", hash)
-	assert.Equal(t, hash, s, "hashes should match")
-
-	time.Sleep(1 * time.Second)
-	count, err := qb.WantedCount(hash)
-	assert.NoError(t, err, "should be able to want none: ", hash)
-	assert.Equal(t, count, 4, "wanted count should be 4")
-
-	_, err = qb.Delete(hash, true)
-	assert.NoError(t, err, "shouldn't fail to remove")
-}
-
-func TestClient_Sync(t *testing.T) {
-	sync, err := qb.Sync("0")
-	assert.NoError(t, err, "should be able to get sync")
-	assert.Equal(t, 1, sync.Rid, "request id")
-}
-
-func TestClient_Torrents(t *testing.T) {
-	list, err := qb.Torrents(nil)
-	require.NoError(t, err, "should be able to get torrents")
-	fmt.Printf("list: %#v\n", list)
-}
-
-func TestClient_List(t *testing.T) {
-	list, err := qb.List()
-	require.NoError(t, err, "should be able to get list")
-	printList(list)
 }

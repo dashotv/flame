@@ -11,6 +11,15 @@ import (
 	"github.com/pkg/errors"
 )
 
+func validPriority(priority string) bool {
+	switch priority {
+	case "0", "1", "2", "7":
+		return true
+	default:
+		return false
+	}
+}
+
 func InfohashFromURL(rawurl string) (string, error) {
 	u, err := url.Parse(rawurl)
 	if err != nil {
@@ -82,9 +91,9 @@ func magnetInfohash(URL *url.URL) (string, error) {
 	return h, nil
 }
 
-//processInfoHashList puts list into a combined (single element) map with all hashes connected with '|'
-//this is how the WEBUI API recognizes multiple hashes
-func (Client) processInfoHashList(infoHashList []string) (hashMap map[string]string) {
+// processInfoHashList puts list into a combined (single element) map with all hashes connected with '|'
+// this is how the WEBUI API recognizes multiple hashes
+func processInfoHashList(infoHashList []string) (hashMap map[string]string) {
 	params := map[string]string{}
 	params["hashes"] = strings.Join(infoHashList, "|")
 	return params

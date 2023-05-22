@@ -2,3 +2,4 @@ vendor
 /flame
 gin-bin
 tmp
+*.old

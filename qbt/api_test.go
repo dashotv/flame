@@ -19,6 +19,7 @@ var (
 
 	magnetURLs = map[string]string{
 		"6293ed83c38a1b988f201f7f0b1ab315971ff38f": "magnet:?xt=urn:btih:6293ed83c38a1b988f201f7f0b1ab315971ff38f&dn=ubuntu+mini+remix+13.04+x32+&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80&tr=udp%3a%2f%2ftracker.publicbt.com%3a80&tr=udp%3a%2f%2ftracker.istole.it%3a6969&tr=udp%3a%2f%2ftracker.ccc.de%3a80&tr=udp%3a%2f%2fopen.demonii.com%3a1337",
+		"68d583f28dc697401a8b769fecbe011272e1dc89": "magnet:?xt=urn:btih:68d583f28dc697401a8b769fecbe011272e1dc89",
 	}
 )
 
@@ -48,4 +49,18 @@ func TestApi_Add(t *testing.T) {
 		err = api.Delete(k, true)
 		assert.NoError(t, err, "shouldn't fail to remove")
 	}
+
+	for k, v := range magnetURLs {
+		s, err := api.Add(v, opts)
+		assert.NoError(t, err, "should be able to add: ", v)
+		assert.Equal(t, k, s, "hashes should match")
+
+		time.Sleep(1 * time.Second)
+		err = api.Delete(k, true)
+		assert.NoError(t, err, "shouldn't fail to remove")
+	}
+
+	list, err := api.Torrents("priority")
+	assert.NoError(t, err)
+	assert.Equal(t, len(list), 0)
 }

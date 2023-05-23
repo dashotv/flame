@@ -12,12 +12,6 @@ import (
 func (s *Server) Routes() {
 	s.Router.GET("/", homeHandler)
 
-	downloads := s.Router.Group("/downloads")
-	downloads.GET("/", downloadsIndexHandler)
-
-	media := s.Router.Group("/media")
-	media.GET("/", mediaIndexHandler)
-
 	nzbs := s.Router.Group("/nzbs")
 	nzbs.GET("/add", nzbsAddHandler)
 	nzbs.GET("/destroy", nzbsDestroyHandler)
@@ -45,18 +39,6 @@ func homeHandler(c *gin.Context) {
 
 func Index(c *gin.Context) {
 	c.String(http.StatusOK, "home")
-}
-
-// /downloads
-func downloadsIndexHandler(c *gin.Context) {
-
-	DownloadsIndex(c)
-}
-
-// /media
-func mediaIndexHandler(c *gin.Context) {
-
-	MediaIndex(c)
 }
 
 // /nzbs

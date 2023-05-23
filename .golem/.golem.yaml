@@ -2,7 +2,7 @@ file: ""
 name: flame
 repo: github.com/dashotv/flame
 models:
-  enabled: true
+  enabled: false
   package: app
   output: app
   definitions: .golem/models

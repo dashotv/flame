@@ -1,16 +1,6 @@
 name: flame
 repo: github.com/dashotv/flame
 groups:
-  media:
-    path: /media
-    routes:
-      index:
-        path: /
-  downloads:
-    path: /downloads
-    routes:
-      index:
-        path: /
   nzbs:
     path: /nzbs
     routes:

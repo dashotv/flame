@@ -23,7 +23,6 @@ type Application struct {
 	Router *gin.Engine
 	Cache  *redis.Client
 	Log    *logrus.Entry
-	DB     *Connector
 
 	Nzbget      *nzbget.Client
 	Qbittorrent *qbt.Api
@@ -39,11 +38,6 @@ func logger() *logrus.Entry {
 func initialize() *Application {
 	cfg := ConfigInstance()
 	log := logger()
-
-	db, err := NewConnector()
-	if err != nil {
-		log.Errorf("database connection failed: %s", err)
-	}
 
 	if cfg.Mode == "dev" {
 		logrus.SetLevel(logrus.DebugLevel)
@@ -81,7 +75,6 @@ func initialize() *Application {
 
 	return &Application{
 		Config:      cfg,
-		DB:          db,
 		Nzbget:      nzb,
 		Qbittorrent: qb,
 		Router:      router,

@@ -8,6 +8,9 @@ Nzbget:
   URL: http://nzbget.dasho.net/jsonrpc
 Nats:
   URL: nats://host.docker.internal:4222
+Redis:
+  host: host.docker.internal
+  port: 6379
 connections:
   default:
     uri: mongodb://host.docker.internal:27017

@@ -20,6 +20,10 @@ type Config struct {
 	Nats struct {
 		URL string
 	}
+	Redis struct {
+		Host string
+		Port string
+	}
 	Port        int
 	Mode        string
 	Cron        bool

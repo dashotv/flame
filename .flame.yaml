@@ -9,6 +9,8 @@ Nzbget:
   URL: http://nzbget.dasho.net/jsonrpc
 Nats:
   URL: nats://dashotv-nats-1:4222
+Redis:
+  URL: dashotv-redis-1:6379
 connections:
   default:
     uri: mongodb://db:27017

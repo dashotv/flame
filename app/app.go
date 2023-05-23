@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"sync"
 
@@ -55,9 +56,8 @@ func initialize() *Application {
 	router := gin.New()
 	router.Use(ginlogrus.Logger(log), gin.Recovery())
 
-	// TODO: add this to config
 	cache := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: fmt.Sprintf("%s:%s", cfg.Redis.Host, cfg.Redis.Port),
 		DB:   15, // use default DB
 	})
 

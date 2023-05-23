@@ -1,7 +1,7 @@
 package app
 
 import (
-	"fmt"
+	"context"
 	"os"
 	"sync"
 
@@ -56,10 +56,15 @@ func initialize() *Application {
 	router := gin.New()
 	router.Use(ginlogrus.Logger(log), gin.Recovery())
 
+	log.Infof("connecting redis: %s", cfg.RedisURL())
 	cache := redis.NewClient(&redis.Options{
-		Addr: fmt.Sprintf("%s:%s", cfg.Redis.Host, cfg.Redis.Port),
+		Addr: cfg.RedisURL(),
 		DB:   15, // use default DB
 	})
+	status := cache.Ping(context.Background())
+	if status.Err() != nil {
+		log.Fatalf("failed to connect to redis: %s", status.Err())
+	}
 
 	log.Infof("connecting nzbget: %s", cfg.Nzbget.URL)
 	nzb := nzbget.NewClient(cfg.Nzbget.URL)

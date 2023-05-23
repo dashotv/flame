@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 )
 
@@ -34,6 +35,10 @@ type Connection struct {
 	URI        string `yaml:"uri,omitempty"`
 	Database   string `yaml:"database,omitempty"`
 	Collection string `yaml:"collection,omitempty"`
+}
+
+func (c *Config) RedisURL() string {
+	return fmt.Sprintf("%s:%s", c.Redis.Host, c.Redis.Port)
 }
 
 func ConfigInstance() *Config {

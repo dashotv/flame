@@ -33,7 +33,6 @@ func New() (*Server, error) {
 	var err error
 	cfg := ConfigInstance()
 	app := App()
-	fmt.Printf("%v\n", app)
 	log := app.Log.WithField("prefix", "server")
 	s := &Server{
 		Log:    log,

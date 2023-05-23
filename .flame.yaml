@@ -10,7 +10,8 @@ Nzbget:
 Nats:
   URL: nats://dashotv-nats-1:4222
 Redis:
-  URL: dashotv-redis-1:6379
+  host: dashotv-redis-1
+  port: 6379
 connections:
   default:
     uri: mongodb://db:27017

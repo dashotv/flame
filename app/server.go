@@ -88,19 +88,19 @@ func (s *Server) Start() error {
 func (s *Server) SendQbittorrents() {
 	resp, err := App().Qbittorrent.List()
 	if err != nil {
-		logrus.Errorf("couldn't get torrent list: %s", err)
+		s.Log.Errorf("couldn't get torrent list: %s", err)
 		return
 	}
 
 	b, err := json.Marshal(&resp)
 	if err != nil {
-		logrus.Errorf("couldn't marshal torrents: %s", err)
+		s.Log.Errorf("couldn't marshal torrents: %s", err)
 		return
 	}
 
 	status := App().Cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
 	if status.Err() != nil {
-		logrus.Errorf("sendqbts: set cache failed: %s", status.Err())
+		s.Log.Errorf("sendqbts: set cache failed: %s", status.Err())
 	}
 	s.qbtChannel <- resp
 }
@@ -108,19 +108,19 @@ func (s *Server) SendQbittorrents() {
 func (s *Server) SendNzbs() {
 	resp, err := App().Nzbget.List()
 	if err != nil {
-		logrus.Errorf("couldn't get nzb list: %s", err)
+		s.Log.Errorf("couldn't get nzb list: %s", err)
 		return
 	}
 
 	b, err := json.Marshal(&resp)
 	if err != nil {
-		logrus.Errorf("couldn't marshal nzbs: %s", err)
+		s.Log.Errorf("couldn't marshal nzbs: %s", err)
 		return
 	}
 
 	status := App().Cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
 	if status.Err() != nil {
-		logrus.Errorf("sendnzbs: set cache failed: %s", status.Err())
+		s.Log.Errorf("sendnzbs: set cache failed: %s", status.Err())
 	}
 	s.nzbChannel <- resp
 }

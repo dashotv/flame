@@ -40,6 +40,10 @@ func TestApi_Add(t *testing.T) {
 	api := NewApi("http://qbittorrent.dasho.net")
 	opts := map[string]string{}
 
+	list, err := api.Torrents("priority")
+	assert.NoError(t, err)
+	count := len(list)
+
 	for k, v := range URLs {
 		s, err := api.Add(v, opts)
 		assert.NoError(t, err, "should be able to add: ", v)
@@ -60,7 +64,7 @@ func TestApi_Add(t *testing.T) {
 		assert.NoError(t, err, "shouldn't fail to remove")
 	}
 
-	list, err := api.Torrents("priority")
+	list, err = api.Torrents("priority")
 	assert.NoError(t, err)
-	assert.Equal(t, len(list), 0)
+	assert.Equal(t, len(list), count)
 }

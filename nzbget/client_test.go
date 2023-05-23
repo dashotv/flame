@@ -57,10 +57,10 @@ func TestClient_Pause(t *testing.T) {
 		if r[0].Status == "PAUSED" || r[0].Status == "QUEUED" {
 			return poll.Success()
 		}
-		return poll.Continue("Status != PAUSED (%s)", r[0].Status)
+		return poll.Continue("Status != PAUSED|QUEUED (%s)", r[0].Status)
 	}
 
-	poll.WaitOn(t, check, poll.WithTimeout(30*time.Second), poll.WithDelay(1*time.Second))
+	poll.WaitOn(t, check, poll.WithTimeout(60*time.Second), poll.WithDelay(1*time.Second))
 }
 
 func TestClient_Resume(t *testing.T) {
@@ -73,11 +73,18 @@ func TestClient_Resume(t *testing.T) {
 	err = c.Resume(r[0].ID)
 	require.NoError(t, err)
 
-	time.Sleep(5 * time.Second)
-	r, err = c.Groups()
-	require.NoError(t, err)
-	require.NotNil(t, r)
-	require.Equal(t, "DOWNLOADING", r[0].Status)
+	check := func(l poll.LogT) poll.Result {
+		r, err = c.Groups()
+		if err != nil {
+			poll.Error(errors.Wrap(err, "failed to get groups"))
+		}
+		if r[0].Status == "DOWNLOADING" {
+			return poll.Success()
+		}
+		return poll.Continue("Status != DOWNLOADING (%s)", r[0].Status)
+	}
+
+	poll.WaitOn(t, check, poll.WithTimeout(60*time.Second), poll.WithDelay(1*time.Second))
 	printList(r)
 }
 

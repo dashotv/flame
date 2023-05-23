@@ -31,14 +31,10 @@ type Server struct {
 
 func New() (*Server, error) {
 	var err error
-	cfg := ConfigInstance()
-	app := App()
-	log := app.Log.WithField("prefix", "server")
 	s := &Server{
-		Log:    log,
-		Router: app.Router,
-		App:    app,
-		Config: cfg,
+		Log:    App().Log,
+		Router: App().Router,
+		Config: ConfigInstance(),
 	}
 
 	s.merc, err = mercury.New("flame", s.Config.Nats.URL)
@@ -90,7 +86,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) SendQbittorrents() {
-	resp, err := s.App.Qbittorrent.List()
+	resp, err := App().Qbittorrent.List()
 	if err != nil {
 		logrus.Errorf("couldn't get torrent list: %s", err)
 		return
@@ -102,12 +98,15 @@ func (s *Server) SendQbittorrents() {
 		return
 	}
 
-	s.App.Cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
+	status := App().Cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
+	if status.Err() != nil {
+		logrus.Errorf("sendqbts: set cache failed: %s", status.Err())
+	}
 	s.qbtChannel <- resp
 }
 
 func (s *Server) SendNzbs() {
-	resp, err := s.App.Nzbget.List()
+	resp, err := App().Nzbget.List()
 	if err != nil {
 		logrus.Errorf("couldn't get nzb list: %s", err)
 		return
@@ -119,6 +118,9 @@ func (s *Server) SendNzbs() {
 		return
 	}
 
-	s.App.Cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
+	status := App().Cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
+	if status.Err() != nil {
+		logrus.Errorf("sendnzbs: set cache failed: %s", status.Err())
+	}
 	s.nzbChannel <- resp
 }

@@ -58,8 +58,9 @@ func New() (*Server, error) {
 func (s *Server) Start() error {
 	s.Log.Info("starting flame...")
 
-	c := cron.New(cron.WithSeconds())
 	if s.Config.Cron {
+		c := cron.New(cron.WithSeconds())
+
 		// every second SendQbittorrents
 		if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
 			return errors.Wrap(err, "adding cron function")
@@ -68,12 +69,12 @@ func (s *Server) Start() error {
 		if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
 			return errors.Wrap(err, "adding cron function")
 		}
-	}
 
-	go func() {
-		s.Log.Info("starting cron...")
-		c.Start()
-	}()
+		go func() {
+			s.Log.Info("starting cron...")
+			c.Start()
+		}()
+	}
 
 	s.Routes()
 
@@ -86,7 +87,6 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) SendQbittorrents() {
-	s.Log.Info("SendQbittorrents")
 	resp, err := App().Qbittorrent.List()
 	if err != nil {
 		s.Log.Errorf("couldn't get torrent list: %s", err)
@@ -107,7 +107,6 @@ func (s *Server) SendQbittorrents() {
 }
 
 func (s *Server) SendNzbs() {
-	s.Log.Info("SendNzbs")
 	resp, err := App().Nzbget.List()
 	if err != nil {
 		s.Log.Errorf("couldn't get nzb list: %s", err)

@@ -59,7 +59,7 @@ func initialize() *Application {
 	log.Infof("connecting redis: %s", cfg.RedisURL())
 	cache := redis.NewClient(&redis.Options{
 		Addr: cfg.RedisURL(),
-		DB:   15, // use default DB
+		DB:   cfg.Redis.Database,
 	})
 	status := cache.Ping(context.Background())
 	if status.Err() != nil {

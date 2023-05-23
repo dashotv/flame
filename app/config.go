@@ -22,8 +22,9 @@ type Config struct {
 		URL string
 	}
 	Redis struct {
-		Host string
-		Port string
+		Host     string
+		Port     string
+		Database int
 	}
 	Port        int
 	Mode        string

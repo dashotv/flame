@@ -11,6 +11,7 @@ Nats:
 Redis:
   host: host.docker.internal
   port: 6379
+  database: 15
 connections:
   default:
     uri: mongodb://host.docker.internal:27017

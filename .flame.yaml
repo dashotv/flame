@@ -12,6 +12,7 @@ Nats:
 Redis:
   host: dashotv-redis-1
   port: 6379
+  database: 15
 connections:
   default:
     uri: mongodb://db:27017

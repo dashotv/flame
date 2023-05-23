@@ -86,6 +86,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) SendQbittorrents() {
+	s.Log.Info("SendQbittorrents")
 	resp, err := App().Qbittorrent.List()
 	if err != nil {
 		s.Log.Errorf("couldn't get torrent list: %s", err)
@@ -106,6 +107,7 @@ func (s *Server) SendQbittorrents() {
 }
 
 func (s *Server) SendNzbs() {
+	s.Log.Info("SendNzbs")
 	resp, err := App().Nzbget.List()
 	if err != nil {
 		s.Log.Errorf("couldn't get nzb list: %s", err)

@@ -86,6 +86,9 @@ func (a *Api) Login(username, password string) (ok bool, err error) {
 
 func (a *Api) List() (*Response, error) {
 	sync, err := a.Sync(0)
+	if err != nil {
+		return nil, err
+	}
 
 	torrents, err := a.Torrents("priority")
 	if err != nil {
@@ -183,7 +186,7 @@ func (a *Api) Sync(requestID int) (*Sync, error) {
 
 	err = json.NewDecoder(resp.Body).Decode(s)
 	if err != nil {
-		return s, err
+		return nil, err
 	}
 
 	return s, nil

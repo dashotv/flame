@@ -63,11 +63,15 @@ func (s *Server) Start() error {
 
 		// every second SendQbittorrents
 		if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
-			return errors.Wrap(err, "adding cron function")
+			return errors.Wrap(err, "adding send qbts cron function")
 		}
 		// every second SendQbittorrents
 		if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
-			return errors.Wrap(err, "adding cron function")
+			return errors.Wrap(err, "adding send nzbs cron function")
+		}
+		// every 10 minutes check disk space
+		if _, err := c.AddFunc("0 */1 * * * *", s.CheckDisk); err != nil {
+			return errors.Wrap(err, "adding check disk cron function")
 		}
 
 		go func() {
@@ -124,4 +128,22 @@ func (s *Server) SendNzbs() {
 		s.Log.Errorf("sendnzbs: set cache failed: %s", status.Err())
 	}
 	s.nzbChannel <- resp
+}
+
+func (s *Server) CheckDisk() {
+	//s.Log.Infof("checkdisk: checking free disk space")
+	resp, err := App().Nzbget.List()
+	if err != nil {
+		s.Log.Errorf("couldn't get nzb list: %s", err)
+		return
+	}
+
+	//s.Log.Infof("checkdisk: checking free disk space: %d MB", resp.Status.FreeDiskSpaceMB)
+	if resp.Status.FreeDiskSpaceMB < 5000 {
+		s.Log.Warnf("checkdisk: free disk space low")
+		err := App().Qbittorrent.PauseAll()
+		if err != nil {
+			s.Log.Errorf("checkdisk: failed to pause all qbts: %s", err)
+		}
+	}
 }

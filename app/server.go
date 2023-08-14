@@ -139,7 +139,7 @@ func (s *Server) CheckDisk() {
 	}
 
 	//s.Log.Infof("checkdisk: checking free disk space: %d MB", resp.Status.FreeDiskSpaceMB)
-	if resp.Status.FreeDiskSpaceMB < 5000 {
+	if resp.Status.FreeDiskSpaceMB < 25000 {
 		s.Log.Warnf("checkdisk: free disk space low")
 		err := App().Qbittorrent.PauseAll()
 		if err != nil {

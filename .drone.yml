@@ -30,6 +30,11 @@ steps:
       command_timeout: 2m
       script:
         - sudo service flame restart
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
 
 trigger:
   branch:

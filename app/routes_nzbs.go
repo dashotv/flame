@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dashotv/golem/web"
 	"github.com/gin-gonic/gin"
 
 	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/golem/web"
 )
 
 func NzbsAdd(c *gin.Context, URL, cat, name string) {
@@ -58,9 +58,7 @@ func NzbsRemove(c *gin.Context, id int) {
 }
 
 func NzbsDestroy(c *gin.Context, id int) {
-	var err error
-
-	err = App().Nzbget.Destroy(id)
+	err := App().Nzbget.Destroy(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

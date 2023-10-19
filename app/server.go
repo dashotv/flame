@@ -69,7 +69,7 @@ func (s *Server) Start() error {
 		if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
 			return errors.Wrap(err, "adding send nzbs cron function")
 		}
-		// every 10 minutes check disk space
+		// every 1 minutes check disk space
 		if _, err := c.AddFunc("0 */1 * * * *", s.CheckDisk); err != nil {
 			return errors.Wrap(err, "adding check disk cron function")
 		}

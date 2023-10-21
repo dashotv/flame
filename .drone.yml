@@ -29,7 +29,7 @@ steps:
         from_secret: ssh_key
       command_timeout: 2m
       script:
-        - cd /etc/dashotv && docker-compose pull flame && docker-compose restart flame
+        - cd /etc/dashotv && docker compose pull flame && docker compose restart flame
   - name: slack
     image: plugins/slack
     settings:
@@ -43,3 +43,4 @@ trigger:
     - main
   event:
     - push
+    - custom

@@ -15,5 +15,4 @@ FROM alpine
 # Copy our static executable.
 WORKDIR /root/
 COPY --from=builder /go/bin/flame .
-COPY --from=builder /go/src/app/etc/.flame.production.yaml ./.flame.yaml
 CMD ["./flame", "server"]

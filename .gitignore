@@ -3,3 +3,4 @@ vendor
 gin-bin
 tmp
 *.old
+etc

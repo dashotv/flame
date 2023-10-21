@@ -84,6 +84,7 @@ func initConfig() {
 		// Search config in home directory with name ".flame" (without extension).
 		viper.AddConfigPath(".")
 		viper.AddConfigPath(home)
+		viper.AddConfigPath("/etc/flame")
 		viper.SetConfigName(".flame")
 	}
 

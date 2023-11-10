@@ -3,7 +3,7 @@ PORT := 9001
 
 all: test
 
-test: generate
+test:
 	[ -f .env ] && source .env; go test -v ./qbt ./nzbget
 
 generate:

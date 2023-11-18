@@ -1,0 +1,19 @@
+mode: release
+port: 9001
+cron: true
+Qbittorrent:
+  URL: http://qbittorrent.dasho.net/
+  Username: admin
+  Password: adminadmin
+Nzbget:
+  URL: http://nzbget.dasho.net/jsonrpc
+Nats:
+  URL: nats://localhost:4222
+Redis:
+  host: localhost
+  port: 6379
+  database: 15
+connections:
+  default:
+    uri: mongodb://localhost:27017
+    database: database

@@ -19,14 +19,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/dashotv/mercury"
 	"github.com/nats-io/nats.go"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
 	"github.com/dashotv/flame/app"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
-	"github.com/dashotv/mercury"
 )
 
 // receiverCmd represents the receiver command
@@ -39,24 +38,24 @@ var receiverCmd = &cobra.Command{
 
 		m, err := mercury.New("mercury", nats.DefaultURL)
 		if err != nil {
-			logrus.Fatalf("creating mercury: %w", err)
+			app.Log.Fatalf("creating mercury: %s", err)
 		}
 
 		app.Log.Infof("starting receiver...")
 
 		qbittorrents := make(chan *qbt.Response, 5)
 		if err := m.Receiver("flame.qbittorrents", qbittorrents); err != nil {
-			logrus.Fatalf("flame torrents receiver: %w", err)
+			app.Log.Fatalf("flame torrents receiver: %s", err)
 		}
 
 		nzbs := make(chan *nzbget.GroupResponse, 5)
 		if err := m.Receiver("flame.nzbs", nzbs); err != nil {
-			logrus.Fatalf("flame nzbs receiver: %w", err)
+			app.Log.Fatalf("flame nzbs receiver: %s", err)
 		}
 
 		downloads := make(chan string, 5)
 		if err := m.Receiver("seer.downloads", downloads); err != nil {
-			logrus.Fatalf("seer downloads receiver: %w", err)
+			app.Log.Fatalf("seer downloads receiver: %s", err)
 		}
 
 		for {
@@ -72,7 +71,7 @@ var receiverCmd = &cobra.Command{
 			case r := <-nzbs:
 				app.Log.WithField("prefix", "nzb").Infof("%T %s", r, r.Timestamp)
 				//for _, g := range r.Result {
-				//	logrus.Infof("%5d %25s %s\n", g.ID, g.Status, g.NZBName)
+				//	app.Log.Infof("%5d %25s %s\n", g.ID, g.Status, g.NZBName)
 				//}
 			case s := <-downloads:
 				app.Log.WithField("prefix", "dls").Infof("%#v\n", s)

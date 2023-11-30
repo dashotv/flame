@@ -2,18 +2,17 @@ package app
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 
+	"github.com/dashotv/mercury"
+
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
-	"github.com/dashotv/mercury"
 )
 
 var ctx = context.Background()
@@ -24,9 +23,10 @@ type Server struct {
 	App    *Application
 	Config *Config
 
-	merc       *mercury.Mercury
-	qbtChannel chan *qbt.Response
-	nzbChannel chan *nzbget.GroupResponse
+	merc           *mercury.Mercury
+	qbtChannel     chan *qbt.Response
+	nzbChannel     chan *nzbget.GroupResponse
+	metricsChannel chan *Metrics
 }
 
 func New() (*Server, error) {
@@ -52,6 +52,11 @@ func New() (*Server, error) {
 		return nil, errors.Wrap(err, "mercury sender")
 	}
 
+	s.metricsChannel = make(chan *Metrics, 5)
+	if err := s.merc.Sender("flame.metrics", s.metricsChannel); err != nil {
+		return nil, errors.Wrap(err, "mercury sender")
+	}
+
 	return s, nil
 }
 
@@ -61,17 +66,8 @@ func (s *Server) Start() error {
 	if s.Config.Cron {
 		c := cron.New(cron.WithSeconds())
 
-		// every second SendQbittorrents
-		if _, err := c.AddFunc("* * * * * *", s.SendQbittorrents); err != nil {
-			return errors.Wrap(err, "adding send qbts cron function")
-		}
-		// every second SendQbittorrents
-		if _, err := c.AddFunc("* * * * * *", s.SendNzbs); err != nil {
-			return errors.Wrap(err, "adding send nzbs cron function")
-		}
-		// every 1 minutes check disk space
-		if _, err := c.AddFunc("0 */1 * * * *", s.CheckDisk); err != nil {
-			return errors.Wrap(err, "adding check disk cron function")
+		if _, err := c.AddFunc("* * * * * *", s.Updates); err != nil {
+			return errors.Wrap(err, "adding updates cron function")
 		}
 
 		go func() {
@@ -90,54 +86,7 @@ func (s *Server) Start() error {
 	return nil
 }
 
-func (s *Server) SendQbittorrents() {
-	resp, err := App().Qbittorrent.List()
-	if err != nil {
-		s.Log.Errorf("couldn't get torrent list: %s", err)
-		return
-	}
-
-	b, err := json.Marshal(&resp)
-	if err != nil {
-		s.Log.Errorf("couldn't marshal torrents: %s", err)
-		return
-	}
-
-	status := App().Cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
-	if status.Err() != nil {
-		s.Log.Errorf("sendqbts: set cache failed: %s", status.Err())
-	}
-	s.qbtChannel <- resp
-}
-
-func (s *Server) SendNzbs() {
-	resp, err := App().Nzbget.List()
-	if err != nil {
-		s.Log.Errorf("couldn't get nzb list: %s", err)
-		return
-	}
-
-	b, err := json.Marshal(&resp)
-	if err != nil {
-		s.Log.Errorf("couldn't marshal nzbs: %s", err)
-		return
-	}
-
-	status := App().Cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
-	if status.Err() != nil {
-		s.Log.Errorf("sendnzbs: set cache failed: %s", status.Err())
-	}
-	s.nzbChannel <- resp
-}
-
-func (s *Server) CheckDisk() {
-	//s.Log.Infof("checkdisk: checking free disk space")
-	resp, err := App().Nzbget.List()
-	if err != nil {
-		s.Log.Errorf("couldn't get nzb list: %s", err)
-		return
-	}
-
+func (s *Server) checkDisk(resp *nzbget.GroupResponse) {
 	//s.Log.Infof("checkdisk: checking free disk space: %d MB", resp.Status.FreeDiskSpaceMB)
 	if resp.Status.FreeDiskSpaceMB < 25000 {
 		s.Log.Warnf("checkdisk: free disk space low")

@@ -106,6 +106,21 @@ func (a *Api) List() (*Response, error) {
 	return out, nil
 }
 
+func (a *Api) AllPaused() (bool, error) {
+	torrents, err := a.Torrents("priority")
+	if err != nil {
+		return false, err
+	}
+
+	for _, t := range torrents {
+		if t.State != "pausedUP" && t.State != "pausedDL" {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
 func (a *Api) Torrents(sort string) ([]*Torrent, error) {
 	var torrents []*Torrent
 	filter := TorrentsInfoPostRequestFilterAll

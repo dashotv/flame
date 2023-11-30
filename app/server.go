@@ -94,5 +94,17 @@ func (s *Server) checkDisk(resp *nzbget.GroupResponse) {
 		if err != nil {
 			s.Log.Errorf("checkdisk: failed to pause all qbts: %s", err)
 		}
+	} else {
+		ok, err := App().Qbittorrent.AllPaused()
+		if err != nil {
+			s.Log.Errorf("checkdisk: failed to check if all qbts are paused: %s", err)
+		}
+		if ok {
+			s.Log.Infof("checkdisk: free disk space restored")
+			err := App().Qbittorrent.ResumeAll()
+			if err != nil {
+				s.Log.Errorf("checkdisk: failed to resume all qbts: %s", err)
+			}
+		}
 	}
 }

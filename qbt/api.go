@@ -112,6 +112,10 @@ func (a *Api) AllPaused() (bool, error) {
 		return false, err
 	}
 
+	if len(torrents) == 0 {
+		return false, nil
+	}
+
 	for _, t := range torrents {
 		if t.State != "pausedUP" && t.State != "pausedDL" {
 			return false, nil

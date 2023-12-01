@@ -21,9 +21,10 @@ type Metrics struct {
 }
 
 type Combined struct {
-	Torrents []*qbt.Torrent
-	Nzbs     []nzbget.Group
-	Metrics  *Metrics
+	Torrents  []*qbt.Torrent
+	Nzbs      []nzbget.Group
+	NzbStatus nzbget.Status
+	Metrics   *Metrics
 }
 
 func (s *Server) Updates() {

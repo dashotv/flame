@@ -20,6 +20,12 @@ type Metrics struct {
 	} `json:"nzbs"`
 }
 
+type Combined struct {
+	Torrents []*qbt.Torrent
+	Nzbs     []nzbget.Group
+	Metrics  *Metrics
+}
+
 func (s *Server) Updates() {
 	qbt, err := App().Qbittorrent.List()
 	if err != nil {
@@ -45,6 +51,11 @@ func (s *Server) Updates() {
 		metrics.Torrents.UploadRate = fmt.Sprintf("%2.1f", float64(qbt.UploadRate/1000))
 		metrics.Nzbs.DownloadRate = fmt.Sprintf("%2.1f", float64(nzbs.Status.DownloadRate/1000))
 		s.metricsChannel <- metrics
+		s.combined <- &Combined{
+			Torrents: qbt.Torrents,
+			Nzbs:     nzbs.Result,
+			Metrics:  metrics,
+		}
 	}()
 }
 

@@ -24,6 +24,7 @@ type Server struct {
 	Config *Config
 
 	merc           *mercury.Mercury
+	combined       chan *Combined
 	qbtChannel     chan *qbt.Response
 	nzbChannel     chan *nzbget.GroupResponse
 	metricsChannel chan *Metrics
@@ -40,6 +41,11 @@ func New() (*Server, error) {
 	s.merc, err = mercury.New("flame", s.Config.Nats.URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "creating mercury")
+	}
+
+	s.combined = make(chan *Combined, 5)
+	if err := s.merc.Sender("flame.combined", s.combined); err != nil {
+		return nil, errors.Wrap(err, "mercury sender")
 	}
 
 	s.qbtChannel = make(chan *qbt.Response, 5)

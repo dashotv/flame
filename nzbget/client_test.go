@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-
 	"github.com/stretchr/testify/require"
 	"gotest.tools/v3/poll"
 )
@@ -45,6 +44,7 @@ func TestClient_Pause(t *testing.T) {
 	r, err := c.Groups()
 	require.NoError(t, err)
 	require.NotNil(t, r)
+	require.Equal(t, 1, len(r))
 
 	err = c.Pause(r[0].ID)
 	require.NoError(t, err)

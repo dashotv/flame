@@ -15,4 +15,5 @@ FROM alpine
 # Copy our static executable.
 WORKDIR /root/
 COPY --from=builder /go/bin/flame .
+COPY --from=builder /go/src/app/.env.vault .
 CMD ["./flame", "server"]

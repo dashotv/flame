@@ -16,19 +16,19 @@ func QbittorrentsAdd(c *gin.Context, URL string) {
 	}
 	u := string(b)
 
-	infohash, err := App().Qbittorrent.Add(u, nil)
+	infohash, err := qb.Add(u, nil)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	App().Log.Infof("added: %s", infohash)
+	log.Infof("added: %s", infohash)
 
 	c.JSON(http.StatusOK, gin.H{"error": false, "infohash": infohash})
 }
 
 func QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
-	err := App().Qbittorrent.Delete(infohash, del)
+	err := qb.Delete(infohash, del)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -40,7 +40,7 @@ func QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
 
 func QbittorrentsIndex(c *gin.Context) {
 	// read the json string from cache
-	res, err := App().Cache.Get(ctx, "flame-qbittorrents").Result()
+	res, err := cache.Get(ctx, "flame-qbittorrents").Result()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -50,7 +50,7 @@ func QbittorrentsIndex(c *gin.Context) {
 }
 
 func QbittorrentsLabel(c *gin.Context, infohash, label string) {
-	err := App().Qbittorrent.SetLabel([]string{infohash}, label)
+	err := qb.SetLabel([]string{infohash}, label)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -64,7 +64,7 @@ func QbittorrentsPause(c *gin.Context, infohash string) {
 		QbittorrentsPauseAll(c)
 		return
 	}
-	err := App().Qbittorrent.Pause(infohash)
+	err := qb.Pause(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -73,7 +73,7 @@ func QbittorrentsPause(c *gin.Context, infohash string) {
 }
 
 func QbittorrentsPauseAll(c *gin.Context) {
-	err := App().Qbittorrent.PauseAll()
+	err := qb.PauseAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -87,7 +87,7 @@ func QbittorrentsResume(c *gin.Context, infohash string) {
 		return
 	}
 
-	err := App().Qbittorrent.Resume(infohash)
+	err := qb.Resume(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -97,7 +97,7 @@ func QbittorrentsResume(c *gin.Context, infohash string) {
 }
 
 func QbittorrentsResumeAll(c *gin.Context) {
-	err := App().Qbittorrent.ResumeAll()
+	err := qb.ResumeAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -106,7 +106,7 @@ func QbittorrentsResumeAll(c *gin.Context) {
 }
 
 //func QbittorrentsStart(c *gin.Context, infohash string) {
-//	err := App().Qbittorrent.Start(infohash)
+//	err := qb.Start(infohash)
 //	if err != nil {
 //		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 //		return
@@ -130,7 +130,7 @@ func QbittorrentsWant(c *gin.Context, infohash, files string) {
 	}
 
 	ids := strings.Split(files, ",")
-	err := App().Qbittorrent.Want(infohash, ids)
+	err := qb.Want(infohash, ids)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -140,7 +140,7 @@ func QbittorrentsWant(c *gin.Context, infohash, files string) {
 }
 
 func QbittorrentsWantNone(c *gin.Context, infohash string) {
-	err := App().Qbittorrent.WantNone(infohash)
+	err := qb.WantNone(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -150,7 +150,7 @@ func QbittorrentsWantNone(c *gin.Context, infohash string) {
 }
 
 func QbittorrentsWanted(c *gin.Context, infohash string) {
-	want, err := App().Qbittorrent.WantedCount(infohash)
+	want, err := qb.WantedCount(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

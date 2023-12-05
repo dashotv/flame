@@ -6,8 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dashotv/golem/web"
 	"github.com/gin-gonic/gin"
+
+	"github.com/dashotv/golem/web"
 
 	"github.com/dashotv/flame/nzbget"
 )
@@ -34,7 +35,7 @@ func NzbsAdd(c *gin.Context, URL, cat, name string) {
 		options.NiceName = name
 	}
 
-	id, err := App().Nzbget.Add(u, options)
+	id, err := nzb.Add(u, options)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -46,9 +47,9 @@ func NzbsRemove(c *gin.Context, id int) {
 	var err error
 
 	if c.Query("delete") == "true" {
-		err = App().Nzbget.Delete(id)
+		err = nzb.Delete(id)
 	} else {
-		err = App().Nzbget.Remove(id)
+		err = nzb.Remove(id)
 	}
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -58,7 +59,7 @@ func NzbsRemove(c *gin.Context, id int) {
 }
 
 func NzbsDestroy(c *gin.Context, id int) {
-	err := App().Nzbget.Destroy(id)
+	err := nzb.Destroy(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -69,7 +70,7 @@ func NzbsDestroy(c *gin.Context, id int) {
 
 func NzbsIndex(c *gin.Context) {
 	// read the json string from cache
-	res, err := App().Cache.Get(ctx, "flame-nzbs").Result()
+	res, err := cache.Get(ctx, "flame-nzbs").Result()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return
@@ -79,7 +80,7 @@ func NzbsIndex(c *gin.Context) {
 }
 
 func NzbsHistory(c *gin.Context, hidden bool) {
-	r, err := App().Nzbget.History(hidden)
+	r, err := nzb.History(hidden)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 		return
@@ -96,7 +97,7 @@ func NzbsPause(c *gin.Context, id int) {
 		return
 	}
 
-	err = App().Nzbget.Pause(id)
+	err = nzb.Pause(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -105,7 +106,7 @@ func NzbsPause(c *gin.Context, id int) {
 }
 
 func NzbsPauseAll(c *gin.Context) {
-	err := App().Nzbget.PauseAll()
+	err := nzb.PauseAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -120,7 +121,7 @@ func NzbsResume(c *gin.Context, id int) {
 		NzbsResumeAll(c)
 		return
 	}
-	err = App().Nzbget.Resume(id)
+	err = nzb.Resume(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -129,7 +130,7 @@ func NzbsResume(c *gin.Context, id int) {
 }
 
 func NzbsResumeAll(c *gin.Context) {
-	err := App().Nzbget.ResumeAll()
+	err := nzb.ResumeAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

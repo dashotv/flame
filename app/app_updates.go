@@ -28,7 +28,7 @@ type Combined struct {
 }
 
 func (s *Server) Updates() {
-	qbt, err := App().Qbittorrent.List()
+	qbt, err := qb.List()
 	if err != nil {
 		s.Log.Errorf("couldn't get torrent list: %s", err)
 		return
@@ -36,7 +36,7 @@ func (s *Server) Updates() {
 
 	go s.updateQbittorrents(qbt)
 
-	nzbs, err := App().Nzbget.List()
+	nzbs, err := nzb.List()
 	if err != nil {
 		s.Log.Errorf("couldn't get nzb list: %s", err)
 		return
@@ -67,7 +67,7 @@ func (s *Server) updateQbittorrents(resp *qbt.Response) {
 		return
 	}
 
-	status := App().Cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
+	status := cache.Set(ctx, "flame-qbittorrents", string(b), time.Minute)
 	if status.Err() != nil {
 		s.Log.Errorf("sendqbts: set cache failed: %s", status.Err())
 	}
@@ -81,7 +81,7 @@ func (s *Server) updateNzbs(resp *nzbget.GroupResponse) {
 		return
 	}
 
-	status := App().Cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
+	status := cache.Set(ctx, "flame-nzbs", string(b), time.Minute)
 	if status.Err() != nil {
 		s.Log.Errorf("sendnzbs: set cache failed: %s", status.Err())
 	}

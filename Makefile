@@ -1,10 +1,13 @@
+include .env
+export $(shell sed 's/=.*//' .env)
+
 NAME := shawncatz/flame
 PORT := 9001
 
 all: test
 
 test:
-	[ -f .env ] && source .env; go test -v ./qbt ./nzbget
+	source .env && go test -v ./qbt ./nzbget
 
 generate:
 	golem generate
@@ -26,6 +29,9 @@ docker:
 
 docker-run:
 	docker run -d --rm --name $(NAME) -p $(PORT):$(PORT) $(NAME)
+
+dotenv:
+	npx dotenv-vault local build
 
 deps:
 	go install golang.org/x/tools/cmd/goimports@latest

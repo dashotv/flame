@@ -4,3 +4,8 @@ gin-bin
 tmp
 *.old
 etc
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

@@ -16,14 +16,15 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/dashotv/mercury"
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 
-	"github.com/dashotv/flame/app"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 )
@@ -34,49 +35,55 @@ var receiverCmd = &cobra.Command{
 	Short: "run flame receiver",
 	Long:  "run flame receiver",
 	Run: func(cmd *cobra.Command, args []string) {
-		app := app.App()
+		l, err := zap.NewDevelopment()
+		if err != nil {
+			fmt.Printf("error setting up logger: %s\n", err)
+			os.Exit(1)
+		}
+		defer l.Sync()
+		log := l.Sugar().Named("receiver")
 
 		m, err := mercury.New("mercury", nats.DefaultURL)
 		if err != nil {
-			app.Log.Fatalf("creating mercury: %s", err)
+			log.Fatalf("creating mercury: %s", err)
 		}
 
-		app.Log.Infof("starting receiver...")
+		log.Infof("starting receiver...")
 
 		qbittorrents := make(chan *qbt.Response, 5)
 		if err := m.Receiver("flame.qbittorrents", qbittorrents); err != nil {
-			app.Log.Fatalf("flame torrents receiver: %s", err)
+			log.Fatalf("flame torrents receiver: %s", err)
 		}
 
 		nzbs := make(chan *nzbget.GroupResponse, 5)
 		if err := m.Receiver("flame.nzbs", nzbs); err != nil {
-			app.Log.Fatalf("flame nzbs receiver: %s", err)
+			log.Fatalf("flame nzbs receiver: %s", err)
 		}
 
 		downloads := make(chan string, 5)
 		if err := m.Receiver("seer.downloads", downloads); err != nil {
-			app.Log.Fatalf("seer downloads receiver: %s", err)
+			log.Fatalf("seer downloads receiver: %s", err)
 		}
 
 		for {
 			select {
 			case r := <-qbittorrents:
-				app.Log.WithField("prefix", "qbt").Infof("%T %s", r, r.Timestamp)
+				log.Named("qbt").Infof("%T %s", r, r.Timestamp)
 				for _, t := range r.Torrents {
-					app.Log.WithField("prefix", "qbt").Infof("%3d %6.2f%% %10.2fmb %8.8s %s", t.Priority, t.Progress, t.SizeMb(), t.State, t.Name)
+					log.Named("qbt").Infof("%3d %6.2f%% %10.2fmb %8.8s %s", t.Priority, t.Progress, t.SizeMb(), t.State, t.Name)
 					for _, f := range t.Files {
-						app.Log.WithField("prefix", "qbt").Infof("%3d %6.2f%% %s", f.Priority, f.Progress, f.Name)
+						log.Named("qbt").Infof("%3d %6.2f%% %s", f.Priority, f.Progress, f.Name)
 					}
 				}
 			case r := <-nzbs:
-				app.Log.WithField("prefix", "nzb").Infof("%T %s", r, r.Timestamp)
+				log.Named("nzb").Infof("%T %s", r, r.Timestamp)
 				//for _, g := range r.Result {
-				//	app.Log.Infof("%5d %25s %s\n", g.ID, g.Status, g.NZBName)
+				//	log.Infof("%5d %25s %s\n", g.ID, g.Status, g.NZBName)
 				//}
 			case s := <-downloads:
-				app.Log.WithField("prefix", "dls").Infof("%#v\n", s)
+				log.Named("dls").Infof("%#v\n", s)
 			case <-time.After(30 * time.Second):
-				app.Log.Warn("timeout")
+				log.Warn("timeout")
 				os.Exit(0)
 			}
 		}

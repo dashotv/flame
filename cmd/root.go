@@ -19,10 +19,7 @@ import (
 	"fmt"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
 	"github.com/dashotv/flame/app"
 )
@@ -55,53 +52,15 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	// cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.test.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.test.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
-
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		// Search config in home directory with name ".flame" (without extension).
-		viper.AddConfigPath(".")
-		viper.AddConfigPath(home)
-		viper.AddConfigPath("/etc/flame")
-		viper.SetConfigName(".flame")
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err != nil {
-		logrus.Warnf("unable to read config: %s\n", err)
-		return
-	}
-
-	cfg = app.ConfigInstance()
-	if err := viper.Unmarshal(cfg); err != nil {
-		logrus.Fatalf("failed to unmarshal configuration file: %s", err)
-	}
-
-	if err := cfg.Validate(); err != nil {
-		logrus.Fatalf("failed to validate config: %s", err)
-	}
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

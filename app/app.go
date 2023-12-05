@@ -14,6 +14,9 @@ func Start() error {
 		setupQbittorrent,
 	)
 	if err != nil {
+		if log != nil {
+			log.Errorf("error setting up: %s", err)
+		}
 		return err
 	}
 

@@ -32,7 +32,7 @@ var serverCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := app.Start()
 		if err != nil {
-			fmt.Printf("error starting: %s", err)
+			fmt.Printf("error starting: %s\n", err)
 			os.Exit(1)
 		}
 	},

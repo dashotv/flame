@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dashotv/mercury"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
-	"github.com/dashotv/mercury"
 )
 
 var server *Server

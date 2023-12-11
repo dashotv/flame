@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dashotv/mercury"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
+
+	"github.com/dashotv/mercury"
 
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
@@ -117,7 +118,7 @@ func (s *Server) Start() error {
 func (s *Server) checkDisk(resp *nzbget.GroupResponse) {
 	//s.Log.Infof("checkdisk: checking free disk space: %d MB", resp.Status.FreeDiskSpaceMB)
 	if resp.Status.FreeDiskSpaceMB < 25000 {
-		s.Log.Warnf("checkdisk: free disk space low")
+		// s.Log.Warnf("checkdisk: free disk space low")
 		err := qb.PauseAll()
 		if err != nil {
 			s.Log.Errorf("checkdisk: failed to pause all qbts: %s", err)

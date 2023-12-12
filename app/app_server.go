@@ -115,25 +115,79 @@ func (s *Server) Start() error {
 	return nil
 }
 
-func (s *Server) checkDisk(resp *nzbget.GroupResponse) {
-	//s.Log.Infof("checkdisk: checking free disk space: %d MB", resp.Status.FreeDiskSpaceMB)
-	if resp.Status.FreeDiskSpaceMB < 25000 {
-		// s.Log.Warnf("checkdisk: free disk space low")
-		err := qb.PauseAll()
+// pauseAll pauses all torrents and sets a flag in the cache
+func (s *Server) pauseAll() error {
+	s.Log.Info("pausing all...")
+	err := qb.PauseAll()
+	if err != nil {
+		return errors.Wrap(err, "pausing all")
+	}
+
+	status := cache.Set(ctx, "flame-disk-paused", true, time.Hour*24*7)
+	if status.Err() != nil {
+		s.Log.Errorf("sendqbts: set cache failed: %s", status.Err())
+	}
+
+	return nil
+}
+
+func (s *Server) resumeAll() error {
+	err := qb.ResumeAll()
+	if err != nil {
+		s.Log.Errorf("checkdisk: failed to resume all qbts: %s", err)
+	}
+
+	status := cache.Del(ctx, "flame-disk-paused")
+	if status.Err() != nil {
+		s.Log.Errorf("sendqbts: set cache failed: %s", status.Err())
+	}
+
+	return nil
+}
+
+// diskPaused checks the cache for the flag
+func (s *Server) diskPaused() bool {
+	paused, err := cache.Get(ctx, "flame-disk-paused").Result()
+	if err != nil {
+		s.Log.Errorf("paused: %s", err)
+		return false
+	}
+	return paused == "true"
+}
+
+// allPaused checks if all torrents are paused and the paused flag is true
+func (s *Server) allPaused() bool {
+	if !s.diskPaused() {
+		return false
+	}
+
+	ok, err := qb.AllPaused()
+	if err != nil {
+		s.Log.Errorf("checkdisk: failed to check if all qbts are paused: %s", err)
+	}
+	return ok
+}
+
+func (s *Server) checkDisk(resp *nzbget.GroupResponse, qbt *qbt.Response) {
+	if resp.Status.FreeDiskSpaceMB < 25000 && !s.allPaused() {
+		err := s.pauseAll()
 		if err != nil {
 			s.Log.Errorf("checkdisk: failed to pause all qbts: %s", err)
 		}
-	} else {
-		ok, err := qb.AllPaused()
-		if err != nil {
-			s.Log.Errorf("checkdisk: failed to check if all qbts are paused: %s", err)
-		}
-		if ok {
-			s.Log.Infof("checkdisk: free disk space restored")
-			err := qb.ResumeAll()
-			if err != nil {
-				s.Log.Errorf("checkdisk: failed to resume all qbts: %s", err)
-			}
-		}
+		return
 	}
+
+	if !s.diskPaused() {
+		return
+	}
+	if !qbt.AllPaused() {
+		return
+	}
+
+	err := s.resumeAll()
+	if err != nil {
+		s.Log.Errorf("checkdisk: failed to resume all qbts: %s", err)
+	}
+
+	return
 }

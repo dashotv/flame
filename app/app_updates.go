@@ -43,7 +43,7 @@ func (s *Server) Updates() {
 	}
 
 	go s.updateNzbs(nzbs)
-	go s.checkDisk(nzbs)
+	go s.checkDisk(nzbs, qbt)
 
 	go func() {
 		metrics := &Metrics{}

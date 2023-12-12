@@ -30,6 +30,20 @@ type Response struct {
 	Timestamp    time.Time
 }
 
+func (r *Response) AllPaused() bool {
+	if len(r.Torrents) == 0 {
+		return false
+	}
+
+	for _, t := range r.Torrents {
+		if t.State != "pausedUP" && t.State != "pausedDL" {
+			return false
+		}
+	}
+
+	return true
+}
+
 func clientCookieJar(jar http.CookieJar) func(*Client) error {
 	return func(c *Client) error {
 		h := http.DefaultClient

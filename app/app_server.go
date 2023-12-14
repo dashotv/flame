@@ -117,7 +117,6 @@ func (s *Server) Start() error {
 
 // pauseAll pauses all torrents and sets a flag in the cache
 func (s *Server) pauseAll() error {
-	s.Log.Info("pausing all...")
 	err := qb.PauseAll()
 	if err != nil {
 		return errors.Wrap(err, "pausing all")

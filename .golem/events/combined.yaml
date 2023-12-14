@@ -1,0 +1,4 @@
+name: combined
+channel: flame.combined
+receiver: false
+existing_payload: Combined

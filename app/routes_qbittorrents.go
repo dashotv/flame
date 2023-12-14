@@ -6,9 +6,10 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
 
-func QbittorrentsAdd(c *gin.Context, URL string) {
+func (a *Application) QbittorrentsAdd(c *gin.Context, URL string) {
 	b, err := base64.StdEncoding.DecodeString(URL)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -16,19 +17,19 @@ func QbittorrentsAdd(c *gin.Context, URL string) {
 	}
 	u := string(b)
 
-	infohash, err := qb.Add(u, nil)
+	infohash, err := app.Qbt.Add(u, nil)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	log.Infof("added: %s", infohash)
+	a.Log.Infof("added: %s", infohash)
 
 	c.JSON(http.StatusOK, gin.H{"error": false, "infohash": infohash})
 }
 
-func QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
-	err := qb.Delete(infohash, del)
+func (a *Application) QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
+	err := app.Qbt.Delete(infohash, del)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -38,19 +39,25 @@ func QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsIndex(c *gin.Context) {
+func (a *Application) QbittorrentsIndex(c *gin.Context) {
 	// read the json string from cache
-	res, err := cache.Get(ctx, "flame-qbittorrents").Result()
+	// read the json string from cache
+	res := ""
+	ok, err := a.Cache.Get("flame-qbittorrents", &res)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": errors.Errorf("failed to get %s from cache", "flame-qbittorrents")})
 		return
 	}
 
 	c.String(http.StatusOK, res)
 }
 
-func QbittorrentsLabel(c *gin.Context, infohash, label string) {
-	err := qb.SetLabel([]string{infohash}, label)
+func (a *Application) QbittorrentsLabel(c *gin.Context, infohash, label string) {
+	err := app.Qbt.SetLabel([]string{infohash}, label)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -59,12 +66,12 @@ func QbittorrentsLabel(c *gin.Context, infohash, label string) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsPause(c *gin.Context, infohash string) {
+func (a *Application) QbittorrentsPause(c *gin.Context, infohash string) {
 	if infohash == "" {
-		QbittorrentsPauseAll(c)
+		a.QbittorrentsPauseAll(c)
 		return
 	}
-	err := qb.Pause(infohash)
+	err := app.Qbt.Pause(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -72,8 +79,8 @@ func QbittorrentsPause(c *gin.Context, infohash string) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsPauseAll(c *gin.Context) {
-	err := qb.PauseAll()
+func (a *Application) QbittorrentsPauseAll(c *gin.Context) {
+	err := app.Qbt.PauseAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -81,13 +88,13 @@ func QbittorrentsPauseAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsResume(c *gin.Context, infohash string) {
+func (a *Application) QbittorrentsResume(c *gin.Context, infohash string) {
 	if infohash == "" {
-		QbittorrentsResumeAll(c)
+		a.QbittorrentsResumeAll(c)
 		return
 	}
 
-	err := qb.Resume(infohash)
+	err := app.Qbt.Resume(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -96,8 +103,8 @@ func QbittorrentsResume(c *gin.Context, infohash string) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsResumeAll(c *gin.Context) {
-	err := qb.ResumeAll()
+func (a *Application) QbittorrentsResumeAll(c *gin.Context) {
+	err := app.Qbt.ResumeAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -105,8 +112,8 @@ func QbittorrentsResumeAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-//func QbittorrentsStart(c *gin.Context, infohash string) {
-//	err := qb.Start(infohash)
+//func (a *Application) QbittorrentsStart(c *gin.Context, infohash string) {
+//	err := app.Qbt.Start(infohash)
 //	if err != nil {
 //		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 //		return
@@ -114,7 +121,7 @@ func QbittorrentsResumeAll(c *gin.Context) {
 //	c.JSON(http.StatusOK, gin.H{"error": false})
 //}
 //
-//func QbittorrentsStop(c *gin.Context, infohash string) {
+//func (a *Application) QbittorrentsStop(c *gin.Context, infohash string) {
 //	err := App().Utorrent.Stop(infohash)
 //	if err != nil {
 //		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -123,14 +130,14 @@ func QbittorrentsResumeAll(c *gin.Context) {
 //	c.JSON(http.StatusOK, gin.H{"error": false})
 //}
 
-func QbittorrentsWant(c *gin.Context, infohash, files string) {
+func (a *Application) QbittorrentsWant(c *gin.Context, infohash, files string) {
 	if files == "none" {
-		QbittorrentsWantNone(c, infohash)
+		a.QbittorrentsWantNone(c, infohash)
 		return
 	}
 
 	ids := strings.Split(files, ",")
-	err := qb.Want(infohash, ids)
+	err := app.Qbt.Want(infohash, ids)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -139,8 +146,8 @@ func QbittorrentsWant(c *gin.Context, infohash, files string) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsWantNone(c *gin.Context, infohash string) {
-	err := qb.WantNone(infohash)
+func (a *Application) QbittorrentsWantNone(c *gin.Context, infohash string) {
+	err := app.Qbt.WantNone(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -149,8 +156,8 @@ func QbittorrentsWantNone(c *gin.Context, infohash string) {
 	c.JSON(http.StatusOK, gin.H{"error": false})
 }
 
-func QbittorrentsWanted(c *gin.Context, infohash string) {
-	want, err := qb.WantedCount(infohash)
+func (a *Application) QbittorrentsWanted(c *gin.Context, infohash string) {
+	want, err := app.Qbt.WantedCount(infohash)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

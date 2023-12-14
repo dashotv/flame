@@ -1,0 +1,4 @@
+name: metrics
+channel: flame.metrics
+receiver: false
+existing_payload: Metrics

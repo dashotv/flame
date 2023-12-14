@@ -1,0 +1,44 @@
+name: qbittorrents
+path: /qbittorrents
+routes:
+  - name: index
+    path: /
+    method: GET
+  - name: add
+    path: /add
+    method: GET
+    params:
+      - { name: url, type: string, query: true }
+  - name: remove
+    path: /remove
+    method: GET
+    params:
+      - { name: infohash, type: string, query: true }
+      - { name: del, type: bool, query: true }
+  - name: pause
+    path: /pause
+    method: GET
+    params:
+      - { name: infohash, type: string, query: true }
+  - name: resume
+    path: /resume
+    method: GET
+    params:
+      - { name: infohash, type: string, query: true }
+  - name: label
+    path: /label
+    method: GET
+    params:
+      - { name: infohash, type: string, query: true }
+      - { name: label, type: string, query: true }
+  - name: want
+    path: /want
+    method: GET
+    params:
+      - { name: infohash, type: string, query: true }
+      - { name: files, type: string, query: true }
+  - name: wanted
+    path: /wanted
+    method: GET
+    params:
+      - { name: infohash, type: string, query: true }

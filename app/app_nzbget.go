@@ -1,11 +1,15 @@
 package app
 
-import "github.com/dashotv/flame/nzbget"
+import (
+	"github.com/dashotv/flame/nzbget"
+)
 
-var nzb *nzbget.Client
+func init() {
+	initializers = append(initializers, setupNzbget)
+}
 
-func setupNzbget() error {
-	log.Infof("connecting nzbget: %s", cfg.NzbgetURL)
-	nzb = nzbget.NewClient(cfg.NzbgetURL)
+func setupNzbget(app *Application) error {
+	app.Log.Infof("connecting nzbget: %s", app.Config.NzbgetURL)
+	app.Nzb = nzbget.NewClient(app.Config.NzbgetURL)
 	return nil
 }

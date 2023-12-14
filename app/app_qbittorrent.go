@@ -6,12 +6,14 @@ import (
 	"github.com/dashotv/flame/qbt"
 )
 
-var qb *qbt.Api
+func init() {
+	initializers = append(initializers, setupQbittorrent)
+}
 
-func setupQbittorrent() error {
-	log.Infof("connecting qbittorrent: %s", cfg.QbittorrentURL)
-	qb = qbt.NewApi(cfg.QbittorrentURL)
-	ok, err := qb.Login(cfg.QbittorrentUsername, cfg.QbittorrentPassword)
+func setupQbittorrent(app *Application) error {
+	app.Log.Infof("connecting qbittorrent: %s", app.Config.QbittorrentURL)
+	app.Qbt = qbt.NewApi(app.Config.QbittorrentURL)
+	ok, err := app.Qbt.Login(app.Config.QbittorrentUsername, app.Config.QbittorrentPassword)
 	if err != nil {
 		return errors.Errorf("qbittorrent: could not login: %s", err)
 	}

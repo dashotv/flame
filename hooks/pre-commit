@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [[ -e ".env.vault" ]]; then
+  if [[ ! -e '.env.vault.md5' ]]; then
+    echo "[pre-commit] .env.vault creating checksum file..."
+    md5sum ".env.vault" >".env.vault.md5"
+  fi
+  echo "[pre-commit] checking/updating .env.vault file..."
+  if ! md5sum -c - <".env.vault.md5" &>/dev/null; then
+    npx dotenv-vault local build &>/dev/null
+    git add .env.vault
+  fi
+fi

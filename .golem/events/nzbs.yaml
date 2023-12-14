@@ -1,0 +1,4 @@
+name: nzbs
+channel: flame.nzbs
+receiver: false
+existing_payload: nzbget.GroupResponse

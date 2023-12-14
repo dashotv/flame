@@ -1,0 +1,4 @@
+name: qbittorrents
+channel: flame.qbittorrents
+receiver: false
+existing_payload: qbt.Response

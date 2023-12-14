@@ -6,6 +6,7 @@ tmp
 etc
 
 .env*
+.md5*
 .flaskenv*
 !.env.project
 !.env.vault

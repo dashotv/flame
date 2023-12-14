@@ -149,7 +149,7 @@ func (s *Server) resumeAll() error {
 func (s *Server) diskPaused() bool {
 	paused, err := cache.Get(ctx, "flame-disk-paused").Result()
 	if err != nil {
-		s.Log.Errorf("paused: %s", err)
+		// s.Log.Errorf("paused: %s", err)
 		return false
 	}
 	return paused == "true"

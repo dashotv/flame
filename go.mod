@@ -10,7 +10,7 @@ require (
 	github.com/anacrolix/torrent v1.53.2
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/dashotv/golem v0.10.4
+	github.com/dashotv/golem v0.11.0
 	github.com/dashotv/mercury v0.3.2
 	github.com/dashotv/minion v0.2.11
 	github.com/deepmap/oapi-codegen v1.16.2
@@ -129,7 +129,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.6.0 // indirect
 	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611 // indirect
+	golang.org/x/exp v0.0.0-20231219180239-dc181d75b848 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect

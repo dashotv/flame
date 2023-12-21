@@ -30,7 +30,9 @@ type Combined struct {
 	Metrics   *Metrics
 }
 
-type Updates struct{}
+type Updates struct {
+	minion.WorkerDefaults[*Updates]
+}
 
 func (j *Updates) Kind() string { return "updates" }
 func (j *Updates) Work(ctx context.Context, job *minion.Job[*Updates]) error {

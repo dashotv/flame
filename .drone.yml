@@ -19,6 +19,7 @@ steps:
       repo: docker.dasho.tv/dashotv/flame
       tags:
         - latest
+        - ${DRONE_BUILD_NUMBER}
   - name: deploy
     image: appleboy/drone-ssh
     settings:

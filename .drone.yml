@@ -11,11 +11,12 @@ steps:
   - name: publish
     image: plugins/docker
     settings:
+      registry: docker.dasho.tv
       username:
-        from_secret: dockerhub_username
+        from_secret: docker_dasho_username
       password:
-        from_secret: dockerhub_password
-      repo: dashotv/flame
+        from_secret: docker_dasho_password
+      repo: docker.dasho.tv/dashotv/flame
       tags:
         - latest
   - name: deploy

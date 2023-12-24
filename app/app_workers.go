@@ -14,9 +14,7 @@ func init() {
 }
 
 func checkWorkers(app *Application) error {
-	// ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	// defer cancel()
-	// return app.Workers.Ping(ctx)
+	// TODO: workers health check
 	return nil
 }
 
@@ -38,9 +36,28 @@ func setupWorkers(app *Application) error {
 		return errors.Wrap(err, "creating minion")
 	}
 
-	// uncomment this to enable notifications
+	// add something like the below line in app.Start() (before the workers are
+	// started) to subscribe to job notifications.
 	// minion sends notifications as jobs are processed and change status
 	// m.Subscribe(app.MinionNotification)
+	// an example of the subscription function and the basic setup instructions
+	// are included at the end of this file.
+
+	m.Queue("", 0, 0, 0)
+	m.Queue("cleanup_jobs", 0, 0, 0)
+	m.Queue("combined", 0, 0, 0)
+	m.Queue("flame", 0, 0, 0)
+	m.Queue("metrics", 0, 0, 0)
+	m.Queue("nzbs", 0, 0, 0)
+	m.Queue("qbittorrents", 0, 0, 0)
+	m.Queue("updates", 0, 0, 0)
+
+	if err := minion.Register[*CleanupJobs](m, &CleanupJobs{}); err != nil {
+		return errors.Wrap(err, "registering worker: cleanup_jobs (CleanupJobs)")
+	}
+	if _, err := m.Schedule("0 10 11 * * *", &CleanupJobs{}); err != nil {
+		return errors.Wrap(err, "scheduling worker: cleanup_jobs (CleanupJobs)")
+	}
 
 	if err := minion.Register[*Updates](m, &Updates{}); err != nil {
 		return errors.Wrap(err, "registering worker: updates (Updates)")
@@ -57,7 +74,10 @@ func setupWorkers(app *Application) error {
 //
 // > golem add event jobs event id job:*Minion
 // > golem add model minion_attempt --struct started_at:time.Time duration:float64 status error 'stacktrace:[]string'
-// > golem add model minion kind args status 'attempts:[]*MinionAttempt'
+// > golem add model minion queue kind args status 'attempts:[]*MinionAttempt'
+//
+// then add a Connection configuration that points to the same database connection information
+// as the minion database.
 
 // // This allows you to notify other services as jobs change status.
 //func (a *Application) MinionNotification(n *minion.Notification) {

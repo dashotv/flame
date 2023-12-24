@@ -1,0 +1,2 @@
+name: cleanup_jobs
+schedule: "0 10 11 * * *"

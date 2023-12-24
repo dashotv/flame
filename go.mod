@@ -12,7 +12,7 @@ require (
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/dashotv/golem v0.11.0
 	github.com/dashotv/mercury v0.3.2
-	github.com/dashotv/minion v0.2.11
+	github.com/dashotv/minion v0.3.0
 	github.com/deepmap/oapi-codegen v1.16.2
 	github.com/dotenv-org/godotenvvault v0.6.0
 	github.com/getkin/kin-openapi v0.122.0

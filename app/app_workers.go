@@ -43,15 +43,6 @@ func setupWorkers(app *Application) error {
 	// an example of the subscription function and the basic setup instructions
 	// are included at the end of this file.
 
-	m.Queue("", 0, 0, 0)
-	m.Queue("cleanup_jobs", 0, 0, 0)
-	m.Queue("combined", 0, 0, 0)
-	m.Queue("flame", 0, 0, 0)
-	m.Queue("metrics", 0, 0, 0)
-	m.Queue("nzbs", 0, 0, 0)
-	m.Queue("qbittorrents", 0, 0, 0)
-	m.Queue("updates", 0, 0, 0)
-
 	if err := minion.Register[*CleanupJobs](m, &CleanupJobs{}); err != nil {
 		return errors.Wrap(err, "registering worker: cleanup_jobs (CleanupJobs)")
 	}

@@ -46,7 +46,7 @@ func setupWorkers(app *Application) error {
 	if err := minion.Register[*CleanupJobs](m, &CleanupJobs{}); err != nil {
 		return errors.Wrap(err, "registering worker: cleanup_jobs (CleanupJobs)")
 	}
-	if _, err := m.Schedule("0 10 11 * * *", &CleanupJobs{}); err != nil {
+	if _, err := m.Schedule("0 0 * * * *", &CleanupJobs{}); err != nil {
 		return errors.Wrap(err, "scheduling worker: cleanup_jobs (CleanupJobs)")
 	}
 

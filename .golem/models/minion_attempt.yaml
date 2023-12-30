@@ -1,0 +1,13 @@
+name: minion_attempt
+type: struct
+fields:
+    - name: started_at
+      type: time.Time
+    - name: duration
+      type: float64
+    - name: status
+      type: string
+    - name: error
+      type: string
+    - name: stacktrace
+      type: '[]string'

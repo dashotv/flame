@@ -34,6 +34,9 @@ type Application struct {
 	Default *gin.RouterGroup
 	Router  *gin.RouterGroup
 
+	// Models
+	DB *Connector
+
 	// Events
 	Events *Events
 

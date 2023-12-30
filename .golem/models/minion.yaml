@@ -1,0 +1,13 @@
+name: minion
+type: model
+fields:
+    - name: queue
+      type: string
+    - name: kind
+      type: string
+    - name: args
+      type: string
+    - name: status
+      type: string
+    - name: attempts
+      type: '[]*MinionAttempt'

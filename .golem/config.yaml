@@ -4,14 +4,14 @@ repo: github.com/dashotv/flame
 package: app
 output: app
 plugins:
-  models: false
-  routes: true
-  workers: true
-  cache: true
-  events: true
+    models: true
+    routes: true
+    workers: true
+    cache: true
+    events: true
 definitions:
-  models: .golem/models
-  routes: .golem/routes
-  events: .golem/events
-  workers: .golem/workers
-  queues: .golem/queues
+    models: .golem/models
+    routes: .golem/routes
+    events: .golem/events
+    workers: .golem/workers
+    queues: .golem/queues

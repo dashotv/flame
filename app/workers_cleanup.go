@@ -16,7 +16,7 @@ type CleanupJobs struct {
 
 func (j *CleanupJobs) Kind() string { return "cleanup_jobs" }
 func (j *CleanupJobs) Work(ctx context.Context, job *minion.Job[*CleanupJobs]) error {
-	if _, err := app.DB.Minion.Collection.DeleteMany(context.Background(), bson.M{"created_at": bson.M{"$lt": time.Now().UTC().AddDate(0, 0, -3)}}); err != nil {
+	if _, err := app.DB.Minion.Collection.DeleteMany(context.Background(), bson.M{"created_at": bson.M{"$lt": time.Now().UTC().AddDate(0, 0, -1)}}); err != nil {
 		return errors.Wrap(err, "deleting messages")
 	}
 	return nil

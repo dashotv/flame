@@ -1,7 +1,8 @@
 repo_name: dashotv/flame
-report_id: 65de32bfe8aa5d7f5c850a57cab921f8
+report_id: 77fa4c5a0b3d0d0f9e5edcc40bc9a712
+version: 0.1
 repo_type: Public
-timestamp: '2023-12-14T10:04:40+00:00'
+timestamp: '2024-01-05T09:04:56+00:00'
 requested_by: shawncatz
 provider: github
 branch: main
@@ -17,6 +18,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1005/O6AczwfV_400x400.png
+  detection_source_url: https://github.com/dashotv/flame
   detection_source: Repo Metadata
 - name: Ruby
   description: A dynamic, interpreted, open source programming language with a focus
@@ -27,6 +29,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/989/ruby.png
+  detection_source_url: https://github.com/dashotv/flame
   detection_source: Repo Metadata
 - name: Echo
   description: High performance, extensible, minimalist Go web framework
@@ -37,6 +40,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Microframeworks (Backend)
   image_url: https://img.stackshare.io/service/4996/9P0MlumU_400x400.jpg
+  detection_source_url: https://github.com/dashotv/flame/blob/main/go.mod
   detection_source: go.mod
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2019-11-23 11:05:37.000000000 Z
@@ -49,6 +53,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Frameworks (Full Stack)
   image_url: https://img.stackshare.io/service/4221/7894478.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/go.mod
   detection_source: go.mod
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2023-11-10 01:23:18.000000000 Z
@@ -60,6 +65,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Serialization Frameworks
   image_url: https://img.stackshare.io/service/4393/ma2jqJKH_400x400.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/go.mod
   detection_source: go.mod
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2023-11-10 01:23:18.000000000 Z
@@ -71,6 +77,7 @@ tools:
   category: Data Stores
   sub_category: Database Tools
   image_url: https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/ruby/LICENSE.txt
   detection_source: ruby/LICENSE.txt
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2020-04-07 17:47:28.000000000 Z
@@ -82,6 +89,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Front End Package Manager
   image_url: https://img.stackshare.io/service/2988/4e77LXIo_400x400.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/ruby/flame.gemspec
   detection_source: ruby/flame.gemspec
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2020-04-07 17:47:28.000000000 Z
@@ -94,6 +102,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Virtual Machine Platforms & Containers
   image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source_url: https://github.com/dashotv/flame
   detection_source: Repo Metadata
 - name: Drone.io
   description: Open source continuous integration platform built on Docker
@@ -103,6 +112,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Continuous Integration
   image_url: https://img.stackshare.io/service/668/R_wMcCqN_400x400.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/.drone.yml
   detection_source: ".drone.yml"
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2022-10-24 01:00:55.000000000 Z
@@ -114,6 +124,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/dashotv/flame
   detection_source: Repo Metadata
 - name: RSpec
   description: Behaviour Driven Development for Ruby
@@ -137,6 +148,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Package Managers
   image_url: https://img.stackshare.io/service/12795/5jL6-BA5_400x400.jpeg
+  detection_source_url: https://github.com/dashotv/flame/blob/main/ruby/flame.gemspec
   detection_source: ruby/flame.gemspec
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2020-04-07 17:47:28.000000000 Z
@@ -150,6 +162,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Go Testing
   image_url: https://img.stackshare.io/service/8695/stretchr.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/go.mod
   detection_source: go.mod
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2023-12-05 20:42:17.000000000 Z
@@ -162,6 +175,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Continuous Integration
   image_url: https://img.stackshare.io/service/460/Lu6cGu0z_400x400.png
+  detection_source_url: https://github.com/dashotv/flame/blob/main/ruby/.travis.yml
   detection_source: ruby/.travis.yml
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2020-04-07 17:47:28.000000000 Z
@@ -173,6 +187,7 @@ tools:
   category: Communications
   sub_category: Large Language Model Tools
   image_url: https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg
+  detection_source_url: https://github.com/dashotv/flame/blob/main/ruby/LICENSE.txt
   detection_source: ruby/LICENSE.txt
   last_updated_by: Shawn Catanzarite
   last_updated_on: 2020-04-07 17:47:28.000000000 Z
@@ -185,6 +200,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source_url: https://github.com/dashotv/flame
   detection_source: Repo Metadata
 - name: ace
   description: HTML template engine for Go

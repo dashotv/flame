@@ -19,6 +19,7 @@ require (
 	github.com/getkin/kin-openapi v0.123.0
 	github.com/gin-contrib/zap v0.2.0
 	github.com/gin-gonic/gin v1.9.1
+	github.com/joho/godotenv v1.5.1
 	github.com/nats-io/nats.go v1.33.1
 	github.com/philippgille/gokv/redis v0.7.0
 	github.com/pkg/errors v0.9.1
@@ -73,7 +74,6 @@ require (
 	github.com/invopop/yaml v0.2.0 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kamva/mgm/v3 v3.5.0 // indirect

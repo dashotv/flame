@@ -4,9 +4,14 @@
 FROM golang:1.21-alpine AS builder
 
 WORKDIR /go/src/app
-COPY . .
+RUN --mount=type=cache,target=/go/pkg/mod \
+  --mount=type=bind,source=go.sum,target=go.sum \
+  --mount=type=bind,source=go.mod,target=go.mod \
+  go mod download -x
 
-RUN go install
+RUN --mount=type=cache,target=/go/pkg/mod \
+  --mount=type=bind,target=. \
+  go install
 
 ############################
 # STEP 2 build a small image
@@ -15,5 +20,5 @@ FROM alpine
 # Copy our static executable.
 WORKDIR /root/
 COPY --from=builder /go/bin/flame .
-COPY --from=builder /go/src/app/.env.vault .
+COPY .env.vault .
 CMD ["./flame", "server"]

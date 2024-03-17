@@ -10,6 +10,8 @@ steps:
       - go build
   - name: publish
     image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: 1
     settings:
       registry: docker.dasho.tv
       username:

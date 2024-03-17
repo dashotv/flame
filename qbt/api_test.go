@@ -1,11 +1,18 @@
 package qbt
 
 import (
+	"os"
 	"testing"
 	"time"
 
+	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+	godotenv.Load("../.env")
+}
 
 var (
 	URLs = map[string]string{
@@ -24,20 +31,26 @@ var (
 )
 
 func TestApi_Login(t *testing.T) {
-	api := NewApi("http://qbittorrent.dasho.net")
-	ok, err := api.Login("admin", "adminadmin")
+	url := os.Getenv("QBITTORRENT_URL")
+	pw := os.Getenv("QBITTORRENT_PASSWORD")
+	assert.NotEmpty(t, url)
+	assert.NotEmpty(t, pw)
 
+	api := NewApi(url)
+	ok, err := api.Login("admin", pw)
 	assert.True(t, ok)
 	assert.NoError(t, err)
 
 	r, err := api.List()
-
 	assert.NoError(t, err)
 	assert.NotNil(t, r)
 }
 
 func TestApi_Add(t *testing.T) {
-	api := NewApi("http://qbittorrent.dasho.net")
+	url := os.Getenv("QBITTORRENT_URL")
+	assert.NotEmpty(t, url)
+
+	api := NewApi(url)
 	opts := map[string]string{}
 
 	list, err := api.Torrents("priority")

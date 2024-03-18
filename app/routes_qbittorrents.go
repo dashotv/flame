@@ -29,6 +29,11 @@ func (a *Application) QbittorrentsAdd(c *gin.Context, URL string) {
 }
 
 func (a *Application) QbittorrentsRemove(c *gin.Context, infohash string, del bool) {
+	if infohash == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "infohash is required"})
+		return
+	}
+
 	err := app.Qbt.Delete(infohash, del)
 
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	initializers = append(initializers, setupMetube)
+	initializers = append(initializers, setupNzbget)
 }
 
 func setupNzbget(app *Application) error {

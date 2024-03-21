@@ -36,6 +36,7 @@ type Updates struct {
 
 func (j *Updates) Kind() string { return "updates" }
 func (j *Updates) Work(ctx context.Context, job *minion.Job[*Updates]) error {
+	// app.Log.Named("updates").Info("starting")
 	qbt, err := app.Qbt.List()
 	if err != nil {
 		return errors.Wrap(err, "getting torrent list")

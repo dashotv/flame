@@ -6,24 +6,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
+	"github.com/labstack/echo/v4"
 
 	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/golem/web"
 )
 
-func (a *Application) NzbsAdd(c *gin.Context, URL, cat, name string) {
-	pri, err := web.QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
+func (a *Application) NzbsAdd(c echo.Context, URL, cat, name string) error {
+	pri, err := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
 
 	b, err := base64.StdEncoding.DecodeString(URL)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
 
 	u := strings.Replace(string(b), "&amp;", "&", -1)
@@ -37,108 +33,99 @@ func (a *Application) NzbsAdd(c *gin.Context, URL, cat, name string) {
 
 	id, err := a.Nzb.Add(u, options)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"error": false, "id": id})
+	return c.JSON(http.StatusOK, H{"error": false, "id": id})
 }
 
-func (a *Application) NzbsRemove(c *gin.Context, id int) {
+func (a *Application) NzbsRemove(c echo.Context, id int) error {
 	var err error
 
-	if c.Query("delete") == "true" {
+	if c.QueryParam("delete") == "true" {
 		err = a.Nzb.Delete(id)
 	} else {
 		err = a.Nzb.Remove(id)
 	}
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"error": false})
+	return c.JSON(http.StatusOK, H{"error": false})
 }
 
-func (a *Application) NzbsDestroy(c *gin.Context, id int) {
+func (a *Application) NzbsDestroy(c echo.Context, id int) error {
 	err := a.Nzb.Destroy(id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
 
-	c.JSON(http.StatusOK, gin.H{"error": false})
+	return c.JSON(http.StatusOK, H{"error": false})
 }
 
-func (a *Application) NzbsIndex(c *gin.Context) {
+func (a *Application) NzbsIndex(c echo.Context) error {
 	// read the json string from cache
 	res := ""
 	ok, err := a.Cache.Get("flame-nzbs", &res)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
-		return
+		return err
 	}
 	if !ok {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": errors.Errorf("failed to get %s from cache", "flame-nzbs")})
-		return
+		return err
 	}
 
-	c.String(http.StatusOK, res)
+	return c.String(http.StatusOK, res)
 }
 
-func (a *Application) NzbsHistory(c *gin.Context, hidden bool) {
+func (a *Application) NzbsHistory(c echo.Context, hidden bool) error {
 	r, err := a.Nzb.History(hidden)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
-		return
+		return err
 	}
 
-	c.JSON(http.StatusOK, nzbget.HistoryResponse{Response: &nzbget.Response{Timestamp: time.Now()}, Result: r})
+	return c.JSON(http.StatusOK, nzbget.HistoryResponse{Response: &nzbget.Response{Timestamp: time.Now()}, Result: r})
 }
 
-func (a *Application) NzbsPause(c *gin.Context, id int) {
+func (a *Application) NzbsPause(c echo.Context, id int) error {
 	var err error
 
 	if id == -1 {
 		a.NzbsPauseAll(c)
-		return
+		return nil
 	}
 
 	err = a.Nzb.Pause(id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"error": false})
+
+	return c.JSON(http.StatusOK, H{"error": false})
 }
 
-func (a *Application) NzbsPauseAll(c *gin.Context) {
+func (a *Application) NzbsPauseAll(c echo.Context) error {
 	err := a.Nzb.PauseAll()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"error": false})
+	return c.JSON(http.StatusOK, H{"error": false})
 }
 
-func (a *Application) NzbsResume(c *gin.Context, id int) {
+func (a *Application) NzbsResume(c echo.Context, id int) error {
 	var err error
 
 	if id == -1 {
 		a.NzbsResumeAll(c)
-		return
+		return nil
 	}
 	err = a.Nzb.Resume(id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"error": false})
+	return c.JSON(http.StatusOK, H{"error": false})
 }
 
-func (a *Application) NzbsResumeAll(c *gin.Context) {
+func (a *Application) NzbsResumeAll(c echo.Context) error {
 	err := a.Nzb.ResumeAll()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"error": false})
+	return c.JSON(http.StatusOK, H{"error": false})
 }

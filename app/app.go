@@ -1,9 +1,9 @@
 package app
 
 import (
-	"fmt"
+	"context"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
@@ -16,9 +16,11 @@ var app *Application
 
 type setupFunc func(app *Application) error
 type healthFunc func(app *Application) error
+type startFunc func(ctx context.Context, app *Application) error
 
 var initializers = []setupFunc{setupConfig, setupLogger}
 var healthchecks = map[string]healthFunc{}
+var starters = []startFunc{}
 
 type Application struct {
 	Config *Config
@@ -30,9 +32,9 @@ type Application struct {
 	//golem:template:app/app_partial_definitions
 	// DO NOT EDIT. This section is managed by github.com/dashotv/golem.
 	// Routes
-	Engine  *gin.Engine
-	Default *gin.RouterGroup
-	Router  *gin.RouterGroup
+	Engine  *echo.Echo
+	Default *echo.Group
+	Router  *echo.Group
 
 	// Models
 	DB *Connector
@@ -50,9 +52,9 @@ type Application struct {
 
 }
 
-func Start() error {
+func Setup() error {
 	if app != nil {
-		return errors.New("application already started")
+		return errors.New("application already setup")
 	}
 
 	app = &Application{}
@@ -63,26 +65,34 @@ func Start() error {
 		}
 	}
 
-	app.Log.Info("starting flame...")
+	return nil
+}
 
-	//golem:template:app/app_partial_start
-	// DO NOT EDIT. This section is managed by github.com/dashotv/golem.
-	go app.Events.Start()
+func Start() error {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	go func() {
-		app.Log.Infof("starting workers (%d)...", app.Config.MinionConcurrency)
-		app.Workers.Start()
-	}()
-
-	app.Routes()
-	app.Log.Info("starting routes...")
-	if err := app.Engine.Run(fmt.Sprintf(":%d", app.Config.Port)); err != nil {
-		return errors.Wrap(err, "starting router")
+	if app == nil {
+		if err := Setup(); err != nil {
+			return err
+		}
 	}
 
-	//golem:template:app/app_partial_start
+	for _, f := range starters {
+		if err := f(ctx, app); err != nil {
+			return err
+		}
+	}
 
-	return nil
+	app.Log.Info("started")
+
+	for {
+		select {
+		case <-ctx.Done():
+			app.Log.Info("stopping")
+			return nil
+		}
+	}
 }
 
 func (a *Application) Health() (map[string]bool, error) {

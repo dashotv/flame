@@ -11,10 +11,19 @@ import (
 func init() {
 	initializers = append(initializers, setupWorkers)
 	healthchecks["workers"] = checkWorkers
+	starters = append(starters, startWorkers)
 }
 
 func checkWorkers(app *Application) error {
 	// TODO: workers health check
+	return nil
+}
+
+func startWorkers(ctx context.Context, app *Application) error {
+	go func() {
+		app.Log.Infof("starting workers (%d)...", app.Config.MinionConcurrency)
+		app.Workers.Start()
+	}()
 	return nil
 }
 

@@ -2,6 +2,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -17,6 +18,7 @@ import (
 func init() {
 	initializers = append(initializers, setupEvents)
 	healthchecks["events"] = checkEvents
+	starters = append(starters, startEvents)
 }
 
 type EventsChannel string
@@ -29,6 +31,11 @@ func setupEvents(app *Application) error {
 	}
 
 	app.Events = events
+	return nil
+}
+
+func startEvents(ctx context.Context, app *Application) error {
+	go app.Events.Start()
 	return nil
 }
 

@@ -2,16 +2,19 @@
 package app
 
 import (
+	"context"
+	"fmt"
 	"net/http"
-	"time"
 
-	ginzap "github.com/gin-contrib/zap"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"go.infratographer.com/x/echox/echozap"
 )
 
 func init() {
 	initializers = append(initializers, setupRoutes)
 	healthchecks["routes"] = checkRoutes
+	starters = append(starters, startRoutes)
 }
 
 func checkRoutes(app *Application) error {
@@ -19,22 +22,29 @@ func checkRoutes(app *Application) error {
 	return nil
 }
 
+func startRoutes(ctx context.Context, app *Application) error {
+	go func() {
+		app.Routes()
+		app.Log.Info("starting routes...")
+		if err := app.Engine.Start(fmt.Sprintf(":%d", app.Config.Port)); err != nil {
+			app.Log.Errorf("routes: %s", err)
+		}
+	}()
+	return nil
+}
+
 func setupRoutes(app *Application) error {
-	if app.Config.Mode == "release" {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
 	logger := app.Log.Named("routes").Desugar()
+	e := echo.New()
+	e.HideBanner = true
+	e.Use(middleware.Recover())
+	e.Use(echozap.Middleware(logger))
 
-	app.Engine = gin.New()
-	app.Engine.Use(
-		ginzap.Ginzap(logger, time.RFC3339, true),
-		ginzap.RecoveryWithZap(logger, true),
-	)
+	app.Engine = e
 	// unauthenticated routes
-	app.Default = app.Engine.Group("/")
+	app.Default = app.Engine.Group("")
 	// authenticated routes (if enabled, otherwise same as default)
-	app.Router = app.Engine.Group("/")
+	app.Router = app.Engine.Group("")
 
 	// if app.Config.Auth {
 	// 	clerkSecret := app.Config.ClerkSecretKey
@@ -57,7 +67,7 @@ func setupRoutes(app *Application) error {
 // also add this import: "github.com/clerkinc/clerk-sdk-go/clerk"
 //
 // requireSession wraps the clerk.RequireSession middleware
-// func requireSession(client clerk.Client) gin.HandlerFunc {
+// func requireSession(client clerk.Client) HandlerFunc {
 // 	requireActiveSession := clerk.RequireSessionV2(client)
 // 	return func(gctx *gin.Context) {
 // 		var skip = true
@@ -67,7 +77,7 @@ func setupRoutes(app *Application) error {
 // 		requireActiveSession(handler).ServeHTTP(gctx.Writer, gctx.Request)
 // 		switch {
 // 		case skip:
-// 			gctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "session required"})
+// 			gctx.AbortWithStatusJSON(http.StatusBadRequest, H{"error": "session required"})
 // 		default:
 // 			gctx.Next()
 // 		}
@@ -77,6 +87,11 @@ func setupRoutes(app *Application) error {
 func (a *Application) Routes() {
 	a.Default.GET("/", a.indexHandler)
 	a.Default.GET("/health", a.healthHandler)
+
+	metube := a.Router.Group("/metube")
+	metube.GET("/", a.MetubeIndexHandler)
+	metube.GET("/add", a.MetubeAddHandler)
+	metube.GET("/remove", a.MetubeRemoveHandler)
 
 	nzbs := a.Router.Group("/nzbs")
 	nzbs.GET("/", a.NzbsIndexHandler)
@@ -99,90 +114,102 @@ func (a *Application) Routes() {
 
 }
 
-func (a *Application) indexHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
+func (a *Application) indexHandler(c echo.Context) error {
+	return c.JSON(http.StatusOK, H{
 		"name": "flame",
-		"routes": gin.H{
+		"routes": H{
+			"metube":       "/metube",
 			"nzbs":         "/nzbs",
 			"qbittorrents": "/qbittorrents",
 		},
 	})
 }
 
-func (a *Application) healthHandler(c *gin.Context) {
+func (a *Application) healthHandler(c echo.Context) error {
 	health, err := a.Health()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		return
+		return err
 	}
-	c.JSON(http.StatusOK, gin.H{"name": "flame", "health": health})
+	return c.JSON(http.StatusOK, H{"name": "flame", "health": health})
+}
+
+// Metube (/metube)
+func (a *Application) MetubeIndexHandler(c echo.Context) error {
+	return a.MetubeIndex(c)
+}
+func (a *Application) MetubeAddHandler(c echo.Context) error {
+	url := QueryString(c, "url")
+	name := QueryString(c, "name")
+	return a.MetubeAdd(c, url, name)
+}
+func (a *Application) MetubeRemoveHandler(c echo.Context) error {
+	name := QueryString(c, "name")
+	return a.MetubeRemove(c, name)
 }
 
 // Nzbs (/nzbs)
-func (a *Application) NzbsIndexHandler(c *gin.Context) {
-	a.NzbsIndex(c)
+func (a *Application) NzbsIndexHandler(c echo.Context) error {
+	return a.NzbsIndex(c)
 }
-func (a *Application) NzbsAddHandler(c *gin.Context) {
+func (a *Application) NzbsAddHandler(c echo.Context) error {
 	url := QueryString(c, "url")
 	category := QueryString(c, "category")
 	name := QueryString(c, "name")
-	a.NzbsAdd(c, url, category, name)
+	return a.NzbsAdd(c, url, category, name)
 }
-func (a *Application) NzbsRemoveHandler(c *gin.Context) {
+func (a *Application) NzbsRemoveHandler(c echo.Context) error {
 	id := QueryInt(c, "id")
-	a.NzbsRemove(c, id)
+	return a.NzbsRemove(c, id)
 }
-func (a *Application) NzbsDestroyHandler(c *gin.Context) {
+func (a *Application) NzbsDestroyHandler(c echo.Context) error {
 	id := QueryInt(c, "id")
-	a.NzbsDestroy(c, id)
+	return a.NzbsDestroy(c, id)
 }
-func (a *Application) NzbsPauseHandler(c *gin.Context) {
+func (a *Application) NzbsPauseHandler(c echo.Context) error {
 	id := QueryInt(c, "id")
-	a.NzbsPause(c, id)
+	return a.NzbsPause(c, id)
 }
-func (a *Application) NzbsResumeHandler(c *gin.Context) {
+func (a *Application) NzbsResumeHandler(c echo.Context) error {
 	id := QueryInt(c, "id")
-	a.NzbsResume(c, id)
+	return a.NzbsResume(c, id)
 }
-func (a *Application) NzbsHistoryHandler(c *gin.Context) {
+func (a *Application) NzbsHistoryHandler(c echo.Context) error {
 	hidden := QueryBool(c, "hidden")
-	a.NzbsHistory(c, hidden)
+	return a.NzbsHistory(c, hidden)
 }
 
 // Qbittorrents (/qbittorrents)
-func (a *Application) QbittorrentsIndexHandler(c *gin.Context) {
-	a.QbittorrentsIndex(c)
+func (a *Application) QbittorrentsIndexHandler(c echo.Context) error {
+	return a.QbittorrentsIndex(c)
 }
-func (a *Application) QbittorrentsAddHandler(c *gin.Context) {
+func (a *Application) QbittorrentsAddHandler(c echo.Context) error {
 	url := QueryString(c, "url")
-	a.QbittorrentsAdd(c, url)
+	return a.QbittorrentsAdd(c, url)
 }
-func (a *Application) QbittorrentsRemoveHandler(c *gin.Context) {
+func (a *Application) QbittorrentsRemoveHandler(c echo.Context) error {
 	infohash := QueryString(c, "infohash")
 	del := QueryBool(c, "del")
-	a.QbittorrentsRemove(c, infohash, del)
+	return a.QbittorrentsRemove(c, infohash, del)
 }
-func (a *Application) QbittorrentsPauseHandler(c *gin.Context) {
+func (a *Application) QbittorrentsPauseHandler(c echo.Context) error {
 	infohash := QueryString(c, "infohash")
-	a.QbittorrentsPause(c, infohash)
+	return a.QbittorrentsPause(c, infohash)
 }
-func (a *Application) QbittorrentsResumeHandler(c *gin.Context) {
+func (a *Application) QbittorrentsResumeHandler(c echo.Context) error {
 	infohash := QueryString(c, "infohash")
-	a.QbittorrentsResume(c, infohash)
+	return a.QbittorrentsResume(c, infohash)
 }
-func (a *Application) QbittorrentsLabelHandler(c *gin.Context) {
+func (a *Application) QbittorrentsLabelHandler(c echo.Context) error {
 	infohash := QueryString(c, "infohash")
 	label := QueryString(c, "label")
-	a.QbittorrentsLabel(c, infohash, label)
+	return a.QbittorrentsLabel(c, infohash, label)
 }
-func (a *Application) QbittorrentsWantHandler(c *gin.Context) {
+func (a *Application) QbittorrentsWantHandler(c echo.Context) error {
 	infohash := QueryString(c, "infohash")
 	files := QueryString(c, "files")
-	a.QbittorrentsWant(c, infohash, files)
+	return a.QbittorrentsWant(c, infohash, files)
 }
-func (a *Application) QbittorrentsWantedHandler(c *gin.Context) {
+func (a *Application) QbittorrentsWantedHandler(c echo.Context) error {
 	infohash := QueryString(c, "infohash")
-	a.QbittorrentsWanted(c, infohash)
+	return a.QbittorrentsWanted(c, infohash)
 }

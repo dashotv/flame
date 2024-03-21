@@ -60,17 +60,17 @@ type Minion struct { // model
 	//ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	//CreatedAt time.Time          `bson:"created_at" json:"created_at"`
 	//UpdatedAt time.Time          `bson:"updated_at" json:"updated_at"`
-	Queue    string           `bson:"queue,omitempty" json:"queue,omitempty"`
-	Kind     string           `bson:"kind,omitempty" json:"kind,omitempty"`
-	Args     string           `bson:"args,omitempty" json:"args,omitempty"`
-	Status   string           `bson:"status,omitempty" json:"status,omitempty"`
-	Attempts []*MinionAttempt `bson:"attempts,omitempty" json:"attempts,omitempty"`
+	Queue    string           `bson:"queue" json:"queue"`
+	Kind     string           `bson:"kind" json:"kind"`
+	Args     string           `bson:"args" json:"args"`
+	Status   string           `bson:"status" json:"status"`
+	Attempts []*MinionAttempt `bson:"attempts" json:"attempts"`
 }
 
 type MinionAttempt struct { // struct
-	StartedAt  time.Time `bson:"started_at,omitempty" json:"started_at,omitempty"`
-	Duration   float64   `bson:"duration,omitempty" json:"duration,omitempty"`
-	Status     string    `bson:"status,omitempty" json:"status,omitempty"`
-	Error      string    `bson:"error,omitempty" json:"error,omitempty"`
-	Stacktrace []string  `bson:"stacktrace,omitempty" json:"stacktrace,omitempty"`
+	StartedAt  time.Time `bson:"started_at" json:"started_at"`
+	Duration   float64   `bson:"duration" json:"duration"`
+	Status     string    `bson:"status" json:"status"`
+	Error      string    `bson:"error" json:"error"`
+	Stacktrace []string  `bson:"stacktrace" json:"stacktrace"`
 }

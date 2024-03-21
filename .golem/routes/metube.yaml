@@ -21,3 +21,6 @@ routes:
       - name: name
         type: string
         query: true
+      - name: where
+        type: string
+        query: true

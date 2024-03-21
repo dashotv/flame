@@ -144,7 +144,8 @@ func (a *Application) MetubeAddHandler(c echo.Context) error {
 }
 func (a *Application) MetubeRemoveHandler(c echo.Context) error {
 	name := QueryString(c, "name")
-	return a.MetubeRemove(c, name)
+	where := QueryString(c, "where")
+	return a.MetubeRemove(c, name, where)
 }
 
 // Nzbs (/nzbs)

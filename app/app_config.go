@@ -31,6 +31,7 @@ type Config struct {
 	QbittorrentURL      string `env:"QBITTORRENT_URL"`
 	QbittorrentUsername string `env:"QBITTORRENT_USERNAME"`
 	QbittorrentPassword string `env:"QBITTORRENT_PASSWORD"`
+	MetubeURL           string `env:"METUBE_URL"`
 	NzbgetURL           string `env:"NZBGET_URL"`
 	RedisHost           string `env:"REDIS_HOST"`
 	RedisPort           string `env:"REDIS_PORT"`

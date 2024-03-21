@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
+	"github.com/dashotv/flame/metube"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/minion"
@@ -26,8 +27,9 @@ type Application struct {
 	Config *Config
 	Log    *zap.SugaredLogger
 
-	Nzb *nzbget.Client
-	Qbt *qbt.Api
+	Nzb    *nzbget.Client
+	Qbt    *qbt.Api
+	Metube *metube.Client
 
 	//golem:template:app/app_partial_definitions
 	// DO NOT EDIT. This section is managed by github.com/dashotv/golem.

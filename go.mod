@@ -10,7 +10,6 @@ require (
 	github.com/anacrolix/torrent v1.55.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/dashotv/golem v0.11.0
 	github.com/dashotv/grimoire v0.4.3
 	github.com/dashotv/mercury v0.3.2
 	github.com/dashotv/minion v0.3.0
@@ -18,7 +17,6 @@ require (
 	github.com/deepmap/oapi-codegen v1.16.2
 	github.com/dotenv-org/godotenvvault v0.6.0
 	github.com/getkin/kin-openapi v0.123.0
-	github.com/gin-gonic/gin v1.9.1
 	github.com/imroc/req/v3 v3.43.1
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.4
@@ -64,6 +62,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/gin-gonic/gin v1.9.1 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.20.3 // indirect

@@ -1,0 +1,23 @@
+name: metube
+path: /metube
+routes:
+  - name: index
+    path: /
+    method: GET
+  - name: add
+    path: /add
+    method: GET
+    params:
+      - name: url
+        type: string
+        query: true
+      - name: name
+        type: string
+        query: true
+  - name: remove
+    path: /remove
+    method: GET
+    params:
+      - name: name
+        type: string
+        query: true

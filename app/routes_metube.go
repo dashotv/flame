@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/base64"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -24,7 +25,12 @@ func (a *Application) MetubeAdd(c echo.Context, url string, name string) error {
 		return c.JSON(http.StatusBadRequest, H{"error": true, "message": "url is required"})
 	}
 
-	err := a.Metube.Add(name, url)
+	u, err := base64.StdEncoding.DecodeString(url)
+	if err != nil {
+		return err
+	}
+
+	err = a.Metube.Add(name, string(u))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, H{"error": true, "message": "error adding to Metube: " + err.Error()})
 	}

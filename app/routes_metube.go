@@ -30,6 +30,7 @@ func (a *Application) MetubeAdd(c echo.Context, url string, name string) error {
 		return err
 	}
 
+	app.Log.Named("metube").Debugf("add: %s %s", name, u)
 	err = a.Metube.Add(name, string(u))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, H{"error": true, "message": "error adding to Metube: " + err.Error()})

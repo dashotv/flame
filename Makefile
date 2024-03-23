@@ -31,7 +31,7 @@ docker-run:
 	docker run -d --rm --name $(NAME) -p $(PORT):$(PORT) $(NAME)
 
 dotenv:
-	npx dotenv-vault local build
+	npx @dotenvx/dotenvx encrypt
 
 deps:
 	go install golang.org/x/tools/cmd/goimports@latest

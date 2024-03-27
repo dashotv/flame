@@ -103,6 +103,8 @@ github.com/dashotv/mercury v0.3.2 h1:88bvWsp5l823wTR1XbIB+LBiAFeCRZfe+JyIKf4nV/0
 github.com/dashotv/mercury v0.3.2/go.mod h1:OZ140gozVBT0iyOwKIJSoSd3yyPgjgq2fI4baqtFBGs=
 github.com/dashotv/minion v0.4.0 h1:PulMCAyCOO/oN+tJldzldmyWGmiT1nq/z1DCTT/PzSY=
 github.com/dashotv/minion v0.4.0/go.mod h1:qFvFgM1NivZLv2c6ISV7RoVYYqWNe8cDzDIBftOBN9I=
+github.com/dashotv/minion v0.4.1 h1:aJNhuUjfmath6SkfIqLuANoC75/GkWwnPnEt8r4Ja9w=
+github.com/dashotv/minion v0.4.1/go.mod h1:qFvFgM1NivZLv2c6ISV7RoVYYqWNe8cDzDIBftOBN9I=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=

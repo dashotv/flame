@@ -1,8 +1,6 @@
 module github.com/dashotv/flame
 
-go 1.21.5
-
-toolchain go1.22.1
+go 1.22.0
 
 //replace github.com/dashotv/grimoire => ../grimoire
 

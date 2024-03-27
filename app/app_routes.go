@@ -46,6 +46,7 @@ func setupRoutes(app *Application) error {
 	// authenticated routes (if enabled, otherwise same as default)
 	app.Router = app.Engine.Group("")
 
+	// TODO: fix auth
 	// if app.Config.Auth {
 	// 	clerkSecret := app.Config.ClerkSecretKey
 	// 	if clerkSecret == "" {
@@ -62,27 +63,6 @@ func setupRoutes(app *Application) error {
 
 	return nil
 }
-
-// Enable Auth and uncomment to use Clerk to manage auth
-// also add this import: "github.com/clerkinc/clerk-sdk-go/clerk"
-//
-// requireSession wraps the clerk.RequireSession middleware
-// func requireSession(client clerk.Client) HandlerFunc {
-// 	requireActiveSession := clerk.RequireSessionV2(client)
-// 	return func(gctx *gin.Context) {
-// 		var skip = true
-// 		var handler http.HandlerFunc = func(http.ResponseWriter, *http.Request) {
-// 			skip = false
-// 		}
-// 		requireActiveSession(handler).ServeHTTP(gctx.Writer, gctx.Request)
-// 		switch {
-// 		case skip:
-// 			gctx.AbortWithStatusJSON(http.StatusBadRequest, H{"error": "session required"})
-// 		default:
-// 			gctx.Next()
-// 		}
-// 	}
-// }
 
 func (a *Application) Routes() {
 	a.Default.GET("/", a.indexHandler)

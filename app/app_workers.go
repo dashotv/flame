@@ -20,16 +20,15 @@ func checkWorkers(app *Application) error {
 }
 
 func startWorkers(ctx context.Context, app *Application) error {
-	go func() {
-		app.Log.Infof("starting workers (%d)...", app.Config.MinionConcurrency)
-		app.Workers.Start()
-	}()
+	ctx = context.WithValue(ctx, "app", app)
+
+	app.Log.Debugf("starting workers (%d)", app.Config.MinionConcurrency)
+	go app.Workers.Start(ctx)
+
 	return nil
 }
 
 func setupWorkers(app *Application) error {
-	ctx := context.Background()
-
 	mcfg := &minion.Config{
 		Logger:      app.Log.Named("minion"),
 		Debug:       app.Config.MinionDebug,
@@ -40,7 +39,7 @@ func setupWorkers(app *Application) error {
 		Collection:  app.Config.MinionCollection,
 	}
 
-	m, err := minion.New(ctx, mcfg)
+	m, err := minion.New("flame", mcfg)
 	if err != nil {
 		return errors.Wrap(err, "creating minion")
 	}

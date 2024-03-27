@@ -38,9 +38,6 @@ type Application struct {
 	Default *echo.Group
 	Router  *echo.Group
 
-	// Models
-	DB *Connector
-
 	// Events
 	Events *Events
 
@@ -79,6 +76,8 @@ func Start() error {
 			return err
 		}
 	}
+
+	app.Workers.ScheduleFunc("* * * * * *", "Updates", Updates)
 
 	for _, f := range starters {
 		if err := f(ctx, app); err != nil {

@@ -101,8 +101,6 @@ github.com/dashotv/grimoire v0.5.1 h1:DP0sY3NTO6fjOpx+q72ZZkHoEzYCGqxNF4mH0pVNHW
 github.com/dashotv/grimoire v0.5.1/go.mod h1:q76AxToGXZ4acrFIt+ZyCrupxeymiamJzlXO6qtSHzM=
 github.com/dashotv/mercury v0.3.2 h1:88bvWsp5l823wTR1XbIB+LBiAFeCRZfe+JyIKf4nV/0=
 github.com/dashotv/mercury v0.3.2/go.mod h1:OZ140gozVBT0iyOwKIJSoSd3yyPgjgq2fI4baqtFBGs=
-github.com/dashotv/minion v0.4.0 h1:PulMCAyCOO/oN+tJldzldmyWGmiT1nq/z1DCTT/PzSY=
-github.com/dashotv/minion v0.4.0/go.mod h1:qFvFgM1NivZLv2c6ISV7RoVYYqWNe8cDzDIBftOBN9I=
 github.com/dashotv/minion v0.4.1 h1:aJNhuUjfmath6SkfIqLuANoC75/GkWwnPnEt8r4Ja9w=
 github.com/dashotv/minion v0.4.1/go.mod h1:qFvFgM1NivZLv2c6ISV7RoVYYqWNe8cDzDIBftOBN9I=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

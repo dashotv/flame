@@ -51,20 +51,6 @@ func setupWorkers(app *Application) error {
 	// an example of the subscription function and the basic setup instructions
 	// are included at the end of this file.
 
-	if err := minion.Register[*CleanupJobs](m, &CleanupJobs{}); err != nil {
-		return errors.Wrap(err, "registering worker: cleanup_jobs (CleanupJobs)")
-	}
-	if _, err := m.Schedule("0 0 * * * *", &CleanupJobs{}); err != nil {
-		return errors.Wrap(err, "scheduling worker: cleanup_jobs (CleanupJobs)")
-	}
-
-	if err := minion.Register[*Updates](m, &Updates{}); err != nil {
-		return errors.Wrap(err, "registering worker: updates (Updates)")
-	}
-	if _, err := m.Schedule("* * * * * *", &Updates{}); err != nil {
-		return errors.Wrap(err, "scheduling worker: updates (Updates)")
-	}
-
 	app.Workers = m
 	return nil
 }

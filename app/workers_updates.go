@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 
@@ -9,7 +8,6 @@ import (
 
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
-	"github.com/dashotv/minion"
 )
 
 type Metrics struct {
@@ -30,27 +28,22 @@ type Combined struct {
 	Metrics   *Metrics
 }
 
-type Updates struct {
-	minion.WorkerDefaults[*Updates]
-}
-
-func (j *Updates) Kind() string { return "updates" }
-func (j *Updates) Work(ctx context.Context, job *minion.Job[*Updates]) error {
+func Updates() error {
 	// app.Log.Named("updates").Info("starting")
 	qbt, err := app.Qbt.List()
 	if err != nil {
 		return errors.Wrap(err, "getting torrent list")
 	}
 
-	go j.updateQbittorrents(qbt)
+	go updateQbittorrents(qbt)
 
 	nzbs, err := app.Nzb.List()
 	if err != nil {
 		return errors.Wrap(err, "getting nzb list")
 	}
 
-	go j.updateNzbs(nzbs)
-	go j.checkDisk(nzbs, qbt)
+	go updateNzbs(nzbs)
+	go checkDisk(nzbs, qbt)
 
 	go func() {
 		metrics := &Metrics{}
@@ -69,7 +62,7 @@ func (j *Updates) Work(ctx context.Context, job *minion.Job[*Updates]) error {
 	return nil
 }
 
-func (j *Updates) updateQbittorrents(resp *qbt.Response) {
+func updateQbittorrents(resp *qbt.Response) {
 	b, err := json.Marshal(&resp)
 	if err != nil {
 		app.Workers.Log.Errorf("couldn't marshal torrents: %s", err)
@@ -84,7 +77,7 @@ func (j *Updates) updateQbittorrents(resp *qbt.Response) {
 	app.Events.Send("flame.qbittorrents", resp)
 }
 
-func (j *Updates) updateNzbs(resp *nzbget.GroupResponse) {
+func updateNzbs(resp *nzbget.GroupResponse) {
 	b, err := json.Marshal(&resp)
 	if err != nil {
 		app.Workers.Log.Errorf("couldn't marshal nzbs: %s", err)
@@ -99,7 +92,7 @@ func (j *Updates) updateNzbs(resp *nzbget.GroupResponse) {
 }
 
 // pauseAll pauses all torrents and sets a flag in the cache
-func (j *Updates) pauseAll() error {
+func pauseAll() error {
 	err := app.Qbt.PauseAll()
 	if err != nil {
 		return errors.Wrap(err, "pausing all")
@@ -113,7 +106,7 @@ func (j *Updates) pauseAll() error {
 	return nil
 }
 
-func (j *Updates) resumeAll() error {
+func resumeAll() error {
 	err := app.Qbt.ResumeAll()
 	if err != nil {
 		app.Workers.Log.Errorf("checkdisk: failed to resume all qbts: %s", err)
@@ -128,7 +121,7 @@ func (j *Updates) resumeAll() error {
 }
 
 // diskPaused checks the cache for the flag
-func (j *Updates) diskPaused() bool {
+func diskPaused() bool {
 	paused := "false"
 	_, err := app.Cache.Get("flame-disk-paused", &paused)
 	if err != nil {
@@ -139,8 +132,8 @@ func (j *Updates) diskPaused() bool {
 }
 
 // allPaused checks if all torrents are paused and the paused flag is true
-func (j *Updates) allPaused() bool {
-	if !j.diskPaused() {
+func allPaused() bool {
+	if !diskPaused() {
 		return false
 	}
 
@@ -151,23 +144,23 @@ func (j *Updates) allPaused() bool {
 	return ok
 }
 
-func (j *Updates) checkDisk(resp *nzbget.GroupResponse, qbt *qbt.Response) {
-	if resp.Status.FreeDiskSpaceMB < 25000 && !j.allPaused() {
-		err := j.pauseAll()
+func checkDisk(resp *nzbget.GroupResponse, qbt *qbt.Response) {
+	if resp.Status.FreeDiskSpaceMB < 25000 && !allPaused() {
+		err := pauseAll()
 		if err != nil {
 			app.Workers.Log.Errorf("checkdisk: failed to pause all qbts: %s", err)
 		}
 		return
 	}
 
-	if !j.diskPaused() {
+	if !diskPaused() {
 		return
 	}
 	if !qbt.AllPaused() {
 		return
 	}
 
-	err := j.resumeAll()
+	err := resumeAll()
 	if err != nil {
 		app.Workers.Log.Errorf("checkdisk: failed to resume all qbts: %s", err)
 	}

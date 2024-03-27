@@ -1,2 +1,0 @@
-name: cleanup_jobs
-schedule: "0 0 * * * *"

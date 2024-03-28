@@ -24,6 +24,7 @@ func (a *Application) MetubeAdd(c echo.Context, url string, name string) error {
 	if url == "" {
 		return c.JSON(http.StatusBadRequest, H{"error": true, "message": "url is required"})
 	}
+	autoStart := c.QueryParam("auto_start") == "true"
 
 	u, err := base64.StdEncoding.DecodeString(url)
 	if err != nil {
@@ -31,7 +32,7 @@ func (a *Application) MetubeAdd(c echo.Context, url string, name string) error {
 	}
 
 	app.Log.Named("metube").Debugf("add: %s %s", name, u)
-	err = a.Metube.Add(name, string(u))
+	err = a.Metube.Add(name, string(u), autoStart)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, H{"error": true, "message": "error adding to Metube: " + err.Error()})
 	}

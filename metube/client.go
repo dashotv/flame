@@ -42,12 +42,12 @@ type AddRequest struct {
 	Name      string `json:"custom_name_prefix"`
 }
 
-func (m *Client) Add(name, url string) error {
+func (m *Client) Add(name, url string, autoStart bool) error {
 	result := &Response{}
 	resp, err := m.Client.R().
 		SetHeader("Accept", "application/json"). // Chainable request settings.
 		SetSuccessResult(result).                // Unmarshal response body into userInfo automatically if status code is between 200 and 299.
-		SetBody(&AddRequest{url, false, "best", "any", "", name}).
+		SetBody(&AddRequest{url, autoStart, "best", "any", "", name}).
 		Post("add")
 
 	if err != nil { // Error handling.

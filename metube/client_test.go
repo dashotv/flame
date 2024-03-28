@@ -19,7 +19,7 @@ func init() {
 func TestClient_Add(t *testing.T) {
 	url := "https://www.dailymotion.com/embed/video/k4LoixovMHT0X5ycZJk?pubtool=oembed"
 	c := New(metubeURL, true)
-	err := c.Add("test", url)
+	err := c.Add("test", url, false)
 	require.NoError(t, err)
 }
 

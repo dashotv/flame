@@ -147,7 +147,7 @@ type Download struct {
 	CustomNamePrefix string  `json:"custom_name_prefix"`
 	Msg              string  `json:"msg"`
 	Percent          float64 `json:"percent"`
-	Speed            int64   `json:"speed"`
+	Speed            float64 `json:"speed"`
 	Eta              int64   `json:"eta"`
 	Status           string  `json:"status"`
 	Size             int64   `json:"size"`

@@ -10,24 +10,6 @@ import (
 	"github.com/dashotv/flame/qbt"
 )
 
-type Metrics struct {
-	Diskspace string `json:"diskspace"`
-	Torrents  struct {
-		DownloadRate string `json:"download_rate"`
-		UploadRate   string `json:"upload_rate"`
-	} `json:"torrents"`
-	Nzbs struct {
-		DownloadRate string `json:"download_rate"`
-	} `json:"nzbs"`
-}
-
-type Combined struct {
-	Torrents  []*qbt.Torrent
-	Nzbs      []nzbget.Group
-	NzbStatus nzbget.Status
-	Metrics   *Metrics
-}
-
 func Updates() error {
 	// app.Log.Named("updates").Info("starting")
 	qbt, err := app.Qbt.List()

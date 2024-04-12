@@ -1,0 +1,11 @@
+name: combined
+type: struct
+fields:
+    - name: torrents
+      type: '[]*qbt.Torrent'
+    - name: nzbs
+      type: '[]nzbget.Group'
+    - name: nzb_status
+      type: nzbget.Status
+    - name: metrics
+      type: '*Metrics'

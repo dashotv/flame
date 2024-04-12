@@ -4,7 +4,7 @@ repo: github.com/dashotv/flame
 package: app
 output: internal/app
 plugins:
-    models: false
+    models: true
     routes: true
     workers: true
     cache: true

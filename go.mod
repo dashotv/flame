@@ -10,6 +10,7 @@ require (
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/dashotv/fae v0.1.5
 	github.com/dashotv/golem v0.14.17
+	github.com/dashotv/grimoire v0.5.4
 	github.com/dashotv/mercury v0.3.2
 	github.com/dashotv/minion v0.4.4
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
@@ -19,6 +20,7 @@ require (
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/imroc/req/v3 v3.43.2
 	github.com/joho/godotenv v1.5.1
+	github.com/kamva/mgm/v3 v3.5.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/nats-io/nats.go v1.34.1
 	github.com/philippgille/gokv/redis v0.7.0
@@ -55,7 +57,6 @@ require (
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
 	github.com/clerk/clerk-sdk-go/v2 v2.0.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
-	github.com/dashotv/grimoire v0.5.4 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -93,7 +94,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kamva/mgm/v3 v3.5.0 // indirect
 	github.com/kataras/blocks v0.0.8 // indirect
 	github.com/kataras/golog v0.1.11 // indirect
 	github.com/kataras/iris/v12 v12.2.10 // indirect

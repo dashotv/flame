@@ -4,8 +4,8 @@ package app
 import (
 	"context"
 
+	"github.com/dashotv/fae"
 	kv "github.com/philippgille/gokv/redis"
-	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
@@ -21,7 +21,7 @@ func init() {
 func setupCache(app *Application) error {
 	cache, err := NewCache(app.Log.Named("cache"), kv.Options{Address: app.Config.RedisAddress})
 	if err != nil {
-		return errors.Wrap(err, "failed to create cache")
+		return fae.Wrap(err, "failed to create cache")
 	}
 
 	app.Cache = cache
@@ -31,7 +31,7 @@ func setupCache(app *Application) error {
 func checkCache(app *Application) error {
 	c := redis.NewClient(&redis.Options{Addr: app.Config.RedisAddress})
 	if status := c.Ping(context.Background()); status.Err() != nil {
-		return errors.Errorf("failed to connect to redis: %s", status.Err())
+		return fae.Errorf("failed to connect to redis: %s", status.Err())
 	}
 	return nil
 }

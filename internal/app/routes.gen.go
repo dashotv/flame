@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dashotv/fae"
+	"github.com/dashotv/golem/plugins/router"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"go.infratographer.com/x/echox/echozap"
 )
 
 func init() {
@@ -35,11 +35,10 @@ func startRoutes(ctx context.Context, app *Application) error {
 
 func setupRoutes(app *Application) error {
 	logger := app.Log.Named("routes").Desugar()
-	e := echo.New()
-	e.HideBanner = true
-	e.Use(middleware.Recover())
-	e.Use(echozap.Middleware(logger))
-
+	e, err := router.New(logger)
+	if err != nil {
+		return fae.Wrap(err, "router plugin")
+	}
 	app.Engine = e
 	// unauthenticated routes
 	app.Default = app.Engine.Group("")
@@ -47,21 +46,38 @@ func setupRoutes(app *Application) error {
 	app.Router = app.Engine.Group("")
 
 	// TODO: fix auth
-	// if app.Config.Auth {
-	// 	clerkSecret := app.Config.ClerkSecretKey
-	// 	if clerkSecret == "" {
-	// 		app.Log.Fatal("CLERK_SECRET_KEY is not set")
-	// 	}
-	//
-	// 	clerkClient, err := clerk.NewClient(clerkSecret)
-	// 	if err != nil {
-	// 		app.Log.Fatalf("clerk: %s", err)
-	// 	}
-	//
-	// 	app.Router.Use(requireSession(clerkClient))
-	// }
+	if app.Config.Auth {
+		clerkSecret := app.Config.ClerkSecretKey
+		if clerkSecret == "" {
+			app.Log.Fatal("CLERK_SECRET_KEY is not set")
+		}
+		clerkToken := app.Config.ClerkToken
+		if clerkToken == "" {
+			app.Log.Fatal("CLERK_TOKEN is not set")
+		}
+
+		app.Router.Use(router.ClerkAuth(clerkSecret, clerkToken))
+	}
 
 	return nil
+}
+
+type Setting struct {
+	Name  string `json:"name"`
+	Value bool   `json:"value"`
+}
+
+type SettingsBatch struct {
+	IDs   []string `json:"ids"`
+	Name  string   `json:"name"`
+	Value bool     `json:"value"`
+}
+
+type Response struct {
+	Error   bool        `json:"error"`
+	Message string      `json:"message,omitempty"`
+	Result  interface{} `json:"result,omitempty"`
+	Total   int64       `json:"total,omitempty"`
 }
 
 func (a *Application) Routes() {
@@ -118,13 +134,13 @@ func (a *Application) MetubeIndexHandler(c echo.Context) error {
 	return a.MetubeIndex(c)
 }
 func (a *Application) MetubeAddHandler(c echo.Context) error {
-	url := QueryString(c, "url")
-	name := QueryString(c, "name")
+	url := QueryParamString(c, "url")
+	name := QueryParamString(c, "name")
 	return a.MetubeAdd(c, url, name)
 }
 func (a *Application) MetubeRemoveHandler(c echo.Context) error {
-	name := QueryString(c, "name")
-	where := QueryString(c, "where")
+	name := QueryParamString(c, "name")
+	where := QueryParamString(c, "where")
 	return a.MetubeRemove(c, name, where)
 }
 
@@ -133,29 +149,29 @@ func (a *Application) NzbsIndexHandler(c echo.Context) error {
 	return a.NzbsIndex(c)
 }
 func (a *Application) NzbsAddHandler(c echo.Context) error {
-	url := QueryString(c, "url")
-	category := QueryString(c, "category")
-	name := QueryString(c, "name")
+	url := QueryParamString(c, "url")
+	category := QueryParamString(c, "category")
+	name := QueryParamString(c, "name")
 	return a.NzbsAdd(c, url, category, name)
 }
 func (a *Application) NzbsRemoveHandler(c echo.Context) error {
-	id := QueryInt(c, "id")
+	id := QueryParamInt(c, "id")
 	return a.NzbsRemove(c, id)
 }
 func (a *Application) NzbsDestroyHandler(c echo.Context) error {
-	id := QueryInt(c, "id")
+	id := QueryParamInt(c, "id")
 	return a.NzbsDestroy(c, id)
 }
 func (a *Application) NzbsPauseHandler(c echo.Context) error {
-	id := QueryInt(c, "id")
+	id := QueryParamInt(c, "id")
 	return a.NzbsPause(c, id)
 }
 func (a *Application) NzbsResumeHandler(c echo.Context) error {
-	id := QueryInt(c, "id")
+	id := QueryParamInt(c, "id")
 	return a.NzbsResume(c, id)
 }
 func (a *Application) NzbsHistoryHandler(c echo.Context) error {
-	hidden := QueryBool(c, "hidden")
+	hidden := QueryParamBool(c, "hidden")
 	return a.NzbsHistory(c, hidden)
 }
 
@@ -164,33 +180,33 @@ func (a *Application) QbittorrentsIndexHandler(c echo.Context) error {
 	return a.QbittorrentsIndex(c)
 }
 func (a *Application) QbittorrentsAddHandler(c echo.Context) error {
-	url := QueryString(c, "url")
+	url := QueryParamString(c, "url")
 	return a.QbittorrentsAdd(c, url)
 }
 func (a *Application) QbittorrentsRemoveHandler(c echo.Context) error {
-	infohash := QueryString(c, "infohash")
-	del := QueryBool(c, "del")
+	infohash := QueryParamString(c, "infohash")
+	del := QueryParamBool(c, "del")
 	return a.QbittorrentsRemove(c, infohash, del)
 }
 func (a *Application) QbittorrentsPauseHandler(c echo.Context) error {
-	infohash := QueryString(c, "infohash")
+	infohash := QueryParamString(c, "infohash")
 	return a.QbittorrentsPause(c, infohash)
 }
 func (a *Application) QbittorrentsResumeHandler(c echo.Context) error {
-	infohash := QueryString(c, "infohash")
+	infohash := QueryParamString(c, "infohash")
 	return a.QbittorrentsResume(c, infohash)
 }
 func (a *Application) QbittorrentsLabelHandler(c echo.Context) error {
-	infohash := QueryString(c, "infohash")
-	label := QueryString(c, "label")
+	infohash := QueryParamString(c, "infohash")
+	label := QueryParamString(c, "label")
 	return a.QbittorrentsLabel(c, infohash, label)
 }
 func (a *Application) QbittorrentsWantHandler(c echo.Context) error {
-	infohash := QueryString(c, "infohash")
-	files := QueryString(c, "files")
+	infohash := QueryParamString(c, "infohash")
+	files := QueryParamString(c, "files")
 	return a.QbittorrentsWant(c, infohash, files)
 }
 func (a *Application) QbittorrentsWantedHandler(c echo.Context) error {
-	infohash := QueryString(c, "infohash")
+	infohash := QueryParamString(c, "infohash")
 	return a.QbittorrentsWanted(c, infohash)
 }

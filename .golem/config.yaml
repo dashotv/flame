@@ -2,16 +2,17 @@ version: "2.0"
 name: flame
 repo: github.com/dashotv/flame
 package: app
-output: app
+output: internal/app
 plugins:
-    models: false
-    routes: true
-    workers: true
-    cache: true
-    events: true
+  models: false
+  routes: true
+  workers: true
+  cache: true
+  events: true
+  clients: false
 definitions:
-    models: .golem/models
-    routes: .golem/routes
-    events: .golem/events
-    workers: .golem/workers
-    queues: .golem/queues
+  models: .golem/models
+  routes: .golem/routes
+  events: .golem/events
+  workers: .golem/workers
+  queues: .golem/queues

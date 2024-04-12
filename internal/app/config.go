@@ -43,6 +43,7 @@ type Config struct {
 	// Router Auth
 	Auth           bool   `env:"AUTH" envDefault:"false"`
 	ClerkSecretKey string `env:"CLERK_SECRET_KEY"`
+	ClerkToken     string `env:"CLERK_TOKEN"`
 
 	// Events
 	NatsURL string `env:"NATS_URL"`

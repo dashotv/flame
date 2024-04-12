@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/fae"
+	"github.com/dashotv/flame/internal/nzbget"
+	"github.com/dashotv/flame/internal/qbt"
 	"github.com/dashotv/mercury"
 )
 
@@ -44,7 +44,7 @@ func checkEvents(app *Application) error {
 	case nats.CONNECTED:
 		return nil
 	default:
-		return errors.Errorf("nats status: %s", app.Events.Merc.Status())
+		return fae.Errorf("nats status: %s", app.Events.Merc.Status())
 	}
 }
 
@@ -108,7 +108,7 @@ func (e *Events) Send(topic EventsTopic, data any) error {
 	}
 	if err != nil {
 		e.Log.Errorf("sending: %s", err)
-		return errors.Wrap(err.(error), "events.send")
+		return fae.Wrap(err.(error), "events.send")
 	}
 	return nil
 }
@@ -118,28 +118,28 @@ func (e *Events) doSend(topic EventsTopic, data any) error {
 	case "flame.combined":
 		m, ok := data.(*Combined)
 		if !ok {
-			return errors.Errorf("events.send: wrong data type: %t", data)
+			return fae.Errorf("events.send: wrong data type: %t", data)
 		}
 		e.Combined <- m
 
 	case "flame.metrics":
 		m, ok := data.(*Metrics)
 		if !ok {
-			return errors.Errorf("events.send: wrong data type: %t", data)
+			return fae.Errorf("events.send: wrong data type: %t", data)
 		}
 		e.Metrics <- m
 
 	case "flame.nzbs":
 		m, ok := data.(*nzbget.GroupResponse)
 		if !ok {
-			return errors.Errorf("events.send: wrong data type: %t", data)
+			return fae.Errorf("events.send: wrong data type: %t", data)
 		}
 		e.Nzbs <- m
 
 	case "flame.qbittorrents":
 		m, ok := data.(*qbt.Response)
 		if !ok {
-			return errors.Errorf("events.send: wrong data type: %t", data)
+			return fae.Errorf("events.send: wrong data type: %t", data)
 		}
 		e.Qbittorrents <- m
 	default:

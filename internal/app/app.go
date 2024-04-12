@@ -7,9 +7,9 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/dashotv/flame/metube"
-	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/flame/internal/metube"
+	"github.com/dashotv/flame/internal/nzbget"
+	"github.com/dashotv/flame/internal/qbt"
 	"github.com/dashotv/minion"
 )
 
@@ -85,7 +85,7 @@ func Start() error {
 		}
 	}
 
-	app.Log.Info("started")
+	app.Log.Infof("started (port=%d)", app.Config.Port)
 
 	for {
 		select {

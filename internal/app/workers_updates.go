@@ -6,8 +6,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/flame/internal/nzbget"
+	"github.com/dashotv/flame/internal/qbt"
 )
 
 type Metrics struct {

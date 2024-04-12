@@ -20,13 +20,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/dashotv/mercury"
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/dashotv/flame/nzbget"
-	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/mercury"
+
+	"github.com/dashotv/flame/internal/nzbget"
+	"github.com/dashotv/flame/internal/qbt"
 )
 
 // receiverCmd represents the receiver command

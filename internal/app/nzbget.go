@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/flame/internal/nzbget"
 )
 
 func init() {
@@ -9,7 +9,7 @@ func init() {
 }
 
 func setupNzbget(app *Application) error {
-	app.Log.Infof("connecting nzbget: %s", app.Config.NzbgetURL)
+	app.Log.Debugf("connecting nzbget: %s", app.Config.NzbgetURL)
 	app.Nzb = nzbget.NewClient(app.Config.NzbgetURL)
 	return nil
 }

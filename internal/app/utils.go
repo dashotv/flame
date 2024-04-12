@@ -12,6 +12,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
+
+	"github.com/dashotv/fae"
 )
 
 // QueryString retrieves a string param from the gin request querystring
@@ -47,7 +49,7 @@ func QueryDefaultInteger(c echo.Context, name string, def int) (int, error) {
 	}
 
 	if n < 0 {
-		return def, fmt.Errorf("less than zero")
+		return def, fae.Errorf("less than zero")
 	}
 
 	return n, nil
@@ -56,6 +58,76 @@ func QueryDefaultInteger(c echo.Context, name string, def int) (int, error) {
 // QueryBool retrieves a boolean param from the gin request querystring
 func QueryBool(c echo.Context, name string) bool {
 	return c.QueryParam(name) == "true"
+}
+
+// QueryParamString retrieves a string param from the gin request querystring
+func QueryParamString(c echo.Context, name string) string {
+	return c.QueryParam(name)
+}
+
+// QueryParamInt retrieves an integer param from the gin request querystring
+func QueryParamInt(c echo.Context, name string) int {
+	v := c.QueryParam(name)
+	i, _ := strconv.Atoi(v)
+	return i
+}
+
+// QueryParamBool retrieves a boolean param from the gin request querystring
+func QueryParamBool(c echo.Context, name string) bool {
+	return c.QueryParam(name) == "true"
+}
+
+func QueryParamIntDefault(c echo.Context, name string, def string) int {
+	param := c.QueryParam(name)
+	result, err := strconv.Atoi(param)
+	if err == nil && result > 0 {
+		return result
+	}
+
+	d, err := strconv.Atoi(def)
+	if err == nil && d > 0 {
+		return d
+	}
+
+	return 0
+}
+
+func QueryParamFloatDefault(c echo.Context, name string, def string) float64 {
+	param := c.QueryParam(name)
+	result, err := strconv.ParseFloat(param, 64)
+	if err == nil && result > 0 {
+		return result
+	}
+
+	if def != "" {
+		d, err := strconv.ParseFloat(param, 64)
+		if err == nil && d > 0 {
+			return d
+		}
+	}
+
+	return 0
+}
+
+func QueryParamBoolDefault(c echo.Context, name string, def string) bool {
+	param := c.QueryParam(name)
+	if param != "" {
+		return param == "true"
+	}
+
+	if def != "" {
+		return def == "true"
+	}
+
+	return false
+}
+
+func QueryParamStringDefault(c echo.Context, name string, def string) string {
+	param := c.QueryParam(name)
+	if param != "" {
+		return param
+	}
+	return def
 }
 
 // stolen from gin gonic

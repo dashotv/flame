@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/dashotv/flame/jsonrpc"
+	"github.com/dashotv/flame/internal/jsonrpc"
 )
 
 const PriorityVeryLow = -100

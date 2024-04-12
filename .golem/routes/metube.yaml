@@ -3,6 +3,7 @@ path: /metube
 routes:
   - name: index
     path: /
+    result: "*metube.HistoryResponse"
     method: GET
   - name: add
     path: /add

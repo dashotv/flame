@@ -8,7 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/flame/internal/nzbget"
 )
 
 func (a *Application) NzbsAdd(c echo.Context, URL, cat, name string) error {

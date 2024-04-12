@@ -3,7 +3,7 @@ package app
 import (
 	"fmt"
 
-	"github.com/dashotv/flame/metube"
+	"github.com/dashotv/flame/internal/metube"
 )
 
 func init() {
@@ -14,7 +14,7 @@ func setupMetube(app *Application) error {
 	if app.Config.MetubeURL == "" {
 		return fmt.Errorf("Metube URL is required: %s", app.Config.MetubeURL)
 	}
-	app.Log.Infof("connecting metube: %s", app.Config.MetubeURL)
+	app.Log.Debugf("connecting metube: %s", app.Config.MetubeURL)
 	app.Metube = metube.New(app.Config.MetubeURL, false)
 	return nil
 }

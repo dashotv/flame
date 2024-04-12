@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/pkg/errors"
 
-	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/flame/internal/qbt"
 )
 
 func init() {
@@ -11,7 +11,7 @@ func init() {
 }
 
 func setupQbittorrent(app *Application) error {
-	app.Log.Infof("connecting qbittorrent: %s", app.Config.QbittorrentURL)
+	app.Log.Debugf("connecting qbittorrent: %s", app.Config.QbittorrentURL)
 	app.Qbt = qbt.NewApi(app.Config.QbittorrentURL)
 	ok, err := app.Qbt.Login(app.Config.QbittorrentUsername, app.Config.QbittorrentPassword)
 	if err != nil {

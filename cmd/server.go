@@ -21,7 +21,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/dashotv/flame/app"
+	"github.com/dashotv/flame/internal/app"
 )
 
 // serverCmd represents the server command

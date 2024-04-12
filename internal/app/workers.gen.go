@@ -4,8 +4,8 @@ package app
 import (
 	"context"
 
+	"github.com/dashotv/fae"
 	"github.com/dashotv/minion"
-	"github.com/pkg/errors"
 )
 
 func init() {
@@ -41,7 +41,7 @@ func setupWorkers(app *Application) error {
 
 	m, err := minion.New("flame", mcfg)
 	if err != nil {
-		return errors.Wrap(err, "creating minion")
+		return fae.Wrap(err, "creating minion")
 	}
 
 	// add something like the below line in app.Start() (before the workers are

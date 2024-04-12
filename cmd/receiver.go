@@ -26,8 +26,8 @@ import (
 
 	"github.com/dashotv/mercury"
 
-	"github.com/dashotv/flame/internal/nzbget"
-	"github.com/dashotv/flame/internal/qbt"
+	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/flame/qbt"
 )
 
 // receiverCmd represents the receiver command

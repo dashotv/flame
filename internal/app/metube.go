@@ -3,7 +3,7 @@ package app
 import (
 	"fmt"
 
-	"github.com/dashotv/flame/internal/metube"
+	"github.com/dashotv/flame/metube"
 )
 
 func init() {

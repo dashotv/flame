@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/dashotv/flame/internal/nzbget"
+	"github.com/dashotv/flame/nzbget"
 )
 
 func init() {

@@ -10,8 +10,8 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/dashotv/fae"
-	"github.com/dashotv/flame/internal/nzbget"
-	"github.com/dashotv/flame/internal/qbt"
+	"github.com/dashotv/flame/nzbget"
+	"github.com/dashotv/flame/qbt"
 	"github.com/dashotv/mercury"
 )
 

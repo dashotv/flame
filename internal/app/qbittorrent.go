@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/pkg/errors"
 
-	"github.com/dashotv/flame/internal/qbt"
+	"github.com/dashotv/flame/qbt"
 )
 
 func init() {

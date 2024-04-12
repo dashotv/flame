@@ -12,7 +12,7 @@ require (
 	github.com/dashotv/golem v0.14.17
 	github.com/dashotv/grimoire v0.5.4
 	github.com/dashotv/mercury v0.3.2
-	github.com/dashotv/minion v0.4.4
+	github.com/dashotv/minion v0.4.3
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/deepmap/oapi-codegen v1.16.2
 	github.com/dotenv-org/godotenvvault v0.6.0

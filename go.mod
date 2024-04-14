@@ -8,11 +8,11 @@ require (
 	github.com/anacrolix/torrent v1.55.0
 	github.com/andrewstuart/go-nzb v0.0.0-20151130213409-4af25f1cccf1
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/dashotv/fae v0.1.5
+	github.com/dashotv/fae v0.1.9
 	github.com/dashotv/golem v0.14.17
 	github.com/dashotv/grimoire v0.5.4
 	github.com/dashotv/mercury v0.3.2
-	github.com/dashotv/minion v0.4.3
+	github.com/dashotv/minion v0.4.11
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/deepmap/oapi-codegen v1.16.2
 	github.com/dotenv-org/godotenvvault v0.6.0
@@ -154,7 +154,7 @@ require (
 	github.com/yosssi/ace v0.0.5 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	go.infratographer.com/x v0.5.1 // indirect
-	go.mongodb.org/mongo-driver v1.14.0 // indirect
+	go.mongodb.org/mongo-driver v1.15.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.50.0 // indirect
 	go.opentelemetry.io/otel v1.25.0 // indirect
 	go.opentelemetry.io/otel/metric v1.25.0 // indirect

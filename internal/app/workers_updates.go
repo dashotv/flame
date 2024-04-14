@@ -17,20 +17,21 @@ func Updates() error {
 		return errors.Wrap(err, "getting torrent list")
 	}
 
-	go updateQbittorrents(qbt)
-
 	nzbs, err := app.Nzb.List()
 	if err != nil {
 		return errors.Wrap(err, "getting nzb list")
 	}
-
-	go updateNzbs(nzbs)
 
 	// check disk space every minute
 	if time.Now().Unix()%60 == 0 {
 		go checkDisk(nzbs.Status.FreeDiskSpaceMB, qbt.AllPaused())
 	}
 
+	app.Events.Send("flame.qbittorrents", qbt)
+	app.Events.Send("flame.nzbs", nzbs)
+
+	go updateQbittorrents(qbt)
+	go updateNzbs(nzbs)
 	go func() {
 		metrics := &Metrics{}
 		metrics.Diskspace = fmt.Sprintf("%2.1f", float64(nzbs.Status.FreeDiskSpaceMB/1000))
@@ -54,8 +55,6 @@ func updateQbittorrents(resp *qbt.Response) {
 	if err != nil {
 		app.Workers.Log.Errorf("sendqbts: set cache failed: %s", err)
 	}
-
-	app.Events.Send("flame.qbittorrents", resp)
 }
 
 func updateNzbs(resp *nzbget.GroupResponse) {
@@ -63,5 +62,4 @@ func updateNzbs(resp *nzbget.GroupResponse) {
 	if err != nil {
 		app.Workers.Log.Errorf("sendnzbs: set cache failed: %s", err)
 	}
-	app.Events.Send("flame.nzbs", resp)
 }

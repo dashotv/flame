@@ -15,6 +15,9 @@ routes:
       - name: name
         type: string
         query: true
+      - name: auto_start
+        type: bool
+        query: true
   - name: remove
     path: /remove
     method: GET

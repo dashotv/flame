@@ -136,7 +136,8 @@ func (a *Application) MetubeIndexHandler(c echo.Context) error {
 func (a *Application) MetubeAddHandler(c echo.Context) error {
 	url := router.QueryParamString(c, "url")
 	name := router.QueryParamString(c, "name")
-	return a.MetubeAdd(c, url, name)
+	auto_start := router.QueryParamBool(c, "auto_start")
+	return a.MetubeAdd(c, url, name, auto_start)
 }
 func (a *Application) MetubeRemoveHandler(c echo.Context) error {
 	name := router.QueryParamString(c, "name")

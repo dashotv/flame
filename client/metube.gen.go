@@ -46,8 +46,9 @@ func (s *MetubeService) Index(ctx context.Context) (*MetubeIndexResponse, error)
 }
 
 type MetubeAddRequest struct {
-	URL  string `json:"url"`
-	Name string `json:"name"`
+	URL       string `json:"url"`
+	Name      string `json:"name"`
+	AutoStart bool   `json:"auto_start"`
 }
 
 func (s *MetubeService) Add(ctx context.Context, req *MetubeAddRequest) (*Response, error) {
@@ -58,6 +59,7 @@ func (s *MetubeService) Add(ctx context.Context, req *MetubeAddRequest) (*Respon
 		SetResult(result).
 		SetQueryParam("url", fmt.Sprintf("%v", req.URL)).
 		SetQueryParam("name", fmt.Sprintf("%v", req.Name)).
+		SetQueryParam("auto_start", fmt.Sprintf("%v", req.AutoStart)).
 		Get("/metube/add")
 	if err != nil {
 		return nil, fae.Wrap(err, "failed to make request")

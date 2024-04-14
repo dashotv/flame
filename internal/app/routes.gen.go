@@ -111,9 +111,9 @@ func (a *Application) Routes() {
 }
 
 func (a *Application) indexHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, H{
+	return c.JSON(http.StatusOK, router.H{
 		"name": "flame",
-		"routes": H{
+		"routes": router.H{
 			"metube":       "/metube",
 			"nzbs":         "/nzbs",
 			"qbittorrents": "/qbittorrents",
@@ -126,7 +126,7 @@ func (a *Application) healthHandler(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"name": "flame", "health": health})
+	return c.JSON(http.StatusOK, router.H{"name": "flame", "health": health})
 }
 
 // Metube (/metube)
@@ -134,13 +134,13 @@ func (a *Application) MetubeIndexHandler(c echo.Context) error {
 	return a.MetubeIndex(c)
 }
 func (a *Application) MetubeAddHandler(c echo.Context) error {
-	url := QueryParamString(c, "url")
-	name := QueryParamString(c, "name")
+	url := router.QueryParamString(c, "url")
+	name := router.QueryParamString(c, "name")
 	return a.MetubeAdd(c, url, name)
 }
 func (a *Application) MetubeRemoveHandler(c echo.Context) error {
-	name := QueryParamString(c, "name")
-	where := QueryParamString(c, "where")
+	name := router.QueryParamString(c, "name")
+	where := router.QueryParamString(c, "where")
 	return a.MetubeRemove(c, name, where)
 }
 
@@ -149,29 +149,29 @@ func (a *Application) NzbsIndexHandler(c echo.Context) error {
 	return a.NzbsIndex(c)
 }
 func (a *Application) NzbsAddHandler(c echo.Context) error {
-	url := QueryParamString(c, "url")
-	category := QueryParamString(c, "category")
-	name := QueryParamString(c, "name")
+	url := router.QueryParamString(c, "url")
+	category := router.QueryParamString(c, "category")
+	name := router.QueryParamString(c, "name")
 	return a.NzbsAdd(c, url, category, name)
 }
 func (a *Application) NzbsRemoveHandler(c echo.Context) error {
-	id := QueryParamInt(c, "id")
+	id := router.QueryParamInt(c, "id")
 	return a.NzbsRemove(c, id)
 }
 func (a *Application) NzbsDestroyHandler(c echo.Context) error {
-	id := QueryParamInt(c, "id")
+	id := router.QueryParamInt(c, "id")
 	return a.NzbsDestroy(c, id)
 }
 func (a *Application) NzbsPauseHandler(c echo.Context) error {
-	id := QueryParamInt(c, "id")
+	id := router.QueryParamInt(c, "id")
 	return a.NzbsPause(c, id)
 }
 func (a *Application) NzbsResumeHandler(c echo.Context) error {
-	id := QueryParamInt(c, "id")
+	id := router.QueryParamInt(c, "id")
 	return a.NzbsResume(c, id)
 }
 func (a *Application) NzbsHistoryHandler(c echo.Context) error {
-	hidden := QueryParamBool(c, "hidden")
+	hidden := router.QueryParamBool(c, "hidden")
 	return a.NzbsHistory(c, hidden)
 }
 
@@ -180,33 +180,33 @@ func (a *Application) QbittorrentsIndexHandler(c echo.Context) error {
 	return a.QbittorrentsIndex(c)
 }
 func (a *Application) QbittorrentsAddHandler(c echo.Context) error {
-	url := QueryParamString(c, "url")
+	url := router.QueryParamString(c, "url")
 	return a.QbittorrentsAdd(c, url)
 }
 func (a *Application) QbittorrentsRemoveHandler(c echo.Context) error {
-	infohash := QueryParamString(c, "infohash")
-	del := QueryParamBool(c, "del")
+	infohash := router.QueryParamString(c, "infohash")
+	del := router.QueryParamBool(c, "del")
 	return a.QbittorrentsRemove(c, infohash, del)
 }
 func (a *Application) QbittorrentsPauseHandler(c echo.Context) error {
-	infohash := QueryParamString(c, "infohash")
+	infohash := router.QueryParamString(c, "infohash")
 	return a.QbittorrentsPause(c, infohash)
 }
 func (a *Application) QbittorrentsResumeHandler(c echo.Context) error {
-	infohash := QueryParamString(c, "infohash")
+	infohash := router.QueryParamString(c, "infohash")
 	return a.QbittorrentsResume(c, infohash)
 }
 func (a *Application) QbittorrentsLabelHandler(c echo.Context) error {
-	infohash := QueryParamString(c, "infohash")
-	label := QueryParamString(c, "label")
+	infohash := router.QueryParamString(c, "infohash")
+	label := router.QueryParamString(c, "label")
 	return a.QbittorrentsLabel(c, infohash, label)
 }
 func (a *Application) QbittorrentsWantHandler(c echo.Context) error {
-	infohash := QueryParamString(c, "infohash")
-	files := QueryParamString(c, "files")
+	infohash := router.QueryParamString(c, "infohash")
+	files := router.QueryParamString(c, "files")
 	return a.QbittorrentsWant(c, infohash, files)
 }
 func (a *Application) QbittorrentsWantedHandler(c echo.Context) error {
-	infohash := QueryParamString(c, "infohash")
+	infohash := router.QueryParamString(c, "infohash")
 	return a.QbittorrentsWanted(c, infohash)
 }

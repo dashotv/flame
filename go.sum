@@ -101,8 +101,6 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/cloudflare/circl v1.3.7 h1:qlCDlTPz2n9fu58M0Nh1J/JzcFpfgkFHHX3O35r5vcU=
 github.com/cloudflare/circl v1.3.7/go.mod h1:sRTcRWXGLrKw6yIGJ+l7amYJFfAXbZG0kBSc8r4zxgA=
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
-github.com/dashotv/fae v0.1.5 h1:kC/7G7uvpTQIyLlcuqo1m/ctgX0sEMthUmA1Pu20r0U=
-github.com/dashotv/fae v0.1.5/go.mod h1:+deep7H052Bz6GxW7HXiel4S+Rqkva1mPETS+3tQOVU=
 github.com/dashotv/fae v0.1.9 h1:tB4ECFDSGTTF5fJF9xegUyAgGiT5dZGgeeiVfvZaGwE=
 github.com/dashotv/fae v0.1.9/go.mod h1:+deep7H052Bz6GxW7HXiel4S+Rqkva1mPETS+3tQOVU=
 github.com/dashotv/golem v0.14.17 h1:g10Gi/1ProuaWaOl3YhQzDM/G/sbnBTLIzhU1DCo1oQ=
@@ -111,10 +109,6 @@ github.com/dashotv/grimoire v0.5.4 h1:rr9p4YK9Sp6qcwiLjlHAcpBwfLfTX3kzUzTrLouqcM
 github.com/dashotv/grimoire v0.5.4/go.mod h1:oeSS1+bBA0ip8ULTaqX6tAnkxqNDg7NF7+mwwiByM3M=
 github.com/dashotv/mercury v0.3.2 h1:88bvWsp5l823wTR1XbIB+LBiAFeCRZfe+JyIKf4nV/0=
 github.com/dashotv/mercury v0.3.2/go.mod h1:OZ140gozVBT0iyOwKIJSoSd3yyPgjgq2fI4baqtFBGs=
-github.com/dashotv/minion v0.4.3 h1:8lHVr+D3MOeiHq8knpJCXjLRooJn4yJ9VIu/jvDHM6g=
-github.com/dashotv/minion v0.4.3/go.mod h1:qFvFgM1NivZLv2c6ISV7RoVYYqWNe8cDzDIBftOBN9I=
-github.com/dashotv/minion v0.4.4 h1:PM660mNPthzTSo2I5G9WRv1P7XXaRPI2EqUwhWfQK0U=
-github.com/dashotv/minion v0.4.4/go.mod h1:jucyUCo+l5smP1ahPuVDEMh4hLdEw2FpiSUDnQu6FyI=
 github.com/dashotv/minion v0.4.11 h1:j9OT8wo/nayEpv+tQvdYolVDJ00z8KyCgXtBZ6mAP6c=
 github.com/dashotv/minion v0.4.11/go.mod h1:T+cFjfuIlT6dF6HTrpgFLqrQnLppqFy2FeKEJLiQgAo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -550,8 +544,6 @@ github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5t
 go.infratographer.com/x v0.5.1 h1:wJQWOyuDx0H/yj0FMG6PQUq1veSJnEgssIkbQzU7vQI=
 go.infratographer.com/x v0.5.1/go.mod h1:IyZALpwaaviUIN8bGp9cU0hnn1mn0A/6zi70XES4+iE=
 go.mongodb.org/mongo-driver v1.8.3/go.mod h1:0sQWfOeY63QTntERDJJ/0SuKK0T1uVSgKCuAROlKEPY=
-go.mongodb.org/mongo-driver v1.14.0 h1:P98w8egYRjYe3XDjxhYJagTokP/H6HzlsnojRgZRd80=
-go.mongodb.org/mongo-driver v1.14.0/go.mod h1:Vzb0Mk/pa7e6cWw85R4F/endUC3u0U9jGcNU603k65c=
 go.mongodb.org/mongo-driver v1.15.0 h1:rJCKC8eEliewXjZGf0ddURtl7tTVy1TK3bfl0gkUSLc=
 go.mongodb.org/mongo-driver v1.15.0/go.mod h1:Vzb0Mk/pa7e6cWw85R4F/endUC3u0U9jGcNU603k65c=
 go.opencensus.io v0.20.1/go.mod h1:6WKK9ahsWS3RSO+PY9ZHZUfv2irvY6gN279GOPZjmmk=

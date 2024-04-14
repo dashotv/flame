@@ -17,14 +17,13 @@ func (a *Application) MetubeIndex(c echo.Context) error {
 }
 
 // GET /metube/add
-func (a *Application) MetubeAdd(c echo.Context, url string, name string) error {
+func (a *Application) MetubeAdd(c echo.Context, url string, name string, autoStart bool) error {
 	if name == "" {
 		return c.JSON(http.StatusBadRequest, H{"error": true, "message": "name is required"})
 	}
 	if url == "" {
 		return c.JSON(http.StatusBadRequest, H{"error": true, "message": "url is required"})
 	}
-	autoStart := c.QueryParam("auto_start") == "true"
 
 	u, err := base64.StdEncoding.DecodeString(url)
 	if err != nil {

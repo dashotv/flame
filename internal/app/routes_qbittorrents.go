@@ -7,6 +7,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
+
+	"github.com/dashotv/flame/qbt"
 )
 
 func (a *Application) QbittorrentsAdd(c echo.Context, URL string) error {
@@ -23,7 +25,7 @@ func (a *Application) QbittorrentsAdd(c echo.Context, URL string) error {
 
 	a.Log.Infof("added: %s", infohash)
 
-	return c.JSON(http.StatusOK, H{"error": false, "infohash": infohash})
+	return c.JSON(http.StatusOK, &Response{Error: false, Result: infohash})
 }
 
 func (a *Application) QbittorrentsRemove(c echo.Context, infohash string, del bool) error {
@@ -37,13 +39,13 @@ func (a *Application) QbittorrentsRemove(c echo.Context, infohash string, del bo
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsIndex(c echo.Context) error {
 	// read the json string from cache
 	// read the json string from cache
-	res := ""
+	res := &qbt.Response{}
 	ok, err := a.Cache.Get("flame-qbittorrents", &res)
 	if err != nil {
 		return err
@@ -52,7 +54,7 @@ func (a *Application) QbittorrentsIndex(c echo.Context) error {
 		return err
 	}
 
-	return c.String(http.StatusOK, res)
+	return c.JSON(http.StatusOK, &Response{Error: false, Result: res})
 }
 
 func (a *Application) QbittorrentsLabel(c echo.Context, infohash, label string) error {
@@ -61,7 +63,7 @@ func (a *Application) QbittorrentsLabel(c echo.Context, infohash, label string) 
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsPause(c echo.Context, infohash string) error {
@@ -73,7 +75,7 @@ func (a *Application) QbittorrentsPause(c echo.Context, infohash string) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsPauseAll(c echo.Context) error {
@@ -81,7 +83,7 @@ func (a *Application) QbittorrentsPauseAll(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsResume(c echo.Context, infohash string) error {
@@ -95,7 +97,7 @@ func (a *Application) QbittorrentsResume(c echo.Context, infohash string) error 
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsResumeAll(c echo.Context) error {
@@ -103,7 +105,7 @@ func (a *Application) QbittorrentsResumeAll(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 //func (a *Application) QbittorrentsStart(c echo.Context, infohash string) error {
@@ -111,7 +113,7 @@ func (a *Application) QbittorrentsResumeAll(c echo.Context) error {
 //	if err != nil {
 //		return err
 //	}
-//	return c.JSON(http.StatusOK, H{"error": false})
+//	return c.JSON(http.StatusOK, &Response{Error: false})
 //}
 //
 //func (a *Application) QbittorrentsStop(c echo.Context, infohash string) error {
@@ -119,7 +121,7 @@ func (a *Application) QbittorrentsResumeAll(c echo.Context) error {
 //	if err != nil {
 //		return err
 //	}
-//	return c.JSON(http.StatusOK, H{"error": false})
+//	return c.JSON(http.StatusOK, &Response{Error: false})
 //}
 
 func (a *Application) QbittorrentsWant(c echo.Context, infohash, files string) error {
@@ -134,7 +136,7 @@ func (a *Application) QbittorrentsWant(c echo.Context, infohash, files string) e
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsWantNone(c echo.Context, infohash string) error {
@@ -143,7 +145,7 @@ func (a *Application) QbittorrentsWantNone(c echo.Context, infohash string) erro
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) QbittorrentsWanted(c echo.Context, infohash string) error {
@@ -152,5 +154,5 @@ func (a *Application) QbittorrentsWanted(c echo.Context, infohash string) error 
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false, "wanted": want > 0, "count": want})
+	return c.JSON(http.StatusOK, &Response{Error: false, Total: int64(want)})
 }

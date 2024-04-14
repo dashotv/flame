@@ -1,7 +1,6 @@
 package app
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/pkg/errors"
@@ -45,13 +44,7 @@ func Updates() error {
 }
 
 func updateQbittorrents(resp *qbt.Response) {
-	b, err := json.Marshal(&resp)
-	if err != nil {
-		app.Workers.Log.Errorf("couldn't marshal torrents: %s", err)
-		return
-	}
-
-	err = app.Cache.Set("flame-qbittorrents", string(b))
+	err := app.Cache.Set("flame-qbittorrents", resp)
 	if err != nil {
 		app.Workers.Log.Errorf("sendqbts: set cache failed: %s", err)
 	}
@@ -60,13 +53,7 @@ func updateQbittorrents(resp *qbt.Response) {
 }
 
 func updateNzbs(resp *nzbget.GroupResponse) {
-	b, err := json.Marshal(&resp)
-	if err != nil {
-		app.Workers.Log.Errorf("couldn't marshal nzbs: %s", err)
-		return
-	}
-
-	err = app.Cache.Set("flame-nzbs", string(b))
+	err := app.Cache.Set("flame-nzbs", resp)
 	if err != nil {
 		app.Workers.Log.Errorf("sendnzbs: set cache failed: %s", err)
 	}

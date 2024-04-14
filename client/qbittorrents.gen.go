@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/dashotv/fae"
+	"github.com/dashotv/flame/qbt"
 )
 
 type QbittorrentsService struct {
@@ -19,8 +20,14 @@ func NewQbittorrentsService(client *Client) *QbittorrentsService {
 	}
 }
 
-func (s *QbittorrentsService) Index(ctx context.Context) (*Response, error) {
-	result := &Response{}
+type QbittorrentsIndexResponse struct {
+	*Response
+	Result *qbt.Response `json:"result"`
+	Total  int64         `json:"total"`
+}
+
+func (s *QbittorrentsService) Index(ctx context.Context) (*QbittorrentsIndexResponse, error) {
+	result := &QbittorrentsIndexResponse{Response: &Response{}}
 	resp, err := s.client.Resty.R().
 		SetContext(ctx).
 		SetResult(result).
@@ -42,8 +49,13 @@ type QbittorrentsAddRequest struct {
 	URL string `json:"url"`
 }
 
-func (s *QbittorrentsService) Add(ctx context.Context, req *QbittorrentsAddRequest) (*Response, error) {
-	result := &Response{}
+type QbittorrentsAddResponse struct {
+	*Response
+	Result string `json:"result"`
+}
+
+func (s *QbittorrentsService) Add(ctx context.Context, req *QbittorrentsAddRequest) (*QbittorrentsAddResponse, error) {
+	result := &QbittorrentsAddResponse{Response: &Response{}}
 	resp, err := s.client.Resty.R().
 		SetContext(ctx).
 		SetBody(req).

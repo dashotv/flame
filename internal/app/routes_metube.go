@@ -13,7 +13,7 @@ func (a *Application) MetubeIndex(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, H{"error": true, "message": "error loading Metube"})
 	}
-	return c.JSON(http.StatusOK, H{"error": false, "history": history})
+	return c.JSON(http.StatusOK, &Response{Error: false, Result: history})
 }
 
 // GET /metube/add
@@ -37,7 +37,7 @@ func (a *Application) MetubeAdd(c echo.Context, url string, name string) error {
 		return c.JSON(http.StatusInternalServerError, H{"error": true, "message": "error adding to Metube: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 // GET /metube/remove
@@ -54,5 +54,5 @@ func (a *Application) MetubeRemove(c echo.Context, name string, where string) er
 		return c.JSON(http.StatusInternalServerError, H{"error": true, "message": "error deleting from Metube: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }

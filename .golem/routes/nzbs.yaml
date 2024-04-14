@@ -4,35 +4,53 @@ routes:
   - name: index
     path: /
     method: GET
+    result: "*nzbget.GroupResponse"
   - name: add
     path: /add
     method: GET
+    result: int64
     params:
-      - { name: url, type: string, query: true }
-      - { name: category, type: string, query: true }
-      - { name: name, type: string, query: true }
+      - name: url
+        type: string
+        query: true
+      - name: category
+        type: string
+        query: true
+      - name: name
+        type: string
+        query: true
   - name: remove
     path: /remove
     method: GET
     params:
-      - { name: id, type: int, query: true }
+      - name: id
+        type: int
+        query: true
   - name: destroy
     path: /destroy
     method: GET
     params:
-      - { name: id, type: int, query: true }
+      - name: id
+        type: int
+        query: true
   - name: pause
     path: /pause
     method: GET
     params:
-      - { name: id, type: int, query: true }
+      - name: id
+        type: int
+        query: true
   - name: resume
     path: /resume
     method: GET
     params:
-      - { name: id, type: int, query: true }
+      - name: id
+        type: int
+        query: true
   - name: history
     path: /history
     method: GET
     params:
-      - { name: hidden, type: bool, query: true }
+      - name: hidden
+        type: bool
+        query: true

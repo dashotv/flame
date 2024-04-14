@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/dashotv/fae"
+	"github.com/dashotv/flame/nzbget"
 )
 
 type NzbsService struct {
@@ -19,8 +20,14 @@ func NewNzbsService(client *Client) *NzbsService {
 	}
 }
 
-func (s *NzbsService) Index(ctx context.Context) (*Response, error) {
-	result := &Response{}
+type NzbsIndexResponse struct {
+	*Response
+	Result *nzbget.GroupResponse `json:"result"`
+	Total  int64                 `json:"total"`
+}
+
+func (s *NzbsService) Index(ctx context.Context) (*NzbsIndexResponse, error) {
+	result := &NzbsIndexResponse{Response: &Response{}}
 	resp, err := s.client.Resty.R().
 		SetContext(ctx).
 		SetResult(result).
@@ -44,8 +51,13 @@ type NzbsAddRequest struct {
 	Name     string `json:"name"`
 }
 
-func (s *NzbsService) Add(ctx context.Context, req *NzbsAddRequest) (*Response, error) {
-	result := &Response{}
+type NzbsAddResponse struct {
+	*Response
+	Result int64 `json:"result"`
+}
+
+func (s *NzbsService) Add(ctx context.Context, req *NzbsAddRequest) (*NzbsAddResponse, error) {
+	result := &NzbsAddResponse{Response: &Response{}}
 	resp, err := s.client.Resty.R().
 		SetContext(ctx).
 		SetBody(req).

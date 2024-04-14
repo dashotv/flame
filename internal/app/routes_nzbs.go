@@ -35,7 +35,7 @@ func (a *Application) NzbsAdd(c echo.Context, URL, cat, name string) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false, "id": id})
+	return c.JSON(http.StatusOK, &Response{Error: false, Result: id})
 }
 
 func (a *Application) NzbsRemove(c echo.Context, id int) error {
@@ -49,7 +49,7 @@ func (a *Application) NzbsRemove(c echo.Context, id int) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) NzbsDestroy(c echo.Context, id int) error {
@@ -58,12 +58,12 @@ func (a *Application) NzbsDestroy(c echo.Context, id int) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) NzbsIndex(c echo.Context) error {
 	// read the json string from cache
-	res := ""
+	res := &nzbget.GroupResponse{}
 	ok, err := a.Cache.Get("flame-nzbs", &res)
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func (a *Application) NzbsIndex(c echo.Context) error {
 		return err
 	}
 
-	return c.String(http.StatusOK, res)
+	return c.JSON(http.StatusOK, &Response{Error: false, Result: res})
 }
 
 func (a *Application) NzbsHistory(c echo.Context, hidden bool) error {
@@ -97,7 +97,7 @@ func (a *Application) NzbsPause(c echo.Context, id int) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) NzbsPauseAll(c echo.Context) error {
@@ -105,7 +105,7 @@ func (a *Application) NzbsPauseAll(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) NzbsResume(c echo.Context, id int) error {
@@ -119,7 +119,7 @@ func (a *Application) NzbsResume(c echo.Context, id int) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }
 
 func (a *Application) NzbsResumeAll(c echo.Context) error {
@@ -127,5 +127,5 @@ func (a *Application) NzbsResumeAll(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, H{"error": false})
+	return c.JSON(http.StatusOK, &Response{Error: false})
 }

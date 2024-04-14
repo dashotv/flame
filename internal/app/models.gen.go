@@ -58,7 +58,7 @@ func NewConnector(app *Application) (*Connector, error) {
 type Combined struct { // struct
 	Torrents  []*qbt.Torrent `bson:"torrents" json:"torrents"`
 	Nzbs      []nzbget.Group `bson:"nzbs" json:"nzbs"`
-	NzbStatus nzbget.Status  `bson:"nzb_status" json:"nzb_status"`
+	NzbStatus *nzbget.Status `bson:"nzb_status" json:"nzb_status"`
 	Metrics   *Metrics       `bson:"metrics" json:"metrics"`
 }
 

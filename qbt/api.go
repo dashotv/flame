@@ -151,6 +151,7 @@ func (a *Api) Torrents(sort string) ([]*Torrent, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&torrents)
 	if err != nil {

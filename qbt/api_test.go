@@ -46,6 +46,18 @@ func TestApi_Login(t *testing.T) {
 	assert.NotNil(t, r)
 }
 
+func TestApi_Torrents(t *testing.T) {
+	url := os.Getenv("QBITTORRENT_URL")
+	assert.NotEmpty(t, url)
+
+	api := NewApi(url)
+	assert.NotNil(t, api)
+
+	list, err := api.Torrents("priority")
+	assert.NoError(t, err)
+	assert.NotNil(t, list)
+}
+
 func TestApi_Add(t *testing.T) {
 	url := os.Getenv("QBITTORRENT_URL")
 	assert.NotEmpty(t, url)

@@ -7,7 +7,7 @@ PORT := 9001
 all: test
 
 test:
-	source .env && go test -v ./qbt ./nzbget
+	go test -v ./qbt ./nzbget
 
 generate:
 	golem generate
@@ -36,6 +36,5 @@ dotenv:
 deps:
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/dashotv/golem@latest
-	go install github.com/codegangsta/gin@latest
 
 .PHONY: server receiver test deps docker docker-run

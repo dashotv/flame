@@ -76,21 +76,26 @@ func httpInfohash(URL *url.URL) (string, error) {
 }
 
 func magnetInfohash(URL *url.URL) (string, error) {
-	q, err := url.ParseQuery(URL.RawQuery)
+	magnet, err := metainfo.ParseMagnetUri(URL.String())
 	if err != nil {
-		return "", errors.Wrap(err, "could not parse query")
+		return "", err
 	}
 
-	h := ""
-	for _, v := range q["xt"] {
-		s := strings.Split(v, ":")
-		if s[0] == "urn" && s[1] == "btih" {
-			h = s[2]
-			break
-		}
-	}
+	// 	q, err := url.ParseQuery(URL.RawQuery)
+	// 	if err != nil {
+	// 		return "", errors.Wrap(err, "could not parse query")
+	// 	}
+	//
+	// 	h := ""
+	// 	for _, v := range q["xt"] {
+	// 		s := strings.Split(v, ":")
+	// 		if s[0] == "urn" && s[1] == "btih" {
+	// 			h = s[2]
+	// 			break
+	// 		}
+	// 	}
 
-	return h, nil
+	return magnet.InfoHash.HexString(), nil
 }
 
 // processInfoHashList puts list into a combined (single element) map with all hashes connected with '|'

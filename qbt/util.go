@@ -3,10 +3,10 @@ package qbt
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/anacrolix/torrent/metainfo"
@@ -46,7 +46,7 @@ func downloadURL(URL *url.URL) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	file, err := ioutil.TempFile("/tmp", "flame-download-*")
+	file, err := os.CreateTemp("/tmp", "flame-download-*")
 	if err != nil {
 		return "", err
 	}
@@ -80,20 +80,6 @@ func magnetInfohash(URL *url.URL) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	// 	q, err := url.ParseQuery(URL.RawQuery)
-	// 	if err != nil {
-	// 		return "", errors.Wrap(err, "could not parse query")
-	// 	}
-	//
-	// 	h := ""
-	// 	for _, v := range q["xt"] {
-	// 		s := strings.Split(v, ":")
-	// 		if s[0] == "urn" && s[1] == "btih" {
-	// 			h = s[2]
-	// 			break
-	// 		}
-	// 	}
 
 	return magnet.InfoHash.HexString(), nil
 }

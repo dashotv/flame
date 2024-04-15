@@ -148,7 +148,7 @@ type Download struct {
 	Msg              string  `json:"msg"`
 	Percent          float64 `json:"percent"`
 	Speed            float64 `json:"speed"`
-	Eta              int64   `json:"eta"`
+	Eta              float64 `json:"eta"`
 	Status           string  `json:"status"`
 	Size             int64   `json:"size"`
 	Timestamp        int64   `json:"timestamp"`

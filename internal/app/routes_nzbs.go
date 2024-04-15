@@ -14,12 +14,12 @@ import (
 func (a *Application) NzbsAdd(c echo.Context, URL, cat, name string) error {
 	pri, err := QueryDefaultInteger(c, "priority", nzbget.PriorityNormal)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 
 	b, err := base64.StdEncoding.DecodeString(URL)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 
 	u := strings.Replace(string(b), "&amp;", "&", -1)
@@ -33,7 +33,7 @@ func (a *Application) NzbsAdd(c echo.Context, URL, cat, name string) error {
 
 	id, err := a.Nzb.Add(u, options)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, &Response{Error: false, Result: id})
 }
@@ -47,7 +47,7 @@ func (a *Application) NzbsRemove(c echo.Context, id int) error {
 		err = a.Nzb.Remove(id)
 	}
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, &Response{Error: false})
 }
@@ -55,7 +55,7 @@ func (a *Application) NzbsRemove(c echo.Context, id int) error {
 func (a *Application) NzbsDestroy(c echo.Context, id int) error {
 	err := a.Nzb.Destroy(id)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, &Response{Error: false})
@@ -66,10 +66,10 @@ func (a *Application) NzbsIndex(c echo.Context) error {
 	res := &nzbget.GroupResponse{}
 	ok, err := a.Cache.Get("flame-nzbs", &res)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 	if !ok {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: "no cache data"})
 	}
 
 	return c.JSON(http.StatusOK, &Response{Error: false, Result: res})
@@ -78,7 +78,7 @@ func (a *Application) NzbsIndex(c echo.Context) error {
 func (a *Application) NzbsHistory(c echo.Context, hidden bool) error {
 	r, err := a.Nzb.History(hidden)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, nzbget.HistoryResponse{Response: &nzbget.Response{Timestamp: time.Now()}, Result: r})
@@ -94,7 +94,7 @@ func (a *Application) NzbsPause(c echo.Context, id int) error {
 
 	err = a.Nzb.Pause(id)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, &Response{Error: false})
@@ -103,7 +103,7 @@ func (a *Application) NzbsPause(c echo.Context, id int) error {
 func (a *Application) NzbsPauseAll(c echo.Context) error {
 	err := a.Nzb.PauseAll()
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, &Response{Error: false})
 }
@@ -117,7 +117,7 @@ func (a *Application) NzbsResume(c echo.Context, id int) error {
 	}
 	err = a.Nzb.Resume(id)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, &Response{Error: false})
 }
@@ -125,7 +125,7 @@ func (a *Application) NzbsResume(c echo.Context, id int) error {
 func (a *Application) NzbsResumeAll(c echo.Context) error {
 	err := a.Nzb.ResumeAll()
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, &Response{Error: true, Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, &Response{Error: false})
 }

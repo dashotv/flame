@@ -17,7 +17,7 @@ type Client struct {
 func New(url string, debug bool) *Client {
 	r := req.C().
 		SetBaseURL(url).
-		SetTimeout(5 * time.Second)
+		SetTimeout(30 * time.Second)
 	if debug {
 		r.DevMode()
 	}

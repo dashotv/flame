@@ -1,6 +1,7 @@
 package qbt
 
 import (
+	"fmt"
 	"net/url"
 	"testing"
 
@@ -34,4 +35,40 @@ func Test_magentInfoHash(t *testing.T) {
 			assert.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func Test_httpInfoHash(t *testing.T) {
+	tests := []struct {
+		name string
+		url  string
+		want string
+	}{
+		{
+			name: "martial god asura",
+			url:  "http://10.0.4.41:9117/dl/animetosho/?jackett_apikey=hcedgf1s4w9etni4pkjb66vh291efylw&path=Q2ZESjhJTHhYZ3Z3d3MxTHZVZ0UtbHJsWVU4OEh2emk3LVVadGhySDQ3bVlkVWhIYWdPUTcyeFhFUzB4ako2NTdjZU5ZQ25CYndGOHFJTGhDTHNsdW82WlRJdUhlQTAwSXBNTmIxQWRaRUlUTVYxSjVvTzRRNjBDTGhPdFBWMUNiVlMzN245M2JPQ1pSdmowbDltaE9tT2RkUkFwNFVmYlNWT1l6RGZWTURaRDR1OVctWG1rVVBlMWw3VGhaRHB5QjBUZV9HSkFxUHJDYkxLMkozeTB6M1c3MlI0UkxHVmd5QWxTRm10VGt4VnJqMmVlR2d3Y1A2MTcweDhzRWstLUJBa1VwVjF2WFU3SkVESklTcTdMb3pKMUZ2Y1VOcUdtUnV0LW1oZTdXaFFSOGxPNUw1R2hGbjNfYmlaWU9CeGtEcjI2cmR6eVZra2xMa0ZIQ0JjUTc2TUtiTkU&file=%5BHuangSubs%5D+%E4%BF%AE%E7%BD%97%E6%AD%A6%E7%A5%9E+%7C+Xiuluo+Wu+Shen+%7C+Martial+God+Asura+S1+(4K+%7C+2160p)",
+			want: "9ba100947d7e76f77b6591160bc78bd0eae6ea5e",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u, err := url.Parse(tt.url)
+			assert.NoError(t, err)
+
+			got, err := httpInfohash(u)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func Test_downloadJackett(t *testing.T) {
+	s := "http://10.0.4.41:9117/dl/animetosho/?jackett_apikey=hcedgf1s4w9etni4pkjb66vh291efylw&path=Q2ZESjhJTHhYZ3Z3d3MxTHZVZ0UtbHJsWVU4OEh2emk3LVVadGhySDQ3bVlkVWhIYWdPUTcyeFhFUzB4ako2NTdjZU5ZQ25CYndGOHFJTGhDTHNsdW82WlRJdUhlQTAwSXBNTmIxQWRaRUlUTVYxSjVvTzRRNjBDTGhPdFBWMUNiVlMzN245M2JPQ1pSdmowbDltaE9tT2RkUkFwNFVmYlNWT1l6RGZWTURaRDR1OVctWG1rVVBlMWw3VGhaRHB5QjBUZV9HSkFxUHJDYkxLMkozeTB6M1c3MlI0UkxHVmd5QWxTRm10VGt4VnJqMmVlR2d3Y1A2MTcweDhzRWstLUJBa1VwVjF2WFU3SkVESklTcTdMb3pKMUZ2Y1VOcUdtUnV0LW1oZTdXaFFSOGxPNUw1R2hGbjNfYmlaWU9CeGtEcjI2cmR6eVZra2xMa0ZIQ0JjUTc2TUtiTkU&file=%5BHuangSubs%5D+%E4%BF%AE%E7%BD%97%E6%AD%A6%E7%A5%9E+%7C+Xiuluo+Wu+Shen+%7C+Martial+God+Asura+S1+(4K+%7C+2160p)"
+	u, err := url.Parse(s)
+	assert.NoError(t, err)
+	assert.Equal(t, s, u.String())
+
+	file, err := downloadURL(u)
+	assert.NoError(t, err)
+	assert.NotNil(t, file)
+	fmt.Printf("file: %s\n", file)
 }

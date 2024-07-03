@@ -10,6 +10,7 @@ plugins:
     cache: true
     events: true
     clients: true
+    apm: true
 definitions:
     models: .golem/models
     routes: .golem/routes

@@ -10,6 +10,7 @@ import (
 	"github.com/dashotv/flame/metube"
 	"github.com/dashotv/flame/nzbget"
 	"github.com/dashotv/flame/qbt"
+	"github.com/dashotv/golem/plugins/cache"
 	"github.com/dashotv/minion"
 )
 
@@ -48,7 +49,7 @@ type Application struct {
 	Workers *minion.Minion
 
 	//Cache
-	Cache *Cache
+	Cache *cache.Cache
 
 	//golem:template:app/app_partial_definitions
 

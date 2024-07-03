@@ -25,7 +25,7 @@ func checkRoutes(app *Application) error {
 func startRoutes(ctx context.Context, app *Application) error {
 	go func() {
 		app.Routes()
-		app.Log.Info("starting routes...")
+		app.Log.Debugf("starting routes")
 		if err := app.Engine.Start(fmt.Sprintf(":%d", app.Config.Port)); err != nil {
 			app.Log.Errorf("routes: %s", err)
 		}

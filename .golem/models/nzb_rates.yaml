@@ -1,0 +1,8 @@
+name: nzb_rates
+type: struct
+indexes:
+    - created_at
+    - updated_at
+fields:
+    - name: download_rate
+      type: string

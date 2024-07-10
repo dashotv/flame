@@ -14,12 +14,16 @@ type Combined struct { // struct
 }
 
 type Metrics struct { // struct
-	Diskspace string `bson:"diskspace" json:"diskspace"`
-	Torrents  struct {
-		DownloadRate string `json:"download_rate"`
-		UploadRate   string `json:"upload_rate"`
-	} `bson:"torrents" json:"torrents"`
-	Nzbs struct {
-		DownloadRate string `json:"download_rate"`
-	} `bson:"nzbs" json:"nzbs"`
+	Diskspace string        `bson:"diskspace" json:"diskspace"`
+	Torrents  *TorrentRates `bson:"torrents" json:"torrents"`
+	Nzbs      *NzbRates     `bson:"nzbs" json:"nzbs"`
+}
+
+type NzbRates struct { // struct
+	DownloadRate string `bson:"download_rate" json:"download_rate"`
+}
+
+type TorrentRates struct { // struct
+	DownloadRate string `bson:"download_rate" json:"download_rate"`
+	UploadRate   string `bson:"upload_rate" json:"upload_rate"`
 }

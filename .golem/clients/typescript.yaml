@@ -1,0 +1,2 @@
+language: typescript
+destination: ../ui/src/client/flame

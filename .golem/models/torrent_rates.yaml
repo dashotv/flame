@@ -1,0 +1,7 @@
+name: torrent_rates
+type: struct
+fields:
+  - name: download_rate
+    type: string
+  - name: upload_rate
+    type: string

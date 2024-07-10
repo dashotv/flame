@@ -4,13 +4,6 @@ fields:
   - name: diskspace
     type: string
   - name: torrents
-    type: '
-      struct {
-      DownloadRate string `json:"download_rate"`;
-      UploadRate   string `json:"upload_rate"`
-      }'
+    type: "*TorrentRates"
   - name: nzbs
-    type: '
-      struct {
-      DownloadRate string `json:"download_rate"`
-      }'
+    type: "*NzbRates"

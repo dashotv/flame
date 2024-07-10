@@ -64,7 +64,7 @@ func Updates() error {
 	go updateQbittorrents(qr)
 	go updateNzbs(nzbs)
 	go func() {
-		metrics := &Metrics{}
+		metrics := &Metrics{Torrents: &TorrentRates{}, Nzbs: &NzbRates{}}
 		metrics.Diskspace = fmt.Sprintf("%2.1f", float64(nzbs.Status.FreeDiskSpaceMB/1000))
 		metrics.Torrents.DownloadRate = fmt.Sprintf("%2.1f", float64(qr.DownloadRate/1000))
 		metrics.Torrents.UploadRate = fmt.Sprintf("%2.1f", float64(qr.UploadRate/1000))

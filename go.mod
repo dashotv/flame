@@ -31,7 +31,6 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/streamingfast/logging v0.0.0-20230608130331-f22c91403091
 	github.com/stretchr/testify v1.9.0
-	go.elastic.co/apm/module/apmechov4/v2 v2.6.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/net v0.26.0
 	golang.org/x/term v0.22.0
@@ -51,7 +50,6 @@ require (
 	github.com/anacrolix/missinggo/v2 v2.7.3 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
-	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/blendle/zapdriver v1.3.1 // indirect
 	github.com/bradfitz/iter v0.0.0-20191230175014-e8f45d346db8 // indirect
@@ -62,8 +60,6 @@ require (
 	github.com/clerk/clerk-sdk-go/v2 v2.0.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/elastic/go-sysinfo v1.7.1 // indirect
-	github.com/elastic/go-windows v1.0.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
@@ -99,7 +95,6 @@ require (
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/blocks v0.0.7 // indirect
@@ -134,7 +129,6 @@ require (
 	github.com/philippgille/gokv/encoding v0.7.0 // indirect
 	github.com/philippgille/gokv/util v0.7.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/prometheus/procfs v0.13.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.42.0 // indirect
 	github.com/refraction-networking/utls v1.6.4 // indirect
@@ -162,9 +156,6 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	go.elastic.co/apm/module/apmhttp/v2 v2.6.0 // indirect
-	go.elastic.co/apm/v2 v2.6.0 // indirect
-	go.elastic.co/fastjson v1.1.0 // indirect
 	go.infratographer.com/x v0.5.1 // indirect
 	go.mongodb.org/mongo-driver v1.15.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.50.0 // indirect
@@ -185,5 +176,4 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	howett.net/plist v0.0.0-20181124034731-591f970eefbb // indirect
 )

@@ -45,11 +45,6 @@ type Config struct {
 	RedisAddress  string `env:"REDIS_ADDRESS,required"`
 	RedisDatabase int    `env:"REDIS_DATABASE" envDefault:"0"`
 
-	// APM
-	APMServiceName string `env:"ELASTIC_APM_SERVICE_NAME,required"`
-	APMServerURL   string `env:"ELASTIC_APM_SERVER_URL,required"`
-	APMSecretToken string `env:"ELASTIC_APM_SECRET_TOKEN" envDefault:"0"`
-
 	// Router Auth
 	Auth           bool   `env:"AUTH" envDefault:"false"`
 	ClerkSecretKey string `env:"CLERK_SECRET_KEY"`

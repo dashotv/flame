@@ -35,7 +35,7 @@ func setupEvents(app *Application) error {
 }
 
 func startEvents(ctx context.Context, app *Application) error {
-	go app.Events.Start()
+	go app.Events.Start(ctx)
 	return nil
 }
 
@@ -92,7 +92,7 @@ func NewEvents(app *Application) (*Events, error) {
 	return e, nil
 }
 
-func (e *Events) Start() error {
+func (e *Events) Start(ctx context.Context) error {
 	e.Log.Debugf("starting events...")
 	// no receivers
 	return nil

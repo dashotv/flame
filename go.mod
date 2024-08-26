@@ -18,7 +18,7 @@ require (
 	github.com/dotenv-org/godotenvvault v0.6.0
 	github.com/getkin/kin-openapi v0.124.0
 	github.com/go-resty/resty/v2 v2.12.0
-	github.com/imroc/req/v3 v3.43.2
+	github.com/imroc/req/v3 v3.43.4
 	github.com/joho/godotenv v1.5.1
 	github.com/kamva/mgm/v3 v3.5.0
 	github.com/labstack/echo/v4 v4.11.4

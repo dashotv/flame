@@ -3,11 +3,6 @@ type: docker
 name: default
 
 steps:
-  - name: build
-    image: golang
-    commands:
-      #      - go test -v ./... # not working and requires nzbget and qbt
-      - go build
   - name: publish
     image: plugins/docker
     environment:
@@ -26,7 +21,7 @@ steps:
     image: appleboy/drone-ssh
     settings:
       host:
-        - 10.0.4.62
+        - 10.0.4.63
       port: 22
       username: deploy
       key:

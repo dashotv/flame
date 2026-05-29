@@ -88,7 +88,7 @@ func (a *Api) Login(username, password string) (ok bool, err error) {
 	}
 
 	for _, c := range resp.Cookies() {
-		if c.Name == "SID" {
+		if c.Name == "QBT_SID_8080" {
 			a.Sid = c.Value
 			a.Authenticated = true
 			break
